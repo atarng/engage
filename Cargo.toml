@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 skyline = { git = "https://github.com/Raytwo/skyline-rs", branch = "preview" }
-unity = { path = "../unity" }
+unity = { git = "https://github.com/DivineDragonFanClub/unity" }
 modular-bitfield = "0.11.2"
 once_cell = "1.17.0"
 lazysimd = { git = "https://github.com/Raytwo/lazysimd" }
