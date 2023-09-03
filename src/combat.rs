@@ -40,6 +40,33 @@ pub struct MagicSignalProcessor {
 }
 
 #[repr(C)]
+#[derive(Debug)]
+
+pub enum ArrivalType {
+    Flying,
+    ConstantTime,
+}
+
+#[repr(C)]
+pub struct MagicBulletSettings {
+    home_node_name: &'static Il2CppString,
+    target_node_name: &'static Il2CppString,
+    float: f32,
+    pub arrival_type: ArrivalType,
+    move_speed: f32,
+}
+
+#[repr(C)]
+pub struct Magic<'a> {
+    base: [u8; 0x28],
+    pub magic_bullet_settings: &'a Il2CppObject<MagicBulletSettings>,
+}
+
+// Combat.MagicSignalProcessor$$get_Magic	7101bf31a0	Combat_Magic_o * Combat.MagicSignalProcessor$$get_Magic(Combat_MagicSignalProcessor_o * __this, MethodInfo * method)	8
+#[unity::from_offset("Combat", "MagicSignalProcessor", "get_Magic")]
+pub fn magicsignalprocessor_get_magic(this: &Il2CppObject<MagicSignalProcessor>, method_info: OptionalMethod) -> &Il2CppObject<Magic>;
+
+#[repr(C)]
 #[unity::class("UnityEngine", "AnimationEvent")]
 pub struct AnimationEvent;
 
@@ -69,6 +96,10 @@ pub fn charactersound_get_cp(this: &Il2CppObject<CharacterSound>, method_info: O
 // Combat.Phase$$get_IsPlayerSideAttack	7101f2b2d0	bool Combat.Phase$$get_IsPlayerSideAttack(Combat_Phase_o * __this, MethodInfo * method)	12
 #[unity::from_offset("Combat", "Phase", "get_IsPlayerSideAttack")]
 pub fn phase_get_is_player_side_attack(this: &Il2CppObject<Phase>, method_info: OptionalMethod) -> bool;
+
+// Combat.Phase$$get_IsEnemySideAttack	7101f2b2e0	bool Combat.Phase$$get_IsEnemySideAttack(Combat_Phase_o * __this, MethodInfo * method)	12
+#[unity::from_offset("Combat", "Phase", "get_IsEnemySideAttack")]
+pub fn phase_get_is_enemy_side_attack(this: &Il2CppObject<Phase>, method_info: OptionalMethod) -> bool;
 
 // Combat.Side$$IsMaster	710247cad0	bool Combat.Side$$IsMaster(int32_t i, MethodInfo * method)	12
 #[unity::from_offset("Combat", "Side", "IsMaster")]
