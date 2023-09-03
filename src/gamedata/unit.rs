@@ -17,6 +17,7 @@ pub trait UnitMethods {
     fn set_selected_weapon(&self, weapon_mask: &Il2CppObject<WeaponMask>);
     fn get_job(&self) -> &'static Il2CppObject<JobData>;
     fn is_engaging(&self) -> bool;
+    fn is_engage_owner(&self) -> bool;
 }
 
 impl UnitMethods for Il2CppObject<Unit> {
@@ -60,6 +61,10 @@ impl UnitMethods for Il2CppObject<Unit> {
     fn is_engaging(&self) -> bool {
         unsafe { unit_is_engaging(self, None) }
     }
+
+    fn is_engage_owner(&self) -> bool {
+        unsafe { unit_is_engage_owner(self, None) }
+    }
 }
 
 #[skyline::from_offset(0x1a3f400)]
@@ -80,6 +85,10 @@ extern "C" fn unit_get_job(this: &Il2CppObject<Unit>, method_info: OptionalMetho
 #[unity::from_offset("App", "Unit", "SetSelectedWeapon")]
 extern "C" fn unit_setselectedweapon(this: &Il2CppObject<Unit>, weapon_mask: &Il2CppObject<WeaponMask>, method_info: OptionalMethod);
 
-//App.Unit$$IsEngaging	7101a265e0	bool App.Unit$$IsEngaging(App_Unit_o * __this, MethodInfo * method)	96
+// App.Unit$$IsEngaging	7101a265e0	bool App.Unit$$IsEngaging(App_Unit_o * __this, MethodInfo * method)	96
 #[skyline::from_offset(0x1a265e0)]
 extern "C" fn unit_is_engaging(this: &Il2CppObject<Unit>, method_info: OptionalMethod) -> bool;
+
+// App.Unit$$IsEngageOwner	7101a197a0	bool App.Unit$$IsEngageOwner(App_Unit_o * __this, MethodInfo * method)	112
+#[skyline::from_offset(0x1a197a0)]
+extern "C" fn unit_is_engage_owner(this: &Il2CppObject<Unit>, method_info: OptionalMethod) -> bool;
