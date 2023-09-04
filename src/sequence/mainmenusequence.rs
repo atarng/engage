@@ -22,3 +22,6 @@ impl AsMut<ProcInst> for MainMenuSequence {
         &mut self.proc
     }
 }
+
+#[unity::from_offset("App", "MainMenuSequence", "JumpToNextSequence")]
+pub fn mainmenusequence_jumptonextsequence(this: *const u8);

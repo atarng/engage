@@ -3,6 +3,10 @@
 use unity::prelude::*;
 
 #[repr(C)]
+#[unity::class("App", "Mess")]
+pub struct AppMess;
+
+#[repr(C)]
 #[unity::class("App", "MsgFile")]
 pub struct MsgFile {
     resource_file_ptr: *const u8,

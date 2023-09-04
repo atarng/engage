@@ -1,8 +1,11 @@
 //! Types and methods to manipulate the script system for events.
 
-use unity::{prelude::*, app::scriptsystem_log};
+use unity::prelude::*;
 
 use crate::gamedata::{unit::Unit, ItemData};
+
+#[unity::from_offset("App", "ScriptSystem", "Log")]
+pub fn scriptsystem_log(args: *const u8);
 
 #[repr(C)]
 #[unity::class("App", "EventScript")]
