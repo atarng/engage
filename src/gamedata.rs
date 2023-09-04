@@ -1,3 +1,5 @@
+//! Structures representing a singular entry from the gamedata files in memory.
+
 use unity::{prelude::*, system::List};
 
 pub mod unit;

@@ -1,3 +1,5 @@
+//! Utility to spawn a notification popup similar to the achievements.
+
 use unity::prelude::*;
 
 #[unity::from_offset("App", "NoticeManager", "Add")]

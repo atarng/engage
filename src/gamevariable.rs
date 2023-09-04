@@ -1,3 +1,5 @@
+//! Methods to interact with the savedata variables.
+
 use unity::prelude::*;
 
 use crate::gameuserdata::*;

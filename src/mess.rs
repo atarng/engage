@@ -1,3 +1,5 @@
+//! Methods to manipulate and query the message system.
+
 use unity::prelude::*;
 
 #[repr(C)]

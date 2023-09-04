@@ -1,3 +1,5 @@
+//! Utilities to display popup dialogues. Tied to the [`ProcInst`](crate::proc::ProcInst) system.
+
 use unity::prelude::*;
 
 use crate::proc::IsProcInst;

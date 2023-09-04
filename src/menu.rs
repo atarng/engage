@@ -1,3 +1,5 @@
+//! Methods, type and traits related to menus. Deeply tied with [`ProcInst`](crate::proc::ProcInst).
+
 use std::ops::{Deref, DerefMut};
 
 use modular_bitfield::{bitfield, specifiers::B2};

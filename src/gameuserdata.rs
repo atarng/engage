@@ -1,3 +1,5 @@
+//! Methods and wrappers to manipulate the settings of the player.
+
 use crate::{singleton::SingletonClass, gamevariable::GameVariable};
 use unity::{il2cpp::class::Il2CppRGCTXData, prelude::*};
 

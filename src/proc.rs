@@ -1,3 +1,5 @@
+//! Methods and traits related to the [`ProcInst`] system.
+
 use unity::prelude::*;
 
 pub mod desc;

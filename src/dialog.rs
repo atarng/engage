@@ -1,3 +1,5 @@
+//! Structures and wrappers to display various Dialogs to the player. Tied to the [`ProcInst`](crate::proc::ProcInst) system.
+
 use unity::prelude::*;
 
 use crate::menu::{BasicMenu, BasicMenuItem};

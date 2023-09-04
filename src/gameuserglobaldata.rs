@@ -1,3 +1,5 @@
+//! Methods to interact with the global savedata variables.
+
 use unity::prelude::*;
 
 #[unity::from_offset("App", "GameUserGlobalData", "IsCompleted")]

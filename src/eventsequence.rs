@@ -1,3 +1,5 @@
+//! Methods related to the flow of maps and their scripting.
+
 use unity::prelude::*;
 
 use crate::{proc::ProcInst, script::DynValue};

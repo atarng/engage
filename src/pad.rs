@@ -1,3 +1,6 @@
+//! Types and methods to read the state of the inputs.
+
+
 use modular_bitfield::{bitfield, specifiers::B4};
 use unity::prelude::*;	
 

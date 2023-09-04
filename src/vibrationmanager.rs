@@ -1,3 +1,5 @@
+//! Convenience methods to perform vibrations.
+
 use crate::pad::app_pad_vibration;
 use unity::prelude::*;
 

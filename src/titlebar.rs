@@ -1,3 +1,5 @@
+//! Wrappers to open and close a TitleBar when entering a menu.
+
 use unity::prelude::*;
 
 #[repr(C)]

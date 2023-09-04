@@ -1,3 +1,5 @@
+//! Types and methods to query the state of [`Unit`](crate::gamedata::unit::Unit)s in battle.
+
 use unity::prelude::*;
 
 #[repr(C)]

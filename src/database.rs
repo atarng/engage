@@ -1,3 +1,5 @@
+//! Methods to manipulate the XML databases.
+
 use unity::prelude::*;
 
 #[unity::from_offset("App", "Database", "Release")]
