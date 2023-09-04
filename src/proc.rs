@@ -13,8 +13,10 @@ pub struct Proc;
 /// The ProcInst is chained to other ProcInsts to be executed in order by one of the three Proc instances of the game.
 ///
 /// They act as a high-level virtual machine to execute [instructions](crate::proc::ProcDesc) in sequence. Said instructions are queued in a ProcDesc array.
+/// 
+/// A lot of classes inherit from it, so implement [`IsProcInst`] on them to represent this relation.
 ///
-/// Use the [cast](ProcInst#cast) methods to represent the chains as a ProcInst derivate of your choice
+/// If it is not possible for some reason, use the [cast](ProcInst::cast) methods to represent the chains as a ProcInst derivate of your choice.
 ///
 /// Example:
 ///
@@ -23,6 +25,8 @@ pub struct Proc;
 ///     let casted_child = proc.child.cast_mut::<BasicMenu>();
 /// }
 /// ```
+/// 
+/// Keep in mind that [`IsProcInst`] is much more preferable, and [cast](ProcInst::cast) should only be used as a last resort.
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
@@ -65,6 +69,11 @@ impl ProcInst {
     }
 }
 
+/// Trait to simulate inheritance for [`ProcInst`].
+/// 
+/// If the trait is in scope, it is automatically implemented for objects that implement `AsMut<ProcInst>`.
+/// 
+/// A method expecting a `&impl IsProcInst` or `<P: IsProcInst>(parent: &P, ...)` will accept any type that inherits from [`ProcInst`].
 pub trait IsProcInst {
     fn create_bind(&self, parent: &impl IsProcInst, descs: &'static mut Il2CppArray<&'static mut Il2CppObject<ProcDesc>>, name: impl AsRef<str>) {
         unsafe { procinst_createbind(self, parent, descs, name.as_ref().into(), None) }
@@ -162,6 +171,7 @@ pub struct ProcBoolMethod<T: 'static> {
     // ...
 }
 
+/// A structure representing a call to a method that returns a bool.
 impl<T> ProcBoolMethod<T> {
     /// Prepare a ProcVoidMethod using your target and method of choice.
     ///
