@@ -1,3 +1,5 @@
+//! Types and methods to manipulate the script system for events.
+
 use unity::{prelude::*, app::scriptsystem_log};
 
 use crate::gamedata::{unit::Unit, ItemData};
