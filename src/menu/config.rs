@@ -76,6 +76,22 @@ impl ConfigBasicMenuItem {
 
         item
     }
+
+    pub fn change_key_value_b(value: bool) -> bool {
+        if unsafe { configbasicmenuitem_change_key_value_int(value as i32, 0, 1, 1, None) } == 1 {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn change_key_value_i(value: i32, min: i32, max: i32, step: i32) -> i32 {
+        unsafe { configbasicmenuitem_change_key_value_int(value, min, max, step, None) }
+    }
+
+    pub fn change_key_value_f(value: f32, min: f32, max: f32, step: f32) -> f32 {
+        unsafe { configbasicmenuitem_change_key_value_float(value, min, max, step, None) }
+    }
 }
 
 pub trait ConfigBasicMenuItemSwitchMethods {
@@ -92,8 +108,11 @@ pub trait ConfigBasicMenuItemGaugeMethods {
 #[skyline::from_offset(0x25379a0)]
 pub fn configbasicmenuitem_ctor(this: &Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);
 
-#[unity::from_offset("", "ConfigBasicMenuItem", "ChangeKeyValue")]
-pub fn configbasicmenuitem_change_key_value<T>(value: T, min: i32, max: i32, step: i32, method_info: OptionalMethod) -> T;
+#[skyline::from_offset(0x2537920)]
+fn configbasicmenuitem_change_key_value_int(value: i32, min: i32, max: i32, step: i32, method_info: OptionalMethod) -> i32;
+
+#[skyline::from_offset(0x2537970)]
+fn configbasicmenuitem_change_key_value_float(value: f32, min: f32, max: f32, step: f32, method_info: OptionalMethod) -> f32;
 
 #[unity::from_offset("", "ConfigBasicMenuItem", "UpdateText")]
 pub fn configbasicmenuitem_update_text(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);

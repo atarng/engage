@@ -4,7 +4,33 @@ use unity::prelude::*;
 
 #[repr(C)]
 #[unity::class("App", "Mess")]
-pub struct AppMess;
+pub struct Mess;
+
+impl Mess {
+    pub fn get(label: &Il2CppString) -> &'static Il2CppString {
+        unsafe { mess_get(label, None) }
+    }
+
+    pub fn load(filename: &Il2CppString) -> bool {
+        unsafe { mess_load(filename, None) }
+    }
+
+    pub fn get_language_directory_name() -> &'static Il2CppString {
+        unsafe { mess_get_language_directory_name(None) }
+    }
+}
+
+#[repr(C)]
+pub struct MessStaticFields {
+    __: [u8; 0xb0],
+    pub mess_file_dictionary: &'static Il2CppObject<()>,
+    pub sound_file_dictionary: &'static Il2CppObject<()>,
+    pub event_file_dictionary: &'static Il2CppObject<()>,
+    pub mess_data_dictionary: &'static Il2CppObject<()>,
+    pub sound_data_dictionary: &'static Il2CppObject<()>,
+    pub event_data_dictionary: &'static Il2CppObject<()>,
+    pub path_dictionary: &'static Il2CppObject<()>,
+}
 
 #[repr(C)]
 #[unity::class("App", "MsgFile")]
@@ -14,14 +40,23 @@ pub struct MsgFile {
     pub reference_count: i32,
 }
 
+impl MsgFile {
+    pub fn get_text_num() {
+
+    }
+}
+
 #[unity::from_offset("App", "Mess", "GetLanguageDirectoryName")]
-pub fn get_language_directory_name(method_info: OptionalMethod) -> &'static Il2CppString;
+fn mess_get_language_directory_name(method_info: OptionalMethod) -> &'static Il2CppString;
 
 #[skyline::from_offset(0x25d54f0)]
 pub fn mess_load_impl(filename: &Il2CppString, is_warning: bool, method_info: OptionalMethod) -> bool;
 
+#[unity::from_offset("App", "Mess", "Get")]
+fn mess_get(label: &Il2CppString, method_info: OptionalMethod) -> &'static Il2CppString;
+
 #[skyline::from_offset(0x25d3e40)]
-pub fn mess_load(filename: &Il2CppString, method_info: OptionalMethod) -> bool;
+fn mess_load(filename: &Il2CppString, method_info: OptionalMethod) -> bool;
 
 #[skyline::from_offset(0x2782e80)]
 pub fn msgfile_ctor(this: &Il2CppObject<MsgFile>, method_info: OptionalMethod);

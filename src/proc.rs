@@ -8,6 +8,20 @@ use desc::*;
 #[repr(C)]
 pub struct Proc;
 
+impl Proc {
+    pub fn get_root_def() -> &'static mut Il2CppObject<ProcInst> {
+        unsafe { proc_getrootdef(None) }
+    }
+
+    pub fn vsync(vsync_mode: i32) -> &'static mut Il2CppObject<ProcDesc> {
+        unsafe { proc_vsync(vsync_mode, None) }
+    }
+
+    pub fn wait_is_loading() -> &'static mut Il2CppObject<ProcDesc> {
+        unsafe { proc_waitisloading(None) }
+    }
+}
+
 /// Represents a Instruction unit for a [`Proc`].
 ///
 /// The ProcInst is chained to other ProcInsts to be executed in order by one of the three Proc instances of the game.
@@ -84,32 +98,18 @@ impl IsProcInst for Il2CppObject<ProcInst> {}
 impl<T: AsMut<ProcInst>> IsProcInst for Il2CppObject<T> {}
 
 #[unity::from_offset("App", "Proc", "WaitIsLoading")]
-pub fn proc_waitisloading(
+fn proc_waitisloading(
     method_info: OptionalMethod,
 ) -> &'static mut Il2CppObject<ProcDesc>;
 
 #[unity::from_offset("App", "Proc", "Vsync")]
-pub fn proc_vsync(
+fn proc_vsync(
     vsync_mode: i32,
     method_info: OptionalMethod,
 ) -> &'static mut Il2CppObject<ProcDesc>;
 
-#[unity::from_offset("App", "Fade", "BlackOut")]
-pub fn fade_blackout(
-    duration: f32,
-    layer: i32,
-    method_info: OptionalMethod,
-) -> &'static mut Il2CppObject<ProcDesc>;
-
-#[unity::from_offset("App", "Fade", "BlackIn")]
-pub fn fade_blackin(
-    duration: f32,
-    layer: i32,
-    method_info: OptionalMethod,
-) -> &'static mut Il2CppObject<ProcDesc>;
-
 #[unity::from_offset("App", "Proc", "GetRootDef")]
-pub fn proc_getrootdef(
+fn proc_getrootdef(
     method_info: OptionalMethod,
 ) -> &'static mut Il2CppObject<ProcInst>;
 

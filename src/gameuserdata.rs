@@ -24,6 +24,17 @@ pub enum GameMode {
     Phoenix
 }
 
+impl From<i32> for GameMode {
+    fn from(value: i32) -> Self {
+        match value {
+            0 => GameMode::Casual,
+            1 => GameMode::Classic,
+            2 => GameMode::Phoenix,
+            _ => GameMode::Casual,
+        }
+    }
+}
+
 impl GameUserData {
     pub fn get_instance() -> &'static mut Il2CppObject<GameUserData> {
         let idk = get_generic_class!(SingletonClass<GameUserData>).unwrap();
