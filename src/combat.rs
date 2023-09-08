@@ -18,10 +18,10 @@ pub struct CharacterSound;
 #[unity::class("Combat", "Phase")]
 pub struct Phase {
     i_dont_care: [u8; 0x10],
-    kind: i32,
-    hit_type: i32,
-    detail: i32,
-    attack_side: i32,
+    pub kind: i32,
+    pub hit_type: i32,
+    pub detail: i32,
+    pub attack_side: i32,
     pub attack_hash: i32,
     pub damage_hash: i32,
 }
