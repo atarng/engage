@@ -72,7 +72,7 @@ impl<T> EventScriptActionArgs<T> {
 
         Il2CppObject::<EventScriptActionArgs<T>>::from_class(action_args_class).map(|args| {
             // This is until helper methods are made to generated MethodInfos from Rust methods.
-            let mut donor_method = scriptsystem_log::as_base();
+            let mut donor_method = Il2CppClass::from_name("App", "ScriptSystem").unwrap().get_method_from_name("Log", 1).unwrap().clone();
 
             donor_method.method_ptr = method as _;
 
