@@ -1,4 +1,4 @@
-//! Types and methods to query the state of [`Unit`](crate::gamedata::unit::Unit)s on the zoomed-out map view.
+//! Types and methods used in the zoomed-out map view.
 use unity::prelude::*;
 
 use crate::{gamedata::unit::Unit, util::get_instance};
