@@ -26,10 +26,27 @@ pub fn play_by_vibration_file_name(
     method_info: OptionalMethod,
 );
 
-pub fn vibrate(time: f32, amplitude_magnitude: f32, amp_low: f32, amp_high: f32, freq_low: f32, freq_high: f32) {
+/// Utility function to play a vibration.
+pub fn vibrate(
+    time: f32,
+    amplitude_magnitude: f32,
+    amp_low: f32,
+    amp_high: f32,
+    freq_low: f32,
+    freq_high: f32,
+) {
     unsafe {
         let vibration_manager = app_pad_vibration(None);
-        vibration_manager_one_shot(vibration_manager, time, amplitude_magnitude, amp_low, amp_high, freq_low, freq_high, None);
+        vibration_manager_one_shot(
+            vibration_manager,
+            time,
+            amplitude_magnitude,
+            amp_low,
+            amp_high,
+            freq_low,
+            freq_high,
+            None,
+        );
     }
 }
 

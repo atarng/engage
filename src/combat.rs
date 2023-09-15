@@ -19,15 +19,58 @@ pub struct CharacterSound;
 pub struct Phase {
     i_dont_care: [u8; 0x10],
     pub kind: i32,
-    pub hit_type: i32,
-    pub detail: i32,
+    pub hit_type: HitType,
+    pub detail: Detail,
     pub attack_side: i32,
     pub attack_hash: i32,
     pub damage_hash: i32,
 }
 
+bitflags::bitflags! {
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    /// Bitflags for the type of hit. The combo flags (which are non-power of two) are provided by the game and included here for completeness.
+    pub struct HitType: i32 {
+        const Critical = 1;
+        const Miss = 2;
+        const Guard = 4;
+        const Hit = 8;
+        const Parry = 16;
+        const Knockoff = 64;
+        const Heal = 128;
+        const ChainGuard = 256;
+        const DualGuard = 512;
+        const HitStop = 268;
+        const GuardType = 260;
+        const MissType = 82;
+    }
+}
+
+bitflags::bitflags! {
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    /// Bitflags for the detail of the hit. The combo flags (which are non-power of two) are provided by the game and included here for completeness.
+    pub struct Detail: i32 {
+        const FirstAttack = 1;
+        const LastAttack = 2;
+        const Rush = 4;
+        const Efficacy = 8;
+        const EngageAttack = 16;
+        const Break = 32;
+        const Smash = 64;
+        const StandingDie = 128;
+        const DamageDisplayed = 256;
+        const ChainAtk = 4096;
+        const ChainAtk2 = 8192;
+        const ChainGrd1 = 16384;
+        const ChainGrd2 = 32768;
+        const ChainGrd3 = 65536;
+        const ChainGrd4 = 131072;
+        const ChainGrd = 245760;
+    }
+}
+
 #[repr(C)]
 #[derive(Debug)]
+/// Used by the game to determine the sound effects to play during damage for zoomed-in combat.
 pub enum DamageEffectLevel {
     Low,
     Medium,
@@ -43,9 +86,11 @@ pub struct MagicSignalProcessor {
 
 #[repr(C)]
 #[derive(Debug)]
-
+/// Describes how the magic projectile will arrive at the target.
 pub enum ArrivalType {
+    /// The magic projectile will fly to the target, such as fireballs and wind attacks.
     Flying,
+    /// The magic projectile will arrive at the target immediately, such as lightning.
     ConstantTime,
 }
 
@@ -66,14 +111,20 @@ pub struct Magic<'a> {
 
 // Combat.MagicSignalProcessor$$get_Magic	7101bf31a0	Combat_Magic_o * Combat.MagicSignalProcessor$$get_Magic(Combat_MagicSignalProcessor_o * __this, MethodInfo * method)	8
 #[unity::from_offset("Combat", "MagicSignalProcessor", "get_Magic")]
-pub fn magicsignalprocessor_get_magic(this: &Il2CppObject<MagicSignalProcessor>, method_info: OptionalMethod) -> &Il2CppObject<Magic>;
+pub fn magicsignalprocessor_get_magic(
+    this: &Il2CppObject<MagicSignalProcessor>,
+    method_info: OptionalMethod,
+) -> &Il2CppObject<Magic>;
 
 #[repr(C)]
 #[unity::class("UnityEngine", "AnimationEvent")]
 pub struct AnimationEvent;
 
 #[unity::from_offset("Combat", "Phase", "get_DamageEffectLevel")]
-pub fn phase_get_damage_effect_level(this: &Il2CppObject<Phase>, method_info: OptionalMethod) -> DamageEffectLevel;
+pub fn phase_get_damage_effect_level(
+    this: &Il2CppObject<Phase>,
+    method_info: OptionalMethod,
+) -> DamageEffectLevel;
 
 #[unity::from_offset("Combat", "RuntimeAnimUtil", "IsEvasion")]
 pub fn runtimeanimutil_is_evasion(hash: i32, method_info: OptionalMethod) -> bool;
@@ -89,19 +140,31 @@ pub fn phase_get_is_critical(this: &Il2CppObject<Phase>, method_info: OptionalMe
 
 // Combat.Character$$get_Phase	7102afcb70	Combat_Phase_o * Combat.Character$$get_Phase(Combat_Character_o * __this, MethodInfo * method)	336
 #[unity::from_offset("Combat", "Character", "get_Phase")]
-pub fn character_get_phase(this: &Il2CppObject<Character>, method_info: OptionalMethod) -> &Il2CppObject<Phase>;
+pub fn character_get_phase(
+    this: &Il2CppObject<Character>,
+    method_info: OptionalMethod,
+) -> &Il2CppObject<Phase>;
 
 // Combat.CharacterSound$$get_CP	71025efef0	Combat_Character_o * Combat.CharacterSound$$get_CP(Combat_CharacterSound_o * __this, MethodInfo * method)	180
 #[unity::from_offset("Combat", "CharacterSound", "get_CP")]
-pub fn charactersound_get_cp(this: &Il2CppObject<CharacterSound>, method_info: OptionalMethod) -> &Il2CppObject<Character>;
+pub fn charactersound_get_cp(
+    this: &Il2CppObject<CharacterSound>,
+    method_info: OptionalMethod,
+) -> &Il2CppObject<Character>;
 
 // Combat.Phase$$get_IsPlayerSideAttack	7101f2b2d0	bool Combat.Phase$$get_IsPlayerSideAttack(Combat_Phase_o * __this, MethodInfo * method)	12
 #[unity::from_offset("Combat", "Phase", "get_IsPlayerSideAttack")]
-pub fn phase_get_is_player_side_attack(this: &Il2CppObject<Phase>, method_info: OptionalMethod) -> bool;
+pub fn phase_get_is_player_side_attack(
+    this: &Il2CppObject<Phase>,
+    method_info: OptionalMethod,
+) -> bool;
 
 // Combat.Phase$$get_IsEnemySideAttack	7101f2b2e0	bool Combat.Phase$$get_IsEnemySideAttack(Combat_Phase_o * __this, MethodInfo * method)	12
 #[unity::from_offset("Combat", "Phase", "get_IsEnemySideAttack")]
-pub fn phase_get_is_enemy_side_attack(this: &Il2CppObject<Phase>, method_info: OptionalMethod) -> bool;
+pub fn phase_get_is_enemy_side_attack(
+    this: &Il2CppObject<Phase>,
+    method_info: OptionalMethod,
+) -> bool;
 
 // Combat.Side$$IsMaster	710247cad0	bool Combat.Side$$IsMaster(int32_t i, MethodInfo * method)	12
 #[unity::from_offset("Combat", "Side", "IsMaster")]

@@ -7,6 +7,7 @@ pub mod eventsequence;
 pub mod fade;
 pub mod gamedata;
 pub mod gamemessage;
+pub mod gametime;
 pub mod gameuserdata;
 pub mod gameuserglobaldata;
 pub mod gamevariable;
