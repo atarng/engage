@@ -37,7 +37,7 @@ pub struct StructData;
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct StructDataStaticFields<T: 'static> {
-    pub s_list: &'static Il2CppObject<StructList<T>>,
+    pub s_list: &'static Il2CppObject<StructList<Il2CppObject<T>>>,
     pub loaded: bool,
 }
 
