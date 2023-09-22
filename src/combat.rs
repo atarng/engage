@@ -4,7 +4,48 @@ use unity::prelude::*;
 
 #[repr(C)]
 #[unity::class("Combat", "Character")]
-pub struct Character;
+pub struct Character {
+    monobehaviour_fields: [u8; 0x8],
+    _side_k__backing_field: i32,
+    _chain_id_k__backing_field: i32,
+    _prefetched_k__backing_field: *const u8,
+    _effect_k__backing_field: *const u8,
+    _observable: *const u8,
+    _idle_smb_k__backing_field: *const u8,
+    fsm: *const u8,
+    m_brain: *const u8,
+    _gs: *const u8,
+    _is_setup_done_k__backing_field: bool,
+    _head_look_at_ik: *const u8,
+    _body_look_at_ik: *const u8,
+    m_enemy_side: i32,
+    _ground_level_k__backing_field: f32,
+    _world_hit_dir_k__backing_field: [f32; 3],
+    rush_dir: *const u8,
+    _combat_start_fade_disposable_k__backing_field: *const u8,
+    _body_animator: *const u8,
+    _ride_animator: *const u8,
+    _face_animator: *const u8,
+    play__idle__________: i32,
+    ________________: f32,
+    _constant_speed_playback_k__backing_field: bool,
+    _playing_hash_k__backing_field: i32,
+    _playing_store_k__backing_field: *const u8,
+    pub _playing_event_k__backing_field: *const u8,
+    m_play_end_world_pos: *const u8,
+    _dither_fade: *const u8,
+    cached_dither_fade: bool,
+    _material_engage: *const u8,
+    cached_material_engage: bool,
+    _signal: *const u8,
+    _lying: *const u8,
+    _joint: *const u8,
+    cached_joint: bool,
+    _proportion: *const u8,
+    cached_proportion: bool,
+    _config: *const u8,
+    // too lazy to do the rest for now
+}
 
 // Combat.Character$$get_Side	7102afc5a0	int32_t Combat.Character$$get_Side(Combat_Character_o * __this, MethodInfo * method)	8
 #[unity::from_offset("Combat", "Character", "get_Side")]
