@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use unity::prelude::*;
 
-use super::{ProcBoolMethod, ProcVoidFunction, ProcVoidMethod};
+use super::{ProcBoolMethod, ProcVoidFunction, ProcVoidMethod, proc_label, proc_call, proc_end, proc_wait_while_true, proc_wait_time, Bindable, Delegate};
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -36,121 +36,97 @@ pub struct ProcDesc {
 }
 
 impl ProcDesc {
-    pub fn label(label: i32) -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescLabel::instantiate_as::<ProcDesc>().map(|desc| {
-            let cast = desc.cast_mut::<ProcDescLabel>();
-            cast.ty = ProcDescType::Label;
-            cast.label = label;
+    pub fn label(label: i32) -> &'static mut ProcDesc {
+        unsafe { proc_label(label, None) }
+    }
+
+    pub fn call(method: &'static mut impl Delegate) -> &'static mut ProcDesc {
+        unsafe { proc_call(method, None) }
+    }
+
+    pub fn wait_while_true<T>(method: &'static mut ProcBoolMethod<T>) -> &'static mut ProcDesc {
+        unsafe { proc_wait_while_true(method, None) }
+    }
+
+    // pub fn function_call<T>(function: &'static mut ProcVoidFunction<T>) -> Il2CppResult<&'static mut ProcDescCall<T>> {
+    //     ProcDescCall::<T>::instantiate().map(|desc| {
+    //         desc.desc.ty = ProcDescType::Call;
+    //         desc.function = function;
+    //         desc
+    //     })
+    // }
+
+    pub fn jump(to_label: i32) -> Il2CppResult<&'static mut ProcDescJump> {
+        ProcDescJump::instantiate().map(|desc| {
+            desc.desc.ty = ProcDescType::Jump;
+            desc.label = to_label;
             desc
         })
     }
 
-    pub fn method_call<T>(method: &'static mut Il2CppObject<ProcVoidMethod<T>>) -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescMCall::<T>::instantiate_as::<ProcDesc>().map(|desc| {
-            let cast = desc.cast_mut::<ProcDescMCall<T>>();
-            cast.ty = ProcDescType::Call;
-            cast.method = method;
+    pub fn yiel() -> Il2CppResult<&'static mut ProcDescYield> {
+        ProcDescYield::instantiate().map(|desc| {
+            desc.desc.ty = ProcDescType::Yield;
             desc
         })
     }
 
-    pub fn wait_while_true<T>(method: &'static mut Il2CppObject<ProcBoolMethod<T>>) -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescMWaitTrue::<T>::instantiate_as::<ProcDesc>().map(|desc| {
-            let cast = desc.cast_mut::<ProcDescMWaitTrue<T>>();
-            cast.ty = ProcDescType::WaitFunc;
-            cast.method = method;
-            desc
-        })
+    pub fn wait_time(time: f32) -> &'static mut ProcDesc {
+        unsafe { proc_wait_time(time, None) }
+
     }
 
-    pub fn function_call<T>(function: &'static mut Il2CppObject<ProcVoidFunction<T>>) -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescCall::<T>::instantiate_as::<ProcDesc>().map(|desc| {
-            let cast = desc.cast_mut::<ProcDescCall<T>>();
-            cast.ty = ProcDescType::Call;
-            cast.function = function;
-            desc
-        })
+    pub fn end() -> &'static mut ProcDesc {
+        unsafe { proc_end(None) }
     }
 
-    pub fn jump<T>(to_label: T) -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescJump::<T>::instantiate_as::<ProcDesc>().map(|desc| {
-            let cast = desc.cast_mut::<ProcDescJump<T>>();
-            cast.ty = ProcDescType::Jump;
-            cast.label = to_label;
-            desc
-        })
-    }
-
-    pub fn yiel() -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescYield::instantiate_as::<ProcDesc>().map(|desc| {
-            desc.ty = ProcDescType::Yield;
-            desc
-        })
-    }
-
-    pub fn wait_time(time: f32) -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescWaitTime::instantiate_as::<ProcDesc>().map(|desc| {
-            let cast = desc.cast_mut::<ProcDescWaitTime>();
-            cast.ty = ProcDescType::WaitTime;
-            cast.time = time;
-            desc
-        })
-    }
-
-    pub fn end() -> Il2CppResult<&'static mut Il2CppObject<ProcDesc>> {
-        ProcDescEnd::instantiate_as::<ProcDesc>().map(|desc| {
-            desc.ty = ProcDescType::End;
-            desc
-        })
-    }
-
-    pub fn cast<T: AsRef<ProcDesc>>(&self) -> &T {
+    pub fn cast<T: AsRef<ProcDescFields>>(&self) -> &T {
         unsafe { std::mem::transmute::<&ProcDesc, &T>(&self) }
     }
 
-    pub fn cast_mut<T: AsMut<ProcDesc>>(&mut self) -> &mut T {
+    pub fn cast_mut<T: AsMut<ProcDescFields>>(&mut self) -> &mut T {
         unsafe { std::mem::transmute::<&mut ProcDesc, &mut T>(self) }
     }
 
-    pub fn get_type(&self) -> ProcDescType {
-        self.ty
+    
+}
+
+pub trait ProcDescriptor: AsRef<ProcDescFields> + Sized {
+    fn get_type(&self) -> ProcDescType {
+        self.as_ref().ty
     }
 }
 
-impl From<ProcDescLabel> for ProcDesc {
-    fn from(value: ProcDescLabel) -> Self {
-        value.desc
-    }
-}
+impl<T: AsRef<ProcDescFields>> ProcDescriptor for T { }
 
 #[repr(C)]
 #[unity::class("App", "ProcDescLabel")]
 pub struct ProcDescLabel {
-    pub desc: ProcDesc,
+    pub desc: ProcDescFields,
     pub label: i32,
 }
 
-impl AsRef<ProcDesc> for ProcDescLabel {
-    fn as_ref(&self) -> &ProcDesc {
+impl AsRef<ProcDescFields> for ProcDescLabel {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl AsMut<ProcDesc> for ProcDescLabel {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl AsMut<ProcDescFields> for ProcDescLabel {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
 
-impl Deref for ProcDescLabel {
-    type Target = ProcDesc;
+impl Deref for ProcDescLabelFields {
+    type Target = ProcDescFields;
 
     fn deref(&self) -> &Self::Target {
-        self.as_ref()
+        &self.desc
     }
 }
 
-impl DerefMut for ProcDescLabel {
+impl DerefMut for ProcDescLabelFields {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.desc
     }
@@ -158,98 +134,84 @@ impl DerefMut for ProcDescLabel {
 
 #[repr(C)]
 #[unity::class("App", "ProcDescJump")]
-pub struct ProcDescJump<T> {
-    pub desc: ProcDesc,
-    pub label: T,
+pub struct ProcDescJump {
+    pub desc: ProcDescFields,
+    pub label: i32,
 }
 
-impl<T> AsRef<ProcDesc> for ProcDescJump<T> {
-    fn as_ref(&self) -> &ProcDesc {
+impl AsRef<ProcDescFields> for ProcDescJump {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl<T> AsMut<ProcDesc> for ProcDescJump<T> {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl AsMut<ProcDescFields> for ProcDescJump {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
-    }
-}
-
-impl<T> Deref for ProcDescJump<T> {
-    type Target = ProcDesc;
-
-    fn deref(&self) -> &Self::Target {
-        self.as_ref()
-    }
-}
-
-impl<T> DerefMut for ProcDescJump<T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        self.as_mut()
     }
 }
 
 #[repr(C)]
 #[unity::class("App", "ProcDescMCall")]
-pub struct ProcDescMCall<T: 'static> {
-    pub desc: ProcDesc,
-    pub method: &'static mut Il2CppObject<ProcVoidMethod<T>>,
+pub struct ProcDescMCall<T: 'static + Bindable> {
+    pub desc: ProcDescFields,
+    pub method: &'static mut ProcVoidMethod<T>,
 }
 
-impl<T> AsRef<ProcDesc> for ProcDescMCall<T> {
-    fn as_ref(&self) -> &ProcDesc {
+impl<T: Bindable> AsRef<ProcDescFields> for ProcDescMCallFields<T> {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl<T> AsMut<ProcDesc> for ProcDescMCall<T> {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl<T: Bindable> AsMut<ProcDescFields> for ProcDescMCallFields<T> {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
 
-impl<T> Deref for ProcDescMCall<T> {
-    type Target = ProcDesc;
+impl<T: Bindable> Deref for ProcDescMCallFields<T> {
+    type Target = ProcDescFields;
 
     fn deref(&self) -> &Self::Target {
-        self.as_ref()
+        &self.desc
     }
 }
 
-impl<T> DerefMut for ProcDescMCall<T> {
+impl<T: Bindable> DerefMut for ProcDescMCallFields<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        self.as_mut()
+        &mut self.desc
     }
 }
 
 #[repr(C)]
 #[unity::class("App", "ProcDescMWaitTrue")]
 pub struct ProcDescMWaitTrue<T: 'static> {
-    pub desc: ProcDesc,
-    pub method: &'static mut Il2CppObject<ProcBoolMethod<T>>,
+    pub desc: ProcDescFields,
+    pub method: &'static mut ProcBoolMethod<T>,
 }
 
-impl<T> AsRef<ProcDesc> for ProcDescMWaitTrue<T> {
-    fn as_ref(&self) -> &ProcDesc {
+impl<T> AsRef<ProcDescFields> for ProcDescMWaitTrueFields<T> {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl<T> AsMut<ProcDesc> for ProcDescMWaitTrue<T> {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl<T> AsMut<ProcDescFields> for ProcDescMWaitTrueFields<T> {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
 
-impl<T> Deref for ProcDescMWaitTrue<T> {
-    type Target = ProcDesc;
+impl<T> Deref for ProcDescMWaitTrueFields<T> {
+    type Target = ProcDescFields;
 
     fn deref(&self) -> &Self::Target {
         self.as_ref()
     }
 }
 
-impl<T> DerefMut for ProcDescMWaitTrue<T> {
+impl<T> DerefMut for ProcDescMWaitTrueFields<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.as_mut()
     }
@@ -258,31 +220,31 @@ impl<T> DerefMut for ProcDescMWaitTrue<T> {
 #[repr(C)]
 #[unity::class("App", "ProcDescCall")]
 pub struct ProcDescCall<T: 'static> {
-    pub desc: ProcDesc,
-    pub function: &'static mut Il2CppObject<ProcVoidFunction<T>>,
+    pub desc: ProcDescFields,
+    pub function: &'static mut ProcVoidFunction<T>,
 }
 
-impl<T> AsRef<ProcDesc> for ProcDescCall<T> {
-    fn as_ref(&self) -> &ProcDesc {
+impl<T> AsRef<ProcDescFields> for ProcDescCallFields<T> {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl<T> AsMut<ProcDesc> for ProcDescCall<T> {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl<T> AsMut<ProcDescFields> for ProcDescCallFields<T> {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
 
-impl<T> Deref for ProcDescCall<T> {
-    type Target = ProcDesc;
+impl<T> Deref for ProcDescCallFields<T> {
+    type Target = ProcDescFields;
 
     fn deref(&self) -> &Self::Target {
         self.as_ref()
     }
 }
 
-impl<T> DerefMut for ProcDescCall<T> {
+impl<T> DerefMut for ProcDescCallFields<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.as_mut()
     }
@@ -291,17 +253,17 @@ impl<T> DerefMut for ProcDescCall<T> {
 #[repr(C)]
 #[unity::class("App", "ProcDescEnd")]
 pub struct ProcDescEnd {
-    pub desc: ProcDesc,
+    pub desc: ProcDescFields,
 }
 
-impl AsRef<ProcDesc> for ProcDescEnd {
-    fn as_ref(&self) -> &ProcDesc {
+impl AsRef<ProcDescFields> for ProcDescEnd {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl AsMut<ProcDesc> for ProcDescEnd {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl AsMut<ProcDescFields> for ProcDescEnd {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
@@ -309,17 +271,17 @@ impl AsMut<ProcDesc> for ProcDescEnd {
 #[repr(C)]
 #[unity::class("App", "ProcDescYield")]
 pub struct ProcDescYield {
-    pub desc: ProcDesc,
+    pub desc: ProcDescFields,
 }
 
-impl AsRef<ProcDesc> for ProcDescYield {
-    fn as_ref(&self) -> &ProcDesc {
+impl AsRef<ProcDescFields> for ProcDescYield {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl AsMut<ProcDesc> for ProcDescYield {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl AsMut<ProcDescFields> for ProcDescYield {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
@@ -327,31 +289,31 @@ impl AsMut<ProcDesc> for ProcDescYield {
 #[repr(C)]
 #[unity::class("App", "ProcDescWaitTime")]
 pub struct ProcDescWaitTime {
-    pub desc: ProcDesc,
+    pub desc: ProcDescFields,
     pub time: f32,
 }
 
-impl AsRef<ProcDesc> for ProcDescWaitTime {
-    fn as_ref(&self) -> &ProcDesc {
+impl AsRef<ProcDescFields> for ProcDescWaitTimeFields {
+    fn as_ref(&self) -> &ProcDescFields {
         &self.desc
     }
 }
 
-impl AsMut<ProcDesc> for ProcDescWaitTime {
-    fn as_mut(&mut self) -> &mut ProcDesc {
+impl AsMut<ProcDescFields> for ProcDescWaitTimeFields {
+    fn as_mut(&mut self) -> &mut ProcDescFields {
         &mut self.desc
     }
 }
 
-impl Deref for ProcDescWaitTime {
-    type Target = ProcDesc;
+impl Deref for ProcDescWaitTimeFields {
+    type Target = ProcDescFields;
 
     fn deref(&self) -> &Self::Target {
         self.as_ref()
     }
 }
 
-impl DerefMut for ProcDescWaitTime {
+impl DerefMut for ProcDescWaitTimeFields {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.as_mut()
     }

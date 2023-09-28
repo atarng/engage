@@ -1,13 +1,12 @@
 use unity::{prelude::*, system::List};
 
 use super::BasicMenuResult;
-use crate::proc::ProcInst;
+use crate::proc::ProcInstFields;
 
-#[repr(C)]
 #[unity::class("", "ConfigBasicMenuItem")]
 pub struct ConfigBasicMenuItem {
     // Inlined BasicMenuItem here because C ABI dumb
-    pub menu: &'static mut Il2CppObject<ProcInst>,
+    pub menu: &'static mut ProcInstFields,
     menu_item_content: *const u8,
     name: &'static Il2CppString,
     index: i32,
@@ -26,13 +25,13 @@ pub struct ConfigBasicMenuItem {
 }
 
 impl ConfigBasicMenuItem {
-    fn new() -> &'static mut Il2CppObject<ConfigBasicMenuItem> {
-        let item = il2cpp::instantiate_class(ConfigBasicMenuItem::get_class().clone()).unwrap();
+    fn new() -> &'static mut ConfigBasicMenuItem {
+        let item = il2cpp::instantiate_class(ConfigBasicMenuItem::class().clone()).unwrap();
         unsafe { configbasicmenuitem_ctor(item, None) };
         item
     }
 
-    pub fn new_switch<Methods: ConfigBasicMenuItemSwitchMethods>(title: impl AsRef<str>) -> &'static mut Il2CppObject<ConfigBasicMenuItem> {
+    pub fn new_switch<Methods: ConfigBasicMenuItemSwitchMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
         let item = Self::new();
 
         item.config_method = 0;
@@ -57,7 +56,7 @@ impl ConfigBasicMenuItem {
         item
     }
 
-    pub fn new_gauge<Methods: ConfigBasicMenuItemGaugeMethods>(title: impl AsRef<str>) -> &'static mut Il2CppObject<ConfigBasicMenuItem> {
+    pub fn new_gauge<Methods: ConfigBasicMenuItemGaugeMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
         let item = Self::new();
 
         item.config_method = 1;
@@ -95,18 +94,18 @@ impl ConfigBasicMenuItem {
 }
 
 pub trait ConfigBasicMenuItemSwitchMethods {
-    extern "C" fn custom_call(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod) -> BasicMenuResult;
-    extern "C" fn set_command_text(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);
-    extern "C" fn set_help_text(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);
+    extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
+    extern "C" fn set_command_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
+    extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
 
 pub trait ConfigBasicMenuItemGaugeMethods {
-    extern "C" fn custom_call(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod) -> BasicMenuResult;
-    extern "C" fn set_help_text(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);
+    extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
+    extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
 
 #[skyline::from_offset(0x25379a0)]
-pub fn configbasicmenuitem_ctor(this: &Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);
+pub fn configbasicmenuitem_ctor(this: &ConfigBasicMenuItem, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x2537920)]
 fn configbasicmenuitem_change_key_value_int(value: i32, min: i32, max: i32, step: i32, method_info: OptionalMethod) -> i32;
@@ -115,7 +114,7 @@ fn configbasicmenuitem_change_key_value_int(value: i32, min: i32, max: i32, step
 fn configbasicmenuitem_change_key_value_float(value: f32, min: f32, max: f32, step: f32, method_info: OptionalMethod) -> f32;
 
 #[unity::from_offset("", "ConfigBasicMenuItem", "UpdateText")]
-pub fn configbasicmenuitem_update_text(this: &mut Il2CppObject<ConfigBasicMenuItem>, method_info: OptionalMethod);
+pub fn configbasicmenuitem_update_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x3de9550)]
-pub fn generic_list_add<T>(list: &mut Il2CppObject<List<T>>, instance: &T, method_id: *mut u64);
+pub fn generic_list_add<T>(list: &mut List<T>, instance: &T, method_id: *mut u64);

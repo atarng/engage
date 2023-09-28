@@ -1,6 +1,7 @@
 //! Methods and traits related to the [`ProcInst`] system.
 
 use unity::prelude::*;
+use std::borrow::Borrow;
 
 pub mod desc;
 use desc::*;
@@ -9,15 +10,15 @@ use desc::*;
 pub struct Proc;
 
 impl Proc {
-    pub fn get_root_def() -> &'static mut Il2CppObject<ProcInst> {
+    pub fn get_root_def() -> &'static mut ProcInst {
         unsafe { proc_getrootdef(None) }
     }
 
-    pub fn vsync(vsync_mode: i32) -> &'static mut Il2CppObject<ProcDesc> {
+    pub fn vsync(vsync_mode: i32) -> &'static mut ProcDesc {
         unsafe { proc_vsync(vsync_mode, None) }
     }
 
-    pub fn wait_is_loading() -> &'static mut Il2CppObject<ProcDesc> {
+    pub fn wait_is_loading() -> &'static mut ProcDesc {
         unsafe { proc_waitisloading(None) }
     }
 }
@@ -44,16 +45,16 @@ impl Proc {
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
-    pub descs: &'static Il2CppArray<&'static Il2CppObject<ProcDesc>>,
+    pub descs: &'static Il2CppArray<&'static ProcDesc>,
     desc_index: i32,
     // Rarely set
     pub name: Option<&'static Il2CppString>,
     hash: i32,
     /// The ProcInst this instance is attached to
-    pub parent: &'static Il2CppObject<ProcInst>,
-    pub child: &'static mut Il2CppObject<ProcInst>,
-    pub prev: &'static Il2CppObject<ProcInst>,
-    pub next: &'static Il2CppObject<ProcInst>,
+    pub parent: &'static ProcInst,
+    pub child: &'static mut ProcInst,
+    pub prev: &'static ProcInst,
+    pub next: &'static ProcInst,
     /// Note:  Observed a ProcVoidMethod being set here
     persistent: *const u8,
     /// Note: Actually a bitfield to mark ProcInsts for death (to be destroyed)
@@ -65,20 +66,26 @@ pub struct ProcInst {
     stack: &'static Il2CppObject<RawValueStack>,
 }
 
+impl Drop for ProcInst {
+    fn drop(&mut self) {
+        panic!("ProcInst dropped");
+    }
+}
+
 impl ProcInst {
-    pub fn get_child(&self) -> &Il2CppObject<ProcInst> {
+    pub fn get_child(&self) -> &ProcInst {
         self.child
     }
 
-    pub fn get_child_mut(&mut self) -> &mut Il2CppObject<ProcInst> {
+    pub fn get_child_mut(&mut self) -> &mut ProcInst {
         self.child
     }
 
-    pub fn cast<T: AsRef<ProcInst>>(&self) -> &T {
+    pub fn cast<T: AsRef<ProcInstFields>>(&self) -> &T {
         unsafe { std::mem::transmute::<&ProcInst, &T>(self) }
     }
 
-    pub fn cast_mut<T: AsMut<ProcInst>>(&mut self) -> &mut T {
+    pub fn cast_mut<T: AsMut<ProcInstFields>>(&mut self) -> &mut T {
         unsafe { std::mem::transmute::<&mut ProcInst, &mut T>(self) }
     }
 }
@@ -87,52 +94,81 @@ impl ProcInst {
 /// 
 /// If the trait is in scope, it is automatically implemented for objects that implement `AsMut<ProcInst>`.
 /// 
-/// A method expecting a `&impl IsProcInst` or `<P: IsProcInst>(parent: &P, ...)` will accept any type that inherits from [`ProcInst`].
-pub trait IsProcInst {
-    fn create_bind(&self, parent: &impl IsProcInst, descs: &'static mut Il2CppArray<&'static mut Il2CppObject<ProcDesc>>, name: impl AsRef<str>) {
+/// A method expecting a `&impl Bindable` or `<P: Bindable>(parent: &P, ...)` will accept any type that inherits from [`ProcInst`].
+pub trait Bindable {
+    fn create_bind(&self, parent: &impl Bindable, descs: &'static mut Il2CppArray<&'static mut ProcDesc>, name: impl AsRef<str>) {
         unsafe { procinst_createbind(self, parent, descs, name.as_ref().into(), None) }
     }
 }
 
-impl IsProcInst for Il2CppObject<ProcInst> {}
-impl<T: AsMut<ProcInst>> IsProcInst for Il2CppObject<T> {}
+impl Bindable for ProcInst { }
+
 
 #[unity::from_offset("App", "Proc", "WaitIsLoading")]
 fn proc_waitisloading(
     method_info: OptionalMethod,
-) -> &'static mut Il2CppObject<ProcDesc>;
+) -> &'static mut ProcDesc;
 
 #[unity::from_offset("App", "Proc", "Vsync")]
 fn proc_vsync(
     vsync_mode: i32,
     method_info: OptionalMethod,
-) -> &'static mut Il2CppObject<ProcDesc>;
+) -> &'static mut ProcDesc;
 
 #[unity::from_offset("App", "Proc", "GetRootDef")]
 fn proc_getrootdef(
     method_info: OptionalMethod,
-) -> &'static mut Il2CppObject<ProcInst>;
+) -> &'static mut ProcInst;
+
+#[unity::from_offset("App", "Proc", "Label")]
+fn proc_label(
+    label: i32,
+    method_info: OptionalMethod,
+) -> &'static mut ProcDesc;
+
+#[unity::from_offset("App", "Proc", "WaitTime")]
+fn proc_wait_time(
+    seconds: f32,
+    method_info: OptionalMethod,
+) -> &'static mut ProcDesc;
+
+#[unity::from_offset("App", "Proc", "Call")]
+fn proc_call<D: Delegate>(
+    method: &'static mut D,
+    method_info: OptionalMethod,
+) -> &'static mut ProcDesc;
+
+#[unity::from_offset("App", "Proc", "WaitWhileTrue")]
+fn proc_wait_while_true<T>(
+    method: &'static mut ProcBoolMethod<T>,
+    method_info: OptionalMethod,
+) -> &'static mut ProcDesc;
+
+#[unity::from_offset("App", "Proc", "End")]
+fn proc_end(
+    method_info: OptionalMethod,
+) -> &'static mut ProcDesc;
 
 #[unity::from_offset("App", "ProcInst", "CreateBind")]
-fn procinst_createbind<T: IsProcInst + ?Sized, P: IsProcInst>(
+pub fn procinst_createbind<T: Bindable + ?Sized, P: Bindable>(
     this: &T,
     parent: &P,
-    descs: &'static mut Il2CppArray<&'static mut Il2CppObject<ProcDesc>>,
+    descs: &'static Il2CppArray<&'static mut ProcDesc>,
     name: &'static Il2CppString,
     method_info: OptionalMethod,
 );
 
 #[unity::from_offset("App", "ProcInst", "OnDispose")]
-pub fn procinst_ondispose(this: &Il2CppObject<ProcInst>, method_info: OptionalMethod);
+pub fn procinst_ondispose(this: &ProcInst, method_info: OptionalMethod);
 
 /// A structure representing a call to a method that returns nothing.
 #[repr(C)]
 #[unity::class("App", "ProcVoidMethod")]
-pub struct ProcVoidMethod<T: 'static> {
+pub struct ProcVoidMethod<T: 'static + Bindable> {
     method_ptr: *const u8,
     invoke_impl: *const u8,
     // Usually the ProcInst
-    target: Option<&'static Il2CppObject<T>>,
+    target: Option<&'static T>,
     // MethodInfo
     method: *const MethodInfo,
     __: [u8; 0x38],
@@ -140,14 +176,19 @@ pub struct ProcVoidMethod<T: 'static> {
     // ...
 }
 
-impl<T> ProcVoidMethod<T> {
+pub trait Delegate { }
+
+impl<T: Bindable> Delegate for ProcVoidFunction<T> { }
+impl<T: Bindable> Delegate for ProcVoidMethod<T> { }
+
+impl<T: Bindable> ProcVoidMethod<T> {
     /// Prepare a ProcVoidMethod using your target and method of choice.
     ///
     /// Do be aware that despite the target argument being immutable, the receiving method can, in fact, mutate the target.
     pub fn new(
-        target: Option<&'static Il2CppObject<T>>,
-        method: extern "C" fn(&'static mut Il2CppObject<T>, OptionalMethod),
-    ) -> Il2CppResult<&'static mut Il2CppObject<ProcVoidMethod<T>>> {
+        target: Option<&'static T>,
+        method: extern "C" fn(&'static mut T, OptionalMethod),
+    ) -> Il2CppResult<&'static mut ProcVoidMethod<T>> {
         ProcVoidMethod::<T>::instantiate().map(|proc| {
             proc.method_ptr = method as _;
             proc.target = target;
@@ -163,7 +204,7 @@ pub struct ProcBoolMethod<T: 'static> {
     method_ptr: *const u8,
     invoke_impl: *const u8,
     // Usually the ProcInst
-    target: &'static Il2CppObject<T>,
+    target: &'static T,
     // MethodInfo
     method: *const MethodInfo,
     __: [u8; 0x38],
@@ -177,9 +218,9 @@ impl<T> ProcBoolMethod<T> {
     ///
     /// Do be aware that despite the target argument being immutable, the receiving method can, in fact, mutate the target.
     pub fn new(
-        target: &'static Il2CppObject<T>,
-        method: extern "C" fn(&'static mut Il2CppObject<T>, OptionalMethod) -> bool,
-    ) -> Il2CppResult<&'static mut Il2CppObject<ProcBoolMethod<T>>> {
+        target: &'static T,
+        method: extern "C" fn(&'static mut T, OptionalMethod) -> bool,
+    ) -> Il2CppResult<&'static mut ProcBoolMethod<T>> {
         ProcBoolMethod::<T>::instantiate().map(|proc| {
             proc.method_ptr = method as _;
             proc.target = target;
@@ -192,10 +233,10 @@ impl<T> ProcBoolMethod<T> {
 #[repr(C)]
 #[unity::class("App", "ProcVoidFunction")]
 pub struct ProcVoidFunction<T: 'static> {
-    method_ptr: extern "C" fn(&'static mut Il2CppObject<T>, OptionalMethod),
+    method_ptr: extern "C" fn(&'static mut T, OptionalMethod),
     invoke_impl: *const u8,
     // Usually the ProcInst
-    target: &'static Il2CppObject<T>,
+    target: Option<&'static T>,
     // MethodInfo
     method: *const MethodInfo,
     // ...
@@ -206,9 +247,9 @@ impl<T> ProcVoidFunction<T> {
     ///
     /// Do be aware that despite the target argument being immutable, the receiving method can, in fact, mutate to target.
     pub fn new(
-        target: &'static Il2CppObject<T>,
-        method: extern "C" fn(&'static mut Il2CppObject<T>, OptionalMethod),
-    ) -> Il2CppResult<&'static mut Il2CppObject<ProcVoidFunction<T>>> {
+        target: Option<&'static T>,
+        method: extern "C" fn(&'static mut T, OptionalMethod),
+    ) -> Il2CppResult<&'static mut ProcVoidFunction<T>> {
         ProcVoidFunction::<T>::instantiate().map(|proc| {
             proc.method_ptr = method;
             proc.target = target;
@@ -222,7 +263,7 @@ impl<T> ProcVoidFunction<T> {
 pub struct RawValueStack {
     count: i32,
     // ValueTypes array
-    values: &'static Il2CppArray<&'static Il2CppObject<ValueType>>,
+    values: &'static Il2CppArray<&'static ValueType>,
 }
 
 #[repr(C)]

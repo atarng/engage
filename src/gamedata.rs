@@ -6,7 +6,7 @@ pub mod unit;
 
 #[repr(C)]
 #[unity::class("App", "ItemData")]
-pub struct ItemData;
+pub struct ItemData { }
 
 #[repr(C)]
 #[unity::class("App", "JobData")]
@@ -27,21 +27,23 @@ pub struct PersonData {
 
 #[repr(C)]
 #[unity::class("App", "StructData`1")]
-pub struct StructDataGeneric;
+pub struct StructDataGeneric { }
 
 #[repr(C)]
-pub struct StructData;
+#[unity::class("App", "StructData`1")]
+pub struct StructData { }
 
 // pub static_fields: &'static StructDataStaticFields<T>,
 
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct StructDataStaticFields<T: 'static> {
-    pub s_list: &'static Il2CppObject<StructList<Il2CppObject<T>>>,
+    pub s_list: &'static StructList<T>,
     pub loaded: bool,
 }
 
 #[repr(C)]
+#[unity::class("App", "StructList<`1>")]
 pub struct StructList<T: 'static> {
     pub list: List<T>,
 }

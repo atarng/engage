@@ -4,11 +4,11 @@ use unity::prelude::*;
 
 #[repr(C)]
 #[unity::class("App", "TitleBar")]
-pub struct TitleBar;
+pub struct TitleBar { }
 
 impl TitleBar {
-    fn get_instance() -> &'static Il2CppObject<TitleBar> {
-        TitleBar::get_class().get_static_fields::<&Il2CppObject<TitleBar>>()
+    fn get_instance() -> &'static TitleBar {
+        TitleBar::class().get_static_fields::<&TitleBar>()
     }
 
     pub fn open_header(title: impl AsRef<str>, help: impl AsRef<str>, key_help_id: impl AsRef<str>) -> bool {
@@ -30,7 +30,7 @@ impl TitleBar {
 
 #[unity::from_offset("App", "TitleBar", "OpenHeader")]
 fn titlebar_open_header(
-    this: &'static Il2CppObject<TitleBar>,
+    this: &'static TitleBar,
     title: &'static Il2CppString,
     help: &'static Il2CppString,
     key_help_id: &'static Il2CppString,
@@ -38,4 +38,4 @@ fn titlebar_open_header(
 ) -> bool;
 
 #[unity::from_offset("App", "TitleBar", "CloseHeader")]
-fn titlebar_close_header(this: &'static Il2CppObject<TitleBar>, method_info: OptionalMethod) -> bool;
+fn titlebar_close_header(this: &'static TitleBar, method_info: OptionalMethod) -> bool;

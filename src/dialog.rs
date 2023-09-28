@@ -2,13 +2,13 @@
 
 use unity::prelude::*;
 
-use crate::menu::{BasicMenu, BasicMenuItem};
+use crate::menu::{BasicMenuItemFields, BasicMenuFields};
 
 pub mod yesno;
 
 #[repr(C)]
 pub struct BasicDialog<T: 'static> {
-    parent: BasicMenu<T>,
+    parent: BasicMenuFields<T>,
     dialog_content: *const u8,
     bind_bg: bool,
     not_bind_bg: bool,
@@ -17,12 +17,12 @@ pub struct BasicDialog<T: 'static> {
 #[repr(C)]
 #[unity::class("App", "BasicDialogItem")]
 pub struct BasicDialogItem {
-    pub parent: BasicMenuItem,
+    pub parent: BasicMenuItemFields,
     text: &'static Il2CppString,
 }
 
 impl BasicDialogItem {
-    pub fn new(text: impl AsRef<str>) -> &'static mut Il2CppObject<BasicDialogItem> {
+    pub fn new(text: impl AsRef<str>) -> &'static mut BasicDialogItem {
         let item = BasicDialogItem::instantiate().unwrap();
         unsafe {
             dialog_item_ctor(item, text.into(), None);
@@ -32,4 +32,4 @@ impl BasicDialogItem {
 }
 
 #[skyline::from_offset(0x2455f30)]
-fn dialog_item_ctor(proc: &Il2CppObject<BasicDialogItem>, text: &Il2CppString, method_info: OptionalMethod);
+fn dialog_item_ctor(proc: &BasicDialogItem, text: &Il2CppString, method_info: OptionalMethod);

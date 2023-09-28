@@ -6,22 +6,22 @@ use crate::gameuserdata::*;
 
 #[repr(C)]
 #[unity::class("App", "GameVariable")]
-pub struct GameVariable;
+pub struct GameVariable { }
 
 #[unity::from_offset("App", "GameVariable", "GetBool")]
-pub fn get_bool(this: &Il2CppObject<GameVariable>, key: &Il2CppString, method_info: OptionalMethod) -> bool;
+pub fn get_bool(this: &GameVariable, key: &Il2CppString, method_info: OptionalMethod) -> bool;
 
 #[skyline::from_offset(0x251ed10)]
-pub fn set_bool(this: &Il2CppObject<GameVariable>, key: &Il2CppString, enable: bool, method_info: OptionalMethod) -> bool;
+pub fn set_bool(this: &GameVariable, key: &Il2CppString, enable: bool, method_info: OptionalMethod) -> bool;
 
 #[skyline::from_offset(0x2512870)]
-pub fn entry(this: &Il2CppObject<GameVariable>, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
+pub fn entry(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
 // bool App.GameVariable$$Entry
 // (App_GameVariable_o *__this,System_String_o *key,int32_t num,MethodInfo *method)
 
 // App.GameVariable$$EntryNoRewind	710251e560	bool App.GameVariable$$EntryNoRewind(App_GameVariable_o * __this, System_String_o * key, int32_t num, MethodInfo * method)	248
 #[skyline::from_offset(0x251e560)]
-pub fn entry_no_rewind(this: &Il2CppObject<GameVariable>, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
+pub fn entry_no_rewind(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
 
 pub struct GameVariableManager;
 

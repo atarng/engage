@@ -4,7 +4,7 @@ use unity::prelude::*;
 
 /// Holder for the language and voice chosen by the player.
 #[unity::class("App", "Language")]
-pub struct Language;
+pub struct Language { }
 
 impl Language {
     /// Force the game to unload and reload every language MSBT file.

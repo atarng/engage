@@ -2,7 +2,7 @@ use unity::prelude::*;
 
 #[repr(C)]
 #[unity::class("App", "LoadingManager")]
-pub struct LoadingManager;
+pub struct LoadingManager { }
 
 impl LoadingManager {
     pub fn bind() {

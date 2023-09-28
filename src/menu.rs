@@ -1,11 +1,9 @@
 //! Methods, type and traits related to menus. Deeply tied with [`ProcInst`](crate::proc::ProcInst).
 
-use std::ops::{Deref, DerefMut};
-
 use modular_bitfield::{bitfield, specifiers::B2};
 use unity::{prelude::*, system::List};
 
-use crate::proc::{desc::ProcDesc, IsProcInst, ProcInst};
+use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields, procinst_createbind};
 
 pub mod config;
 pub mod content;
@@ -18,18 +16,30 @@ pub mod content;
 #[repr(C)]
 #[unity::class("App", "BasicMenu")]
 pub struct BasicMenu<T: 'static> {
-    pub proc: ProcInst,
+    pub proc: ProcInstFields,
     pub menu_content: *const u8,
-    pub menu_item_list: &'static mut Il2CppObject<List<T>>,
-    pub full_menu_item_list: &'static mut Il2CppObject<List<T>>,
+    pub menu_item_list: &'static mut List<T>,
+    pub full_menu_item_list: &'static mut List<T>,
     pad: [u8; 0x30],
     pub reserved_show_row_num: i32,
     pub memory_display_index: i32,
     pub suspend: i32,
 }
 
+impl<T> AsRef<ProcInstFields> for BasicMenu<T> {
+    fn as_ref(&self) -> &ProcInstFields {
+        &self.proc
+    }
+}
+
+impl<T> AsMut<ProcInstFields> for BasicMenu<T> {
+    fn as_mut(&mut self) -> &mut ProcInstFields {
+        &mut self.proc
+    }
+}
+
 pub trait BasicMenuMethods {
-    fn create_default_desc(&self) -> &'static mut Il2CppArray<&'static mut Il2CppObject<ProcDesc>> {
+    fn create_default_desc(&self) -> &'static mut Il2CppArray<&'static mut ProcDesc> {
         unsafe { basicmenu_createdefaultdesc(self, None) }
     }
 
@@ -46,11 +56,12 @@ pub trait BasicMenuMethods {
     }
 }
 
-impl<T> BasicMenuMethods for Il2CppObject<BasicMenu<T>> {}
+impl<T> Bindable for BasicMenu<T> {}
+impl<T> BasicMenuMethods for BasicMenu<T> {}
 
 impl<T> BasicMenu<T> {
-    pub fn new(menu_item_list: &Il2CppObject<List<T>>, menu_content: &Il2CppObject<BasicMenuContent>) -> &'static mut Il2CppObject<BasicMenu<T>> {
-        let instance: &'static mut Il2CppObject<BasicMenu<T>> = BasicMenu::<T>::instantiate().unwrap();
+    pub fn new(menu_item_list: &List<T>, menu_content: &BasicMenuContent) -> &'static mut BasicMenu<T> {
+        let instance: &'static mut BasicMenu<T> = BasicMenu::<T>::instantiate().unwrap();
         unsafe { basicmenu_ctor(instance, menu_item_list, menu_content, None) };
         instance
     }
@@ -59,8 +70,8 @@ impl<T> BasicMenu<T> {
 #[unity::from_offset("App", "BasicMenu", ".ctor")]
 fn basicmenu_ctor<P: BasicMenuMethods + ?Sized, T>(
     this: &P,
-    menu_item_list: &Il2CppObject<List<T>>,
-    menu_content: &Il2CppObject<BasicMenuContent>,
+    menu_item_list: &List<T>,
+    menu_content: &BasicMenuContent,
     method_info: OptionalMethod,
 );
 
@@ -74,44 +85,21 @@ fn basicmenu_setshowrownum<P: BasicMenuMethods + ?Sized>(this: &P, max_row: i32,
 fn basicmenu_createdefaultdesc<P: BasicMenuMethods + ?Sized>(
     this: &P,
     method_info: OptionalMethod,
-) -> &'static mut Il2CppArray<&'static mut Il2CppObject<ProcDesc>>;
-
-impl<T> AsRef<ProcInst> for BasicMenu<T> {
-    fn as_ref(&self) -> &ProcInst {
-        &self.proc
-    }
-}
-
-impl<T> AsMut<ProcInst> for BasicMenu<T> {
-    fn as_mut(&mut self) -> &mut ProcInst {
-        &mut self.proc
-    }
-}
-
-impl<T> Deref for BasicMenu<T> {
-    type Target = ProcInst;
-
-    fn deref(&self) -> &Self::Target {
-        self.as_ref()
-    }
-}
-
-impl<T> DerefMut for BasicMenu<T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.proc
-    }
-}
+) -> &'static mut Il2CppArray<&'static mut ProcDesc>;
 
 pub trait MenuSequence {
-    fn bind(parent: &impl IsProcInst) {
+    fn bind(parent: &impl Bindable) {
         let proc = ProcInst::instantiate().unwrap();
-        let descs = Il2CppArray::new_from(ProcDesc::get_class(), Self::get_proc_desc(proc)).unwrap();
+        let descs = Il2CppArray::new_from(ProcDesc::class(), Self::get_proc_desc(proc)).unwrap();
+        println!("CobaltMenuSequence before create_bind");
 
         proc.create_bind(parent, descs, Self::proc_name());
+        // unsafe { procinst_createbind(proc, parent, descs, Self::proc_name().into(), None) }
+        println!("CobaltMenuSequence after create_bind");
     }
 
-    fn get_proc_desc(_this: &'static Il2CppObject<ProcInst>) -> Vec<&'static mut Il2CppObject<ProcDesc>> {
-        vec![ProcDesc::end().unwrap()]
+    fn get_proc_desc(_this: &'static impl Bindable) -> Vec<&mut ProcDesc> {
+        vec![ProcDesc::end()]
     }
 
     fn proc_name() -> &'static str {
@@ -127,7 +115,7 @@ pub trait MenuSequence {
 #[repr(C)]
 #[unity::class("App", "BasicMenuItem")]
 pub struct BasicMenuItem {
-    pub menu: &'static mut Il2CppObject<BasicMenu<BasicMenuItem>>,
+    pub menu: &'static mut BasicMenu<BasicMenuItem>,
     menu_item_content: *const u8,
     name: &'static Il2CppString,
     index: i32,
@@ -139,7 +127,7 @@ pub struct BasicMenuItem {
 }
 
 impl BasicMenuItem {
-    pub fn new() -> &'static mut Il2CppObject<BasicMenuItem> {
+    pub fn new() -> &'static mut BasicMenuItem {
         let item = BasicMenuItem::instantiate().unwrap();
         unsafe {
             basicmenuitem_ctor(item, None);
@@ -148,8 +136,8 @@ impl BasicMenuItem {
         item
     }
 
-    pub fn new_impl<Methods: BasicMenuItemMethods>() -> &'static mut Il2CppObject<BasicMenuItem> {
-        let custom_class = BasicMenuItem::get_class().clone();
+    pub fn new_impl<Methods: BasicMenuItemMethods>() -> &'static mut BasicMenuItem {
+        let custom_class = BasicMenuItem::class().clone();
         let item = il2cpp::instantiate_class(&custom_class).unwrap();
 
         unsafe {
@@ -181,23 +169,23 @@ impl BasicMenuItem {
 }
 
 pub trait BasicMenuItemMethods {
-    extern "C" fn get_name(_this: &mut Il2CppObject<BasicMenuItem>, _method_info: OptionalMethod) -> &'static Il2CppString;
+    extern "C" fn get_name(_this: &mut BasicMenuItem, _method_info: OptionalMethod) -> &'static Il2CppString;
 
-    extern "C" fn get_help_text(_this: &mut Il2CppObject<BasicMenuItem>, _method_info: OptionalMethod) -> &'static Il2CppString {
+    extern "C" fn get_help_text(_this: &mut BasicMenuItem, _method_info: OptionalMethod) -> &'static Il2CppString {
         "".into()
     }
 
-    extern "C" fn a_call(_this: &'static mut Il2CppObject<BasicMenuItem>, _method_info: OptionalMethod) -> BasicMenuResult {
+    extern "C" fn a_call(_this: &'static mut BasicMenuItem, _method_info: OptionalMethod) -> BasicMenuResult {
         BasicMenuResult::se_decide()
     }
 
-    extern "C" fn build_attributes(_this: &mut Il2CppObject<BasicMenuItem>, _method_info: OptionalMethod) -> BasicMenuItemAttribute {
+    extern "C" fn build_attributes(_this: &mut BasicMenuItem, _method_info: OptionalMethod) -> BasicMenuItemAttribute {
         BasicMenuItemAttribute::Enable
     }
 }
 
 #[skyline::from_offset(0x2455fc0)]
-fn basicmenuitem_ctor(this: &Il2CppObject<BasicMenuItem>, method_info: OptionalMethod);
+fn basicmenuitem_ctor(this: &BasicMenuItem, method_info: OptionalMethod);
 
 #[repr(C)]
 #[unity::class("App", "BasicMenuContent")]

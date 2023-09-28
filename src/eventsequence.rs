@@ -6,13 +6,13 @@ use crate::{proc::ProcInst, script::DynValue};
 
 #[repr(C)]
 #[unity::class("App", "EventSequence")]
-pub struct EventSequence;
+pub struct EventSequence { }
 
 impl EventSequence {
     /// Note: the arguments are currently Option until more is figure out. They serve no purpose at the moment.
-    pub fn try_create_bind<T>(
-        proc: &Il2CppObject<ProcInst>,
-        func: &'static Il2CppObject<DynValue<T>>,
+    pub fn try_create_bind(
+        proc: &ProcInst,
+        func: &'static DynValue,
         _pre_call: Option<()>,
         _post_call: Option<()>,
         _args: Option<()>,
@@ -25,12 +25,12 @@ impl EventSequence {
 }
 
 #[unity::from_offset("App", "EventSequence", "MapOpening")]
-fn eventsequence_mapopening(parent: &Il2CppObject<ProcInst>, method_info: OptionalMethod);
+fn eventsequence_mapopening(parent: &ProcInst, method_info: OptionalMethod);
 
 #[unity::from_offset("App", "EventSequence", "TryCreateBind")]
-fn eventsequence_trycreatebind<T>(
-    parent: &Il2CppObject<ProcInst>,
-    func: &'static Il2CppObject<DynValue<T>>,
+fn eventsequence_trycreatebind(
+    parent: &ProcInst,
+    func: &'static DynValue,
     pre_call: *const u8,
     post_call: *const u8,
     args: *const u8,
