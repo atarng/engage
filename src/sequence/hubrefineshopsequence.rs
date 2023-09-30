@@ -1,14 +1,40 @@
 use unity::prelude::*;
 
-use crate::proc::{desc::ProcDesc, ProcInst};
+use crate::proc::{desc::ProcDesc, ProcInst, ProcInstFields, Bindable};
 
 #[repr(C)]
 #[unity::class("App", "HubRefineShopSequence")]
-pub struct HubRefineShopSequence {}
+pub struct HubRefineShopSequence {
+    proc: ProcInstFields,
+    // ...
+}
+
+impl Bindable for HubRefineShopSequence { }
+
 
 #[repr(C)]
 #[unity::class("App", "SortieSequenceItemShop")]
-pub struct SortieSequenceItemShop {}
+pub struct SortieSequenceItemShop {
+    base: HubRefineShopSequenceFields,
+}
+
+impl Bindable for SortieSequenceItemShop { }
+
+impl SortieSequenceItemShop {
+    pub fn new() -> &'static mut Self {
+        let item = il2cpp::instantiate_class(Self::class_mut().clone()).unwrap();
+
+        unsafe {
+            hubrefineshopsequence_ctor(item, None);
+        }
+
+        item
+    }
+
+    pub fn create_desc(&self) -> &'static mut Il2CppArray<&'static mut ProcDesc> {
+        unsafe { hubrefineshopsequence_createdesc(self, None) }
+    }
+}
 
 #[unity::from_offset("App", "SortieSequenceItemShop", "CreateBind")]
 pub fn sortiesequenceitemshop_createbind(proc: &ProcInst, method_info: OptionalMethod);
@@ -20,10 +46,10 @@ pub fn hubaccessoryshopsequence_createbind(proc: &ProcInst, shop: i32, method_in
 pub fn hubrefineshopsequence_createbind(proc: &ProcInst, method_info: OptionalMethod);
 
 #[unity::from_offset("App", "HubRefineShopSequence", ".ctor")]
-pub fn hubrefineshopsequence_ctor(this: &ProcInst, method_info: OptionalMethod);
+pub fn hubrefineshopsequence_ctor<P: Bindable>(this: &P, method_info: OptionalMethod);
 
 #[unity::from_offset("App", "HubRefineShopSequence", "CreateDesc")]
-pub fn hubrefineshopsequence_createdesc(
-    this: &ProcInst,
+pub fn hubrefineshopsequence_createdesc<P: Bindable>(
+    this: &P,
     method_info: OptionalMethod,
 ) -> &'static mut Il2CppArray<&'static mut ProcDesc>;
