@@ -4,11 +4,12 @@ use unity::prelude::*;
 
 #[repr(C)]
 #[unity::class("App", "Mess")]
+#[static_fields(MessStaticFields)]
 pub struct Mess { }
 
 impl Mess {
-    pub fn get(label: &Il2CppString) -> &'static Il2CppString {
-        unsafe { mess_get(label, None) }
+    pub fn get(label: impl AsRef<str>) -> &'static Il2CppString {
+        unsafe { mess_get(label.as_ref().into(), None) }
     }
 
     pub fn load(filename: &Il2CppString) -> bool {
