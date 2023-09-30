@@ -3,7 +3,9 @@
 use modular_bitfield::{bitfield, specifiers::B2};
 use unity::{prelude::*, system::List};
 
-use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields, procinst_createbind};
+use crate::{proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields, procinst_createbind}, gamedata::unit};
+
+use self::config::ConfigBasicMenuItem;
 
 pub mod config;
 pub mod content;
@@ -266,3 +268,18 @@ pub enum BasicMenuItemAttribute {
     Blank = 8,
     Select = 16,
 }
+
+#[unity::class("", "ConfigMenu")]
+pub struct ConfigMenu<T: 'static> {
+    pub proc: ProcInstFields,
+    pub menu_content: *const u8,
+    pub menu_item_list: &'static mut List<T>,
+    pub full_menu_item_list: &'static mut List<T>,
+    pad: [u8; 0x30],
+    pub reserved_show_row_num: i32,
+    pub memory_display_index: i32,
+    pub suspend: i32,
+}
+
+#[unity::from_offset("", "ConfigMenu", "CreateBind")]
+pub fn configmenu_createbind(parent: &mut BasicMenu<ConfigBasicMenuItem>, method_info: OptionalMethod);
