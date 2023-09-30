@@ -3,4 +3,5 @@
 
 pub mod hubrefineshopsequence;
 pub mod mainmenusequence;
+pub mod skillinheritancesequence;
 pub mod titleloopsequence;
