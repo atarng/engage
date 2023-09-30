@@ -26,6 +26,12 @@ pub struct BasicMenu<T: 'static> {
     pub suspend: i32,
 }
 
+impl<T> BasicMenu<T> {
+    pub fn add_item(&mut self, item: &'static mut T) {
+        self.full_menu_item_list.add(item);
+    }
+}
+
 impl<T> AsRef<ProcInstFields> for BasicMenu<T> {
     fn as_ref(&self) -> &ProcInstFields {
         &self.proc
