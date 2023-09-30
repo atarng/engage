@@ -2,7 +2,6 @@ use unity::prelude::*;
 
 use crate::proc::{desc::ProcDesc, ProcInst, ProcInstFields, Bindable};
 
-#[repr(C)]
 #[unity::class("App", "HubRefineShopSequence")]
 pub struct HubRefineShopSequence {
     proc: ProcInstFields,
@@ -11,23 +10,16 @@ pub struct HubRefineShopSequence {
 
 impl Bindable for HubRefineShopSequence { }
 
-
-#[repr(C)]
 #[unity::class("App", "SortieSequenceItemShop")]
-pub struct SortieSequenceItemShop {
-    base: HubRefineShopSequenceFields,
-}
+pub struct SortieSequenceItemShop { }
 
 impl Bindable for SortieSequenceItemShop { }
 
-impl SortieSequenceItemShop {
+impl HubRefineShopSequence {
     pub fn new() -> &'static mut Self {
-        let item = il2cpp::instantiate_class(Self::class_mut().clone()).unwrap();
-
-        unsafe {
-            hubrefineshopsequence_ctor(item, None);
-        }
-
+        let item = Self::instantiate().unwrap();
+        item.klass = SortieSequenceItemShop::class().clone();
+        unsafe { hubrefineshopsequence_ctor(item, None) }
         item
     }
 
