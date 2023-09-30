@@ -14,7 +14,7 @@ pub struct Pad {
     pub old_buttons: NpadButton,
 }
 
-#[allow(unused)]
+#[repr(C)]
 pub struct NpadState {
     sampling_number: i64,
     pub buttons: NpadButton,
