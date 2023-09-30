@@ -1,12 +1,12 @@
 use unity::{prelude::*, system::List};
 
-use super::BasicMenuResult;
+use super::{BasicMenuResult, BasicMenu};
 use crate::proc::ProcInstFields;
 
 #[unity::class("", "ConfigBasicMenuItem")]
 pub struct ConfigBasicMenuItem {
     // Inlined BasicMenuItem here because C ABI dumb
-    pub menu: &'static mut ProcInstFields,
+    pub menu: &'static mut BasicMenu<ConfigBasicMenuItem>,
     menu_item_content: *const u8,
     name: &'static Il2CppString,
     index: i32,
@@ -76,6 +76,12 @@ impl ConfigBasicMenuItem {
         item
     }
 
+    pub fn update_text(&self) {
+        unsafe {
+            configbasicmenuitem_update_text(self, None);
+        }
+    }
+
     pub fn change_key_value_b(value: bool) -> bool {
         if unsafe { configbasicmenuitem_change_key_value_int(value as i32, 0, 1, 1, None) } == 1 {
             true
@@ -114,7 +120,7 @@ fn configbasicmenuitem_change_key_value_int(value: i32, min: i32, max: i32, step
 fn configbasicmenuitem_change_key_value_float(value: f32, min: f32, max: f32, step: f32, method_info: OptionalMethod) -> f32;
 
 #[unity::from_offset("", "ConfigBasicMenuItem", "UpdateText")]
-pub fn configbasicmenuitem_update_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
+fn configbasicmenuitem_update_text(this: &ConfigBasicMenuItem, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x3de9550)]
 pub fn generic_list_add<T>(list: &mut List<T>, instance: &T, method_id: *mut u64);
