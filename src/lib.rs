@@ -25,6 +25,7 @@ pub mod script;
 pub mod sequence;
 pub mod singleton;
 pub mod titlebar;
+pub mod uniticon;
 pub mod unityengine;
 pub mod util;
 pub mod vibrationmanager;
