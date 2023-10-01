@@ -2,7 +2,7 @@
 
 use unity::prelude::*;
 
-use crate::gamedata::{unit::Unit, ItemData};
+use crate::gamedata::{unit::Unit, item::ItemData};
 
 #[unity::from_offset("App", "ScriptSystem", "Log")]
 pub fn scriptsystem_log(args: *const u8);

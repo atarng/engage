@@ -1,6 +1,6 @@
 pub use unity::prelude::*;
 
-use super::{ItemData, JobData, WeaponMask, PersonData};
+use super::{JobData, WeaponMask, PersonData, item::ItemData};
 
 #[repr(C)]
 #[unity::class("App", "Unit")]
@@ -9,60 +9,49 @@ pub struct Unit {
     pub person: &'static mut PersonData
 }
 
-pub trait UnitMethods {
-    fn learn_job_skill(&self, job: &JobData);
-    fn class_change(&self, job: &JobData);
-    fn add_item(&self, item: &ItemData);
-    fn set_level(&self, level: i32);
-    fn set_selected_weapon(&self, weapon_mask: &WeaponMask);
-    fn get_job(&self) -> &'static JobData;
-    fn is_engaging(&self) -> bool;
-    fn is_engage_owner(&self) -> bool;
-}
-
-impl UnitMethods for Unit {
+impl Unit {
     /// Learn the skill for a job regardless of the unit's level.
-    fn learn_job_skill(&self, job: &JobData) {
+    pub fn learn_job_skill(&self, job: &JobData) {
         unsafe {
             unit_learnjobskill(self, job, None);
         }
     }
 
     /// Performs a class change on the unit without playing the sequence
-    fn class_change(&self, job: &JobData) {
+    pub fn class_change(&self, job: &JobData) {
         unsafe {
             unit_classchange(self, job, 0 as _, None);
         }
     }
 
     /// Add item to the unit's inventory without a notification
-    fn add_item(&self, item: &ItemData) {
+    pub fn add_item(&self, item: &ItemData) {
         unsafe {
             unit_itemadd(self, item, None);
         }
     }
 
-    fn set_level(&self, level: i32) {
+    pub fn set_level(&self, level: i32) {
         unsafe {
             unit_set_level(self, level, None);
         }
     }
 
-    fn set_selected_weapon(&self, weapon_mask: &WeaponMask) {
+    pub fn set_selected_weapon(&self, weapon_mask: &WeaponMask) {
         unsafe {
             unit_setselectedweapon(self, weapon_mask, None);
         }
     }
 
-    fn get_job(&self) -> &'static JobData {
+    pub fn get_job(&self) -> &'static JobData {
         unsafe { unit_get_job(self, None) }
     }
 
-    fn is_engaging(&self) -> bool {
+    pub fn is_engaging(&self) -> bool {
         unsafe { unit_is_engaging(self, None) }
     }
 
-    fn is_engage_owner(&self) -> bool {
+    pub fn is_engage_owner(&self) -> bool {
         unsafe { unit_is_engage_owner(self, None) }
     }
 }

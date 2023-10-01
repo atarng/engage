@@ -3,12 +3,8 @@
 use unity::{prelude::*, system::List};
 
 pub mod unit;
+pub mod item;
 
-#[repr(C)]
-#[unity::class("App", "ItemData")]
-pub struct ItemData { }
-
-#[repr(C)]
 #[unity::class("App", "JobData")]
 pub struct JobData {
     structbase: [u8; 0x10],
@@ -16,7 +12,6 @@ pub struct JobData {
     // ...
 }
 
-#[repr(C)]
 #[unity::class("App", "PersonData")]
 pub struct PersonData {
     structbase: [u8; 0x10],
@@ -25,30 +20,25 @@ pub struct PersonData {
     // ...
 }
 
-#[repr(C)]
 #[unity::class("App", "StructData`1")]
 pub struct StructDataGeneric { }
 
-#[repr(C)]
 #[unity::class("App", "StructData`1")]
 pub struct StructData { }
 
 // pub static_fields: &'static StructDataStaticFields<T>,
 
-#[repr(C)]
 #[derive(Clone, Copy)]
 pub struct StructDataStaticFields<T: 'static> {
     pub s_list: &'static StructList<T>,
     pub loaded: bool,
 }
 
-#[repr(C)]
 #[unity::class("App", "StructList<`1>")]
 pub struct StructList<T: 'static> {
     pub list: List<T>,
 }
 
-#[repr(C)]
 #[unity::class("App", "WeaponMask")]
 pub struct WeaponMask {
     pub value: i32,
