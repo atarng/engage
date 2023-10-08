@@ -41,9 +41,9 @@ pub struct StructList<T: 'static> {
 
 #[unity::class("App", "StructBase")]
 pub struct StructBase {
-    index: i32,
-    hash: i32,
-    key: &'static Il2CppString,
+    pub index: i32,
+    pub hash: i32,
+    pub key: &'static Il2CppString,
 }
 
 #[unity::class("App", "WeaponMask")]
