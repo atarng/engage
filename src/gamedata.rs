@@ -1,6 +1,6 @@
 //! Structures representing a singular entry from the gamedata files in memory.
 
-use unity::{prelude::*, system::List};
+use unity::{prelude::*, system::ListFields};
 
 pub mod unit;
 pub mod item;
@@ -36,7 +36,7 @@ pub struct StructDataStaticFields<T: 'static> {
 
 #[unity::class("App", "StructList<`1>")]
 pub struct StructList<T: 'static> {
-    pub list: List<T>,
+    pub list: ListFields<T>,
 }
 
 #[unity::class("App", "StructBase")]
