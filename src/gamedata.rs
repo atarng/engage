@@ -1,6 +1,8 @@
 //! Structures representing a singular entry from the gamedata files in memory.
 
-use unity::{prelude::*, system::ListFields};
+use std::ops::Deref;
+
+use unity::{prelude::*, system::{ListFields, ListVirtual}};
 
 pub mod unit;
 pub mod item;
@@ -37,6 +39,38 @@ pub struct StructDataStaticFields<T: 'static> {
 #[unity::class("App", "StructList<`1>")]
 pub struct StructList<T: 'static> {
     pub list: ListFields<T>,
+}
+
+impl<T> Deref for StructListFields<T> {
+    type Target = ListFields<T>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.list
+    }
+}
+
+impl<T> StructList<T> {
+    pub fn add(&mut self, element: &'static mut T) {
+        let method = self.get_class().get_virtual_method("Add").unwrap();
+        
+        let add = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&mut Self, &'static mut T, &MethodInfo)>(
+                method.method_info.method_ptr,
+            )
+        };
+
+        add(self, element, method.method_info);
+    }
+}
+
+impl<T> StructListFields<T> {
+    pub fn len(&self) -> usize {
+        self.size as _
+    }
+
+    pub fn capacity(&self) -> usize {
+        self.items.len() as _
+    }
 }
 
 #[unity::class("App", "StructBase")]
