@@ -1,6 +1,6 @@
 //! Methods to manipulate and query the message system.
 
-use unity::prelude::*;
+use unity::{prelude::*, system::Dictionary};
 
 #[repr(C)]
 #[unity::class("App", "Mess")]
@@ -24,13 +24,13 @@ impl Mess {
 #[repr(C)]
 pub struct MessStaticFields {
     __: [u8; 0xb0],
-    pub mess_file_dictionary: &'static Il2CppObject<()>,
+    pub mess_file_dictionary: &'static mut Dictionary<&'static Il2CppString, &'static MsgFile>,
     pub sound_file_dictionary: &'static Il2CppObject<()>,
     pub event_file_dictionary: &'static Il2CppObject<()>,
-    pub mess_data_dictionary: &'static Il2CppObject<()>,
+    pub mess_data_dictionary: &'static mut Dictionary<&'static Il2CppString, *const u8>,
     pub sound_data_dictionary: &'static Il2CppObject<()>,
     pub event_data_dictionary: &'static Il2CppObject<()>,
-    pub path_dictionary: &'static Il2CppObject<()>,
+    pub path_dictionary: &'static mut Dictionary<&'static Il2CppString, &'static Il2CppString>,
 }
 
 #[repr(C)]
@@ -73,6 +73,3 @@ pub fn msbt_get_label(this: &MsgFile, index: usize, method_info: OptionalMethod)
 
 #[skyline::from_offset(0x1e97770)]
 pub fn msbt_get_text(this: &MsgFile, index: usize, method_info: OptionalMethod) -> *const u8;
-
-#[skyline::from_offset(0x3cc4c60)]
-pub fn generic_dictionary_add(this: &(), path: &Il2CppString, instance: *const u8, method_id: *mut u64);
