@@ -1,7 +1,6 @@
 //! Methods and traits related to the [`ProcInst`] system.
 
 use unity::prelude::*;
-use std::borrow::Borrow;
 
 pub mod desc;
 use desc::*;

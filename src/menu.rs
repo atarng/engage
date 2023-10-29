@@ -3,7 +3,7 @@
 use modular_bitfield::{bitfield, specifiers::B2};
 use unity::{prelude::*, system::List};
 
-use crate::{proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields, procinst_createbind}, gamedata::unit};
+use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields};
 
 use self::config::ConfigBasicMenuItem;
 

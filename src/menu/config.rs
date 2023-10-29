@@ -1,7 +1,6 @@
-use unity::{prelude::*, system::List};
+use unity::prelude::*;
 
 use super::{BasicMenuResult, BasicMenu};
-use crate::proc::ProcInstFields;
 
 #[unity::class("", "ConfigBasicMenuItem")]
 pub struct ConfigBasicMenuItem {

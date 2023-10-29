@@ -1,8 +1,6 @@
 use unity::prelude::*;
 
 use crate::proc::{
-    ProcInst,
-    ProcInstFields,
     Bindable,
     desc::ProcDesc
 };

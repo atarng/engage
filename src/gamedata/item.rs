@@ -1,5 +1,7 @@
 pub use unity::prelude::*;
 
+use super::Gamedata;
+
 #[unity::class("App", "ItemData")]
 pub struct ItemData {
 	structbase: [u8; 0x10],
@@ -14,3 +16,5 @@ pub struct ItemData {
 	pub weaponattr: u32,
 	pub icon: &'static Il2CppString,
 }
+
+impl Gamedata for ItemData { }
