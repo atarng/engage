@@ -121,6 +121,3 @@ fn configbasicmenuitem_change_key_value_float(value: f32, min: f32, max: f32, st
 
 #[unity::from_offset("", "ConfigBasicMenuItem", "UpdateText")]
 fn configbasicmenuitem_update_text(this: &ConfigBasicMenuItem, method_info: OptionalMethod);
-
-#[skyline::from_offset(0x3de9550)]
-pub fn generic_list_add<T>(list: &mut List<T>, instance: &T, method_id: *mut u64);
