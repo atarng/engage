@@ -15,7 +15,6 @@ pub mod content;
 /// A Menu is a [ProcInst](crate::proc::ProcInst) with fields to keep every element together
 ///
 /// You can usually use this instead of a class inheriting from it at the risk of missing fields and methods.
-#[repr(C)]
 #[unity::class("App", "BasicMenu")]
 pub struct BasicMenu<T: 'static> {
     pub proc: ProcInstFields,
@@ -120,7 +119,6 @@ pub trait MenuSequence {
 /// A MenuItem is the class representing things such as an entry in a menu's list.
 ///
 /// You can usually use this instead of a class inheriting from it at the risk of not having default implementations for functions.
-#[repr(C)]
 #[unity::class("App", "BasicMenuItem")]
 pub struct BasicMenuItem {
     pub menu: &'static mut BasicMenu<BasicMenuItem>,
@@ -195,7 +193,6 @@ pub trait BasicMenuItemMethods {
 #[skyline::from_offset(0x2455fc0)]
 fn basicmenuitem_ctor(this: &BasicMenuItem, method_info: OptionalMethod);
 
-#[repr(C)]
 #[unity::class("App", "BasicMenuContent")]
 pub struct BasicMenuContent {
     pub base: u64,

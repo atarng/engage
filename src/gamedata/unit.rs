@@ -2,11 +2,16 @@ pub use unity::prelude::*;
 
 use super::{JobData, WeaponMask, PersonData, item::ItemData};
 
-#[repr(C)]
 #[unity::class("App", "Unit")]
 pub struct Unit {
-    padding: [u8; 0x30],
-    pub person: &'static mut PersonData
+    status: &'static (),
+    pub prev: Option<&'static Unit>,
+    pub next: Option<&'static Unit>,
+    ai: &'static (),
+    edit: &'static (),
+    pub ident: i32,
+    pub person: &'static mut PersonData,
+    // ...
 }
 
 impl Unit {
