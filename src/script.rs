@@ -105,8 +105,8 @@ pub trait ScriptUtils {
     fn try_get_i32(&self, index: i32) -> i32;
 
     fn try_get_string(&self, index: i32) -> Option<&'static Il2CppString>;
-    fn try_get_unit(&self, index: i32) -> &'static Unit;
-    fn try_get_item(&self, arg_index: i32) -> &'static ItemData;
+    fn try_get_unit(&self, index: i32) -> Option<&'static Unit>;
+    fn try_get_item(&self, arg_index: i32) -> Option<&'static ItemData>;
 }
 
 impl ScriptUtils for Il2CppArray<DynValue> {
@@ -118,11 +118,11 @@ impl ScriptUtils for Il2CppArray<DynValue> {
         unsafe { scriptutil_trygetstring(self, arg_index, "Couldn't read the value".into(), None) }
     }
 
-    fn try_get_unit(&self, arg_index: i32) -> &'static Unit {
+    fn try_get_unit(&self, arg_index: i32) -> Option<&'static Unit> {
         unsafe { scriptutil_trygetunit(self, arg_index, true, None) }
     }
 
-    fn try_get_item(&self, arg_index: i32) -> &'static ItemData {
+    fn try_get_item(&self, arg_index: i32) -> Option<&'static ItemData> {
         unsafe { scriptutil_trygetitem(self, arg_index, true, None) }
     }
 }
@@ -142,7 +142,7 @@ fn scriptutil_trygetstring(
 fn scriptutil_trygetint(args: &Il2CppArray<DynValue>, index: i32, nothing: i32, method_info: OptionalMethod) -> i32;
 
 #[skyline::from_offset(0x21961f0)]
-fn scriptutil_trygetunit(args: &Il2CppArray<DynValue>, index: i32, warning: bool, method_info: OptionalMethod) -> &'static Unit;
+fn scriptutil_trygetunit(args: &Il2CppArray<DynValue>, index: i32, warning: bool, method_info: OptionalMethod) -> Option<&'static Unit>;
 
 #[skyline::from_offset(0x21a3740)]
 fn scriptutil_trygetitem(
@@ -150,7 +150,7 @@ fn scriptutil_trygetitem(
     index: i32,
     warning: bool,
     method_info: OptionalMethod,
-) -> &'static ItemData;
+) -> Option<&'static ItemData>;
 
 #[skyline::from_offset(0x21994e0)]
 pub fn scriptutil_yield(method_info: OptionalMethod);
