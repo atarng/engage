@@ -103,14 +103,20 @@ impl ConfigBasicMenuItem {
 }
 
 pub trait ConfigBasicMenuItemSwitchMethods {
-    fn init_content(this: &mut ConfigBasicMenuItem);
+    fn init_content(this: &mut ConfigBasicMenuItem) {
+        
+    }
+    
     extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_command_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
 
 pub trait ConfigBasicMenuItemGaugeMethods {
-    fn init_content(this: &mut ConfigBasicMenuItem);
+    fn init_content(this: &mut ConfigBasicMenuItem) {
+        
+    }
+    
     extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
