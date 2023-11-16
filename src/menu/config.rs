@@ -97,7 +97,7 @@ impl ConfigBasicMenuItem {
         unsafe { configbasicmenuitem_change_key_value_int(value, min, max, step, None) }
     }
 
-    pub fn change_key_value_f(value: f32, min: f32, max: f32, step: f32) -> f32 {
+    pub fn change_key_value_f(value: f64, min: f64, max: f64, step: f64) -> f64 {
         unsafe { configbasicmenuitem_change_key_value_float(value, min, max, step, None) }
     }
 }
