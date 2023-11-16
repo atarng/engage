@@ -127,7 +127,7 @@ pub fn configbasicmenuitem_ctor(this: &ConfigBasicMenuItem, method_info: Optiona
 #[skyline::from_offset(0x2537920)]
 fn configbasicmenuitem_change_key_value_int(value: i32, min: i32, max: i32, step: i32, method_info: OptionalMethod) -> i32;
 
-#[skyline::from_offset(0x2537970)]
+#[skyline::from_offset(0x2537150)]
 fn configbasicmenuitem_change_key_value_float(value: f64, min: f64, max: f64, step: f64, method_info: OptionalMethod) -> f64;
 
 #[unity::from_offset("", "ConfigBasicMenuItem", "UpdateText")]
