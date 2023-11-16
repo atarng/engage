@@ -31,7 +31,7 @@ impl ConfigBasicMenuItem {
     }
 
     pub fn new_switch<Methods: ConfigBasicMenuItemSwitchMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
-        let item = Self::new();
+        let mut item = Self::new();
 
         Methods::init_content(item);
 
