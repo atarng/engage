@@ -78,13 +78,7 @@ impl ConfigBasicMenuItem {
 
         item
     }
-
-    pub fn init_content(&mut self) {
-        unsafe {
-            configbasicmenuitem_update_text(self, None);
-        }
-    }
-
+    
     pub fn update_text(&self) {
         unsafe {
             configbasicmenuitem_update_text(self, None);
