@@ -33,6 +33,8 @@ impl ConfigBasicMenuItem {
     pub fn new_switch<Methods: ConfigBasicMenuItemSwitchMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
         let item = Self::new();
 
+        Methods::init_content(item);
+
         item.config_method = 0;
 
         item.get_class_mut()
@@ -56,7 +58,9 @@ impl ConfigBasicMenuItem {
     }
 
     pub fn new_gauge<Methods: ConfigBasicMenuItemGaugeMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
-        let item = Self::new();
+        let mut item = Self::new();
+
+        Methods::init_content(item);
 
         item.config_method = 1;
 
@@ -73,6 +77,12 @@ impl ConfigBasicMenuItem {
         Methods::set_help_text(item, None);
 
         item
+    }
+
+    pub fn init_content(&mut self) {
+        unsafe {
+            configbasicmenuitem_update_text(self, None);
+        }
     }
 
     pub fn update_text(&self) {
@@ -99,12 +109,14 @@ impl ConfigBasicMenuItem {
 }
 
 pub trait ConfigBasicMenuItemSwitchMethods {
+    fn init_content(this: &mut ConfigBasicMenuItem);
     extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_command_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
 
 pub trait ConfigBasicMenuItemGaugeMethods {
+    fn init_content(this: &mut ConfigBasicMenuItem);
     extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
