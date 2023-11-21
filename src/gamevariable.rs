@@ -12,7 +12,7 @@ pub struct GameVariable { }
 pub fn get_bool(this: &GameVariable, key: &Il2CppString, method_info: OptionalMethod) -> bool;
 
 #[skyline::from_offset(0x251ed10)]
-pub fn set_bool(this: &GameVariable, key: &Il2CppString, enable: bool, method_info: OptionalMethod) -> bool;
+pub fn set_bool(this: &GameVariable, key: &Il2CppString, enable: bool, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x2512870)]
 pub fn entry(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
@@ -22,6 +22,12 @@ pub fn entry(this: &GameVariable, key: &Il2CppString, num: i32, method_info: Opt
 // App.GameVariable$$EntryNoRewind	710251e560	bool App.GameVariable$$EntryNoRewind(App_GameVariable_o * __this, System_String_o * key, int32_t num, MethodInfo * method)	248
 #[skyline::from_offset(0x251e560)]
 pub fn entry_no_rewind(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
+
+#[unity::from_offset("App", "GameVariable", "GetNumber")]
+pub fn get_number(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> i32;
+
+#[skyline::from_offset(0x251efb0)]
+pub fn set_number(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod);
 
 pub struct GameVariableManager;
 
