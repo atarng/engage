@@ -44,7 +44,7 @@ impl Proc {
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
-    pub descs: &'static Il2CppArray<&'static ProcDesc>,
+    pub descs: &'static mut Il2CppArray<&'static mut ProcDesc>,
     desc_index: i32,
     // Rarely set
     pub name: Option<&'static Il2CppString>,
