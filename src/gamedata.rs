@@ -26,6 +26,26 @@ pub struct PersonData {
 
 impl Gamedata for PersonData { }
 
+#[unity::class("App", "HubFacilityData")]
+pub struct HubFacilityData {
+    pub parent: StructBaseFields,
+    pub aid: &'static Il2CppString,
+    pub mid: &'static Il2CppString,
+    pub condition_cid: &'static Il2CppString,
+    pub icon_name: &'static Il2CppString,
+}
+
+impl Gamedata for HubFacilityData { }
+
+impl HubFacilityData {
+    pub fn is_complete(&self) -> bool {
+        unsafe { hubdatafacility_iscomplete(self, None) }
+    }
+}
+
+#[skyline::from_offset(0x28a80d0)]
+fn hubdatafacility_iscomplete(this: &HubFacilityData, _method_info: OptionalMethod) -> bool;
+
 #[unity::class("App", "StructData`1")]
 pub struct StructDataGeneric { }
 
