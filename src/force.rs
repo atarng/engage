@@ -32,7 +32,7 @@ impl Force {
 }
 
 #[skyline::from_offset(0x2616200)]
-fn force_gettype(ty: ForceType, _method_info: OptionalMethod) -> Option<&mut Force>;
+fn force_gettype(ty: ForceType, _method_info: OptionalMethod) -> Option<&'static mut Force>;
 
 pub struct ForceIterator(Option<&'static Unit>);
 
