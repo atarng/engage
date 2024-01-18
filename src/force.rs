@@ -12,12 +12,6 @@ pub enum ForceType {
     Lost = 5,
     Temporary = 6,
     Empty = 7,
-    Num = 8,
-    F1st = 0,
-    F2nd = 1,
-    F3rd = 2,
-    MapNum = 3,
-    UsedNum = 7,
 }
 
 #[unity::class("App", "Force")]
