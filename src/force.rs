@@ -26,7 +26,7 @@ impl Force {
         ForceIterator(self.head)
     }
 
-    pub fn get(ty: ForceType) -> Option<&mut Force> {
+    pub fn get(ty: ForceType) -> Option<&'static mut Force> {
 	unsafe { force_gettype(ty, None) }
     }
 }
