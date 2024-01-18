@@ -2,18 +2,43 @@ use unity::prelude::*;
 
 use crate::gamedata::unit::Unit;
 
+#[repr(C)]
+pub enum ForceType {
+    Player = 0,
+    Enemy = 1,
+    Ally = 2,
+    Absent = 3,
+    Dead = 4,
+    Lost = 5,
+    Temporary = 6,
+    Empty = 7,
+    Num = 8,
+    F1st = 0,
+    F2nd = 1,
+    F3rd = 2,
+    MapNum = 3,
+    UsedNum = 7,
+}
+
 #[unity::class("App", "Force")]
 pub struct Force {
-    pub head: &'static Unit,
-	pub tail: &'static Unit,
+    pub head: Option<&'static Unit>,
+    pub tail: Option<&'static Unit>,
     // ...
 }
 
 impl Force {
     pub fn iter(&self) -> ForceIterator {
-        ForceIterator(Some(self.head))
+        ForceIterator(self.head)
+    }
+
+    pub fn get(ty: ForceType) -> Option<&mut Force> {
+	unsafe { force_gettype(ty, None) }
     }
 }
+
+#[skyline::from_offset(0x2616200)]
+fn force_gettype(ty: ForceType, _method_info: OptionalMethod) -> Option<&mut Force>;
 
 pub struct ForceIterator(Option<&'static Unit>);
 
