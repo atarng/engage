@@ -172,6 +172,12 @@ impl BasicMenuItem {
 
         item
     }
+
+    pub fn is_attribute_disable(&self) -> bool {
+        unsafe {
+            basicmenuitem_is_attribute_disable(self, None)
+        }
+    }
 }
 
 pub trait BasicMenuItemMethods {
@@ -192,6 +198,9 @@ pub trait BasicMenuItemMethods {
 
 #[skyline::from_offset(0x2455fc0)]
 fn basicmenuitem_ctor(this: &BasicMenuItem, method_info: OptionalMethod);
+
+#[skyline::from_offset(0x2457540)]
+fn basicmenuitem_is_attribute_disable(this: &BasicMenuItem, method_info: OptionalMethod) -> bool;
 
 #[unity::class("App", "BasicMenuContent")]
 pub struct BasicMenuContent {
@@ -242,6 +251,10 @@ impl BasicMenuResult {
 
     pub fn se_decide() -> Self {
         Self::new().with_se_decide(true)
+    }
+
+    pub fn se_miss() -> Self {
+        Self::new().with_se_miss(true)
     }
 
     pub fn close_decide() -> Self {
