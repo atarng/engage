@@ -188,6 +188,18 @@ pub fn runtimeanimutil_is_guard(hash: i32, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("Combat", "Phase", "get_IsCritical")]
 pub fn phase_get_is_critical(this: &Phase, method_info: OptionalMethod) -> bool;
 
+//Combat.Phase$$IsDeadSomeone	7101f2abe0	bool Combat.Phase$$IsDeadSomeone(Combat_Phase_o * __this, MethodInfo * method)	136
+#[unity::from_offset("Combat", "Phase", "IsDeadSomeone")]
+pub fn phase_is_dead_someone(this: &Phase, method_info: OptionalMethod) -> bool;
+
+//Combat.Phase$$IsDeadDamager	7101f2ad80	bool Combat.Phase$$IsDeadDamager(Combat_Phase_o * __this, MethodInfo * method)	136
+#[unity::from_offset("Combat", "Phase", "IsDeadDamager")]
+pub fn phase_is_dead_damager(this: &Phase, method_info: OptionalMethod) -> bool;
+
+//Combat.Phase$$IsDead	7101f2ad10	bool Combat.Phase$$IsDead(Combat_Phase_o * __this, int32_t side, MethodInfo * method)	108
+#[unity::from_offset("Combat", "Phase", "IsDead")]
+pub fn phase_is_dead(this: &Phase, side: i32, method_info: OptionalMethod) -> bool;
+
 // Combat.Character$$get_Phase	7102afcb70	Combat_Phase_o * Combat.Character$$get_Phase(Combat_Character_o * __this, MethodInfo * method)	336
 #[unity::from_offset("Combat", "Character", "get_Phase")]
 pub fn character_get_phase(
