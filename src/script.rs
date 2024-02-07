@@ -32,6 +32,10 @@ pub trait EventScriptCommand {
     fn register_action(&self, name: &str, action: extern "C" fn(&Il2CppArray<DynValue>, OptionalMethod));
 }
 
+pub trait EventResultScriptCommand {
+    fn register_function(&self, name: &str, action: extern "C" fn(&Il2CppArray<DynValue>, OptionalMethod) -> &'static DynValue);
+}
+
 impl EventScriptCommand for EventScript {
     fn register_action(&self, name: &str, action: extern "C" fn(&Il2CppArray<DynValue>, OptionalMethod)) {
         unsafe {
@@ -40,10 +44,18 @@ impl EventScriptCommand for EventScript {
     }
 }
 
+impl EventResultScriptCommand for EventScript {
+    fn register_function(&self, name: &str, action: extern "C" fn(&Il2CppArray<DynValue>, OptionalMethod) -> &'static DynValue) {
+        unsafe {
+            eventscript_registfunction(self, EventScriptFunctionArgs::new(action).unwrap(), name.into(), None);
+        }
+    }
+}
+
 #[unity::class("", "EventScript.FunctionArgs")]
 
 pub struct EventScriptFunctionArgs {
-    pub method_ptr: extern "C" fn(*const u8, OptionalMethod),
+    pub method_ptr: extern "C" fn(&Il2CppArray<DynValue>, OptionalMethod) -> &'static DynValue,
     pub invoke_impl: *const u8,
     // Usually the ProcInst
     pub target: *const u8,
@@ -52,6 +64,24 @@ pub struct EventScriptFunctionArgs {
     __: [u8; 0x38],
     pub delegates: *const u8,
     // ...
+}
+
+impl EventScriptFunctionArgs {
+    pub fn new(method: extern "C" fn(&Il2CppArray<DynValue>, OptionalMethod) -> &'static DynValue) -> Il2CppResult<&'static mut EventScriptFunctionArgs> {
+        let function_args_class = EventScript::class().get_nested_types()[0];
+
+        Il2CppObject::<EventScriptFunctionArgs>::from_class(function_args_class).map(|args| {
+            // This is until helper methods are made to generated MethodInfos from Rust methods.
+            let mut donor_method = Il2CppClass::from_name("App", "ScriptSystem").unwrap().get_method_from_name("MessIsExist", 1).unwrap().clone();
+
+            donor_method.method_ptr = method as _;
+
+            args.method_ptr = method;
+            args.target = 0 as _;
+            args.method = Box::leak(Box::new(donor_method)) as *mut MethodInfo;
+            args
+        })
+    }
 }
 
 #[unity::class("", "EventScript.ActionArgs")]
@@ -101,9 +131,17 @@ pub struct DynValue {
     pub ty: i32,
 }
 
+impl DynValue {
+    pub fn new_boolean(value: bool) -> &'static DynValue {
+        unsafe { dynvalue_newboolean(value, None) }
+    }
+}
+
+#[skyline::from_offset(0x2e200f0)]
+fn dynvalue_newboolean(v: bool, method_info: OptionalMethod) -> &'static DynValue;
+
 pub trait ScriptUtils {
     fn try_get_i32(&self, index: i32) -> i32;
-
     fn try_get_string(&self, index: i32) -> Option<&'static Il2CppString>;
     fn try_get_unit(&self, index: i32) -> Option<&'static Unit>;
     fn try_get_item(&self, arg_index: i32) -> Option<&'static ItemData>;
