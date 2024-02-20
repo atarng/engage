@@ -31,3 +31,5 @@ pub mod unitpool;
 pub mod unityengine;
 pub mod util;
 pub mod vibrationmanager;
+pub mod random;
+pub mod hub;

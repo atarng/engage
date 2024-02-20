@@ -1,7 +1,7 @@
 //! Methods to interact with the savedata variables.
 
 use unity::prelude::*;
-
+use unity::system::List;
 use crate::gameuserdata::*;
 
 #[repr(C)]
@@ -28,6 +28,12 @@ pub fn get_number(this: &GameVariable, key: &Il2CppString, method_info: Optional
 
 #[skyline::from_offset(0x251efb0)]
 pub fn set_number(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "GameVariable", "GetString")]
+pub fn get_string(this: &GameVariable, key: &Il2CppString, method_info: OptionalMethod) -> &'static Il2CppString;
+
+#[unity::from_offset("App", "GameVariable", "SetString")]
+pub fn set_string(this: &GameVariable, key: &Il2CppString, value: &Il2CppString, method_info: OptionalMethod);
 
 pub struct GameVariableManager;
 
@@ -74,6 +80,24 @@ impl GameVariableManager {
     pub fn get_number(key: &str) -> i32 {
         let game_variable = GameUserData::get_variable();
         unsafe {get_number(game_variable, key.into(), None) }
+    }
 
+    pub fn set_string(key: &str, value: &Il2CppString) {
+        let game_variable = GameUserData::get_variable();
+
+        unsafe {
+            set_string(game_variable, key.into(), value, None);
+        }   
+    }
+    pub fn get_string(key: &str) -> &Il2CppString {
+        let game_variable = GameUserData::get_variable();
+        unsafe {get_string(game_variable, key.into(), None) }
+    }
+    pub fn find_starts_with(string: &str) -> &'static List<&'static Il2CppString> {
+        let game_variable = GameUserData::get_variable();
+        unsafe { gamevariable_find_start_with(game_variable, string.into(), None)  }
     }
 }
+
+#[unity::from_offset("App", "GameVariable", "FindStartsWith")]
+pub fn gamevariable_find_start_with(this: &GameVariable, name: &Il2CppString, method_info: OptionalMethod) -> &'static List<&'static Il2CppString>;

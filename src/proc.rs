@@ -50,7 +50,7 @@ pub struct ProcInst {
     pub name: Option<&'static Il2CppString>,
     hash: i32,
     /// The ProcInst this instance is attached to
-    pub parent: &'static ProcInst,
+    pub parent: &'static mut ProcInst,
     pub child: &'static mut ProcInst,
     pub prev: &'static ProcInst,
     pub next: &'static ProcInst,
