@@ -3,5 +3,6 @@
 
 pub mod hubrefineshopsequence;
 pub mod mainmenusequence;
+pub mod mainsequence;
 pub mod skillinheritancesequence;
 pub mod titleloopsequence;
