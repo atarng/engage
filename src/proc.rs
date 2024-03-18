@@ -48,7 +48,7 @@ pub struct ProcInst {
     desc_index: i32,
     // Rarely set
     pub name: Option<&'static Il2CppString>,
-    hash: i32,
+    pub hashcode: i32,
     /// The ProcInst this instance is attached to
     pub parent: &'static mut ProcInst,
     pub child: &'static mut ProcInst,
