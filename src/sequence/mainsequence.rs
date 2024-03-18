@@ -10,15 +10,15 @@ pub struct MainSequence {
     is_resume: bool,
     is_loaded: bool,
     // End here
-    scene_name: &'static mut Il2CppString,
-    scene_mode: i32,
+    pub scene_name: &'static mut Il2CppString,
+    pub scene_mode: i32,
 }
 
 #[repr(C)]
 pub struct MainSequenceStaticFields {
-    jump_label: MainSequenceLabel,
-    fake_label: i32,
-    initialized: bool,
+    pub jump_label: MainSequenceLabel,
+    pub fake_label: i32,
+    pub initialized: bool,
 }
 
 #[repr(i32)]
