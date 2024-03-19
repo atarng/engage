@@ -1,6 +1,7 @@
 //! Methods and traits related to the [`ProcInst`] system.
 
 use unity::prelude::*;
+use std::cell::UnsafeCell;
 
 pub mod desc;
 use desc::*;
@@ -44,9 +45,8 @@ impl Proc {
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
-    pub descs: &'static mut Il2CppArray<&'static mut ProcDesc>,
-    desc_index: i32,
-    // Rarely set
+    pub descs: &'static mut UnsafeCell<Il2CppArray<&'static mut ProcDesc>>,
+    pub desc_index: i32,
     pub name: Option<&'static Il2CppString>,
     pub hashcode: i32,
     /// The ProcInst this instance is attached to
@@ -78,6 +78,14 @@ impl ProcInst {
 
     pub fn get_child_mut(&mut self) -> &mut ProcInst {
         self.child
+    }
+
+    pub fn get_descs(&self) -> &Il2CppArray<&'static mut ProcDesc> {
+        unsafe { &*self.descs.get() }
+    }
+
+    pub fn get_descs_mut(&self) -> &mut Il2CppArray<&'static mut ProcDesc> {
+        unsafe {&mut *self.descs.get() }
     }
 
     pub fn cast<T: AsRef<ProcInstFields>>(&self) -> &T {
