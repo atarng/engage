@@ -77,6 +77,7 @@ impl PersonData {
     pub fn get_summon_rank(&self) -> i32 { unsafe { person_get_summon_rank(self, None)}}
     pub fn get_unit_icon_id(&self) -> &'static Il2CppString { unsafe { get_uniticonid(self, None )}}
 
+    pub fn load() { unsafe { persondata_load(None); }}
     pub fn on_complete(&self) { unsafe { person_on_release(self, None); }}
 
     // Setters
@@ -221,6 +222,8 @@ fn person_get_summon_rank(this: &PersonData, method_info: OptionalMethod) -> i32
 #[unity::from_offset("App", "PersonData", "get_SummonColor")]
 fn person_get_summoncolor(this: &PersonData, method_info: OptionalMethod) -> i32;
 
+#[unity::from_offset("App", "PersonData", "Load")]
+fn persondata_load(method_info: OptionalMethod);
 //Capability
 
 #[skyline::from_offset(0x25bcda0)]

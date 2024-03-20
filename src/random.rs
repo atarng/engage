@@ -31,6 +31,15 @@ impl Random {
     pub fn probability_100(&self, percent: f32) -> bool {
         unsafe { random_is_prob_100(self, percent, None) }
     }
+    pub fn ctor(&self, seed: u32){
+        unsafe { random_ctor_seed(self, seed, None); }
+    }
+    pub fn initialize(&self, value: u32) {
+        unsafe { random_initialize(self, value, None); }
+    }
+    pub fn value(&self) -> i32 {
+        unsafe { random_get_value2(self, None)}
+    }
 
 }
 #[unity::from_offset("App", "Random", "get_Game")]
@@ -62,3 +71,12 @@ fn random_get_min_max(this: &Random, min: i32, max: i32, method_info: OptionalMe
 
 #[unity::from_offset("App", "Random", "IsProbability100")]
 fn random_is_prob_100(this: &Random, percent: f32, method_info: OptionalMethod) -> bool;
+
+#[skyline::from_offset(0x02374900)]
+fn random_initialize(this: &Random, value: u32, method_info: OptionalMethod);
+
+#[skyline::from_offset(0x02374f10)]
+fn random_ctor_seed(this: &Random, value: u32, method_info: OptionalMethod);
+
+#[skyline::from_offset(0x023748d0)]
+fn random_get_value2(this: &Random, method_info: OptionalMethod) -> i32;

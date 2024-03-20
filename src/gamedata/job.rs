@@ -1,7 +1,7 @@
 pub use unity::prelude::*;
 use unity::il2cpp::object::Array;
 use unity::system::List;
-use super::{JobData, person::{Capability, CapabilitySbyte}};
+use super::{*, JobData, person::{Capability, CapabilitySbyte}};
 use std::ops::Deref;
 // Structs, methods required for PersonData, JobData, SkillArray
 
@@ -26,17 +26,23 @@ impl JobData {
     pub fn get_high_job_2(&self) -> Option<&Il2CppString> { unsafe { job_get_high_job2(self, None)}}
     pub fn get_job_style(&self) -> Option<&Il2CppString> { unsafe { get_jobstyle(self, None)}}
     pub fn get_internal_level(&self) -> i8 { unsafe { get_job_internal_level(self, None)}}
+    pub fn get_learning_skill(&self) -> Option<&Il2CppString> { unsafe { job_get_learn_skill(self, None)}}
     pub fn get_limit(&self) -> &mut Capability { unsafe { job_get_limit(self, None) } }
+    pub fn get_lunatic_skill(&self) -> Option<&Il2CppString> { unsafe { job_get_lunatic_skill(self, None)}}
     pub fn get_low_jobs(&self) -> &List<JobData> { unsafe {job_getlowjobs(self, None)} }
     pub fn get_max_level(&self) -> u8 { unsafe { job_max_level(self, None)}}
+    pub fn get_max_weapon_level(&self, index: i32) -> i32 { unsafe { job_get_max_weapon_level1(self, index, None)}}
+    pub fn get_weapon_mask(&self) -> &'static WeaponMask { unsafe { job_get_weapon_mask2(self, None)}}
     pub fn get_unique_items(&self) -> &Array<&Il2CppString> { unsafe { job_get_unique_items(self, None)}}
 
-    pub fn set_diff_grow(&self, grow: &CapabilitySbyte) {  unsafe { job_set_diffgrow(self, grow, None)}}
-    pub fn set_diff_grow_l(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_l(self, grow, None) }}
-    pub fn set_diff_grow_h(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_h(self, grow, None) }}
-    pub fn set_diff_grow_n(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_n(self, grow, None) }}
-
+    pub fn load() {unsafe { jobdata_load(None); }}
+    pub fn set_diff_grow(&self, grow: &CapabilitySbyte) {  unsafe { job_set_diffgrow(self, grow, None);}}
+    pub fn set_diff_grow_l(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_l(self, grow, None); }}
+    pub fn set_diff_grow_h(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_h(self, grow, None); }}
+    pub fn set_diff_grow_n(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_n(self, grow, None); }}
+    pub fn set_learning_skill(&self, sid: &Il2CppString) { unsafe { job_set_learn_skill(self, sid, None); }}
     pub fn set_limit(&self, limits: &Capability) { unsafe { job_set_limit(self, limits, None); }}
+    pub fn set_lunatic_skill(&self, sid: &Il2CppString) { unsafe { job_set_lunatic_skill(self, sid, None); }}
     pub fn set_max_level(&self, value: u8) { unsafe { job_set_maxLevel(self, value, None); }}
 }
 // JobData 
@@ -111,3 +117,24 @@ fn get_jobstyle(this: &JobData, method_info: OptionalMethod) -> Option<&Il2CppSt
 
 #[unity::from_offset("App", "JobData", "get_UniqueItems")]
 fn job_get_unique_items(this: &JobData, method_info: OptionalMethod) -> &Array<&Il2CppString>;
+
+#[skyline::from_offset(0x020563e0)]
+fn job_get_weapon_mask2(this: &JobData, method_info: OptionalMethod) -> &'static WeaponMask;
+
+#[skyline::from_offset(0x02056bf0)]
+fn job_get_max_weapon_level1(this: &JobData, index: i32, method_info: OptionalMethod) -> i32;
+
+#[unity::from_offset("App","JobData", "get_LunaticSkill")]
+fn job_get_lunatic_skill(this: &JobData, method: OptionalMethod) -> Option<&Il2CppString>;
+
+#[unity::from_offset("App","JobData", "get_LearningSkill")]
+fn job_get_learn_skill(this: &JobData, method: OptionalMethod) -> Option<&Il2CppString>;
+
+#[skyline::from_offset(0x02054c30)]
+fn job_set_lunatic_skill(this: &JobData, sid: &Il2CppString, method_info: OptionalMethod);
+
+#[skyline::from_offset(0x02054c10)]
+fn job_set_learn_skill(this: &JobData, sid: &Il2CppString, method_info: OptionalMethod);
+
+#[unity::from_offset("App","JobData","Load")]
+fn jobdata_load(method_info: OptionalMethod);

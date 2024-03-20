@@ -16,6 +16,9 @@ pub fn set_bool(this: &GameVariable, key: &Il2CppString, enable: bool, method_in
 
 #[skyline::from_offset(0x2512870)]
 pub fn entry(this: &GameVariable, key: &Il2CppString, num: i32, method_info: OptionalMethod) -> bool;
+
+#[skyline::from_offset(0x251e4b0)]
+pub fn entry_str(this: &GameVariable, key: &Il2CppString, value: &Il2CppString, method_info: OptionalMethod) -> bool;
 // bool App.GameVariable$$Entry
 // (App_GameVariable_o *__this,System_String_o *key,int32_t num,MethodInfo *method)
 
@@ -46,7 +49,11 @@ impl GameVariableManager {
 
         unsafe { entry(game_variable, key.into(), num, None) }
     }
+    pub fn make_entry_str(key: &str, value: &str) -> bool {
+        let game_variable = GameUserData::get_variable();
 
+        unsafe { entry_str(game_variable, key.into(), value.into(), None) }
+    }
     pub fn make_entry_norewind(key: &str, num: i32) -> bool {
         let game_variable = GameUserData::get_variable();
 
@@ -82,14 +89,14 @@ impl GameVariableManager {
         unsafe {get_number(game_variable, key.into(), None) }
     }
 
-    pub fn set_string(key: &str, value: &Il2CppString) {
+    pub fn set_string(key: &str, value: &str) {
         let game_variable = GameUserData::get_variable();
 
         unsafe {
-            set_string(game_variable, key.into(), value, None);
+            set_string(game_variable, key.into(), value.into(), None);
         }   
     }
-    pub fn get_string(key: &str) -> &Il2CppString {
+    pub fn get_string(key: &str) -> &'static Il2CppString {
         let game_variable = GameUserData::get_variable();
         unsafe {get_string(game_variable, key.into(), None) }
     }

@@ -13,7 +13,7 @@ pub mod unit;
 pub mod item;
 pub mod cook;
 pub mod animal;
-
+pub mod god;
 
 #[unity::class("App", "HubFacilityData")]
 pub struct HubFacilityData {
@@ -33,10 +33,14 @@ fn hubdatafacility_iscomplete(this: &HubFacilityData, _method_info: OptionalMeth
 
 #[unity::class("App", "JobData")]
 pub struct JobData {
-    pub parent: StructBaseFields,
-    pub jid: &'static Il2CppString,
-    pub name: &'static Il2CppString,
-    pub aid: &'static Il2CppString,
+    pub parent: StructBaseFields, //0x0
+    pub jid: &'static Il2CppString, //0x10
+    pub name: &'static Il2CppString, //0x18
+    pub aid: &'static Il2CppString, //0x20
+    pub help: &'static Il2CppString, //0x28
+    junk: [u8; 0xD0],
+    pub learn_skill: Option<&'static Il2CppString>, // 0x100
+    pub lunatic_skill: Option<&'static Il2CppString>, //0x108
 }
 impl Gamedata for JobData { }
 
@@ -56,6 +60,7 @@ pub struct GodData {
     pub mid: &'static Il2CppString,
 }
 impl Gamedata for GodData {}
+
 
 #[unity::class("App", "StructDataArray`1")]
 pub struct StructDataArray {}
@@ -90,7 +95,6 @@ impl<T> Deref for StructListFields<T> {
 impl<T> StructList<T> {
     pub fn add(&mut self, element: &'static mut T) {
         let method = self.get_class().get_virtual_method("Add").unwrap();
-        
         let add = unsafe {
             std::mem::transmute::<_, extern "C" fn(&mut Self, &'static mut T, &MethodInfo)>(
                 method.method_info.method_ptr,
@@ -157,15 +161,20 @@ pub trait Gamedata: Il2CppClassData + Sized {
         get(name.into(), method.unwrap())
     }
     fn get_index(name: &Il2CppString) ->  i32 {
-        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetIndex"))).unwrap();
-    
+        let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetIndex")));
+        if method.is_none() {
+            method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetIndex")));
+        }
+        if method.is_none() {
+            return -1;
+        }
         let get = unsafe {
             std::mem::transmute::<_, extern "C" fn(&Il2CppString, &MethodInfo) -> i32>(
-                method.method_ptr,
+                method.unwrap().method_ptr,
             )
         };
     
-        get(name, method)
+        get(name, method.unwrap())
     }
     fn get_list() -> Option<&'static StructList<Self>> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetList")));
@@ -191,7 +200,6 @@ pub trait Gamedata: Il2CppClassData + Sized {
                 method.method_ptr,
             )
         };
-    
         getCount(method)
     }
     fn get_list_mut() -> Option<&'static mut StructList<Self>> {
@@ -209,5 +217,20 @@ pub trait Gamedata: Il2CppClassData + Sized {
         };
     
         get_list(method?)
+    }
+    fn unload() {
+        let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        if method.is_none() {
+            method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        }
+        if method.is_none() {
+            return;
+        }
+        let unload = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> ()> (
+                method.unwrap().method_ptr,
+            )
+        };
+        unload(method.unwrap());
     }
 }

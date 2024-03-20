@@ -12,6 +12,10 @@ impl Mess {
         unsafe { mess_get(label.as_ref().into(), None) }
     }
 
+    pub fn get_il2Cpp(label: &Il2CppString) -> &'static Il2CppString {
+        unsafe { mess_get(label, None) }
+    }
+
     pub fn load(filename: &Il2CppString) -> bool {
         unsafe { mess_load(filename, None) }
     }

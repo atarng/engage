@@ -47,7 +47,6 @@ impl GameUserData {
             
         get_instance(Some(&pointer[5]))
     }
-
     pub fn get_variable() -> &'static mut GameVariable {
         let instance = Self::get_instance();
         unsafe { get_variable(instance, None) }
@@ -123,6 +122,7 @@ impl GameUserData {
     pub fn is_encount_map() -> bool { unsafe { is_encounter_map(Self::get_instance(), None)}}
     pub fn is_cid_completed(cid: &Il2CppString) -> bool { unsafe{ is_completed(Self::get_instance(), cid, None) }}
     pub fn is_chapter_completed(chapter: &ChapterData) -> bool { unsafe {is_completed_chapterdata(Self::get_instance(), chapter, None) }}
+    pub fn is_evil_map() -> bool { unsafe { is_evil_map(Self::get_instance(), None) }}
 }
 
 
@@ -182,3 +182,6 @@ fn is_completed_chapterdata(this: &GameUserData, chapter: &ChapterData, method_i
 
 #[unity::from_offset("App", "GameUserData", "get_Chapter")]
 fn get_chapter_data(this: &GameUserData, method_info: OptionalMethod) -> &ChapterData;
+
+#[unity::from_offset("App", "GameUserData", "IsEvilMap")]
+fn is_evil_map(this: &GameUserData, method_info: OptionalMethod) -> bool;

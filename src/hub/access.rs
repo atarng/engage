@@ -1,6 +1,6 @@
 use unity::prelude::*;
 use unity::system::List;
-use crate::gamedata::{
+use crate::gamedata::{*,
     item::ItemData,
     animal::AnimalData,
 };
@@ -26,7 +26,36 @@ pub struct HubAccessManager {
 }
 
 impl HubDisposData {
+    pub fn get_array_mut() -> Option<&'static mut StructList<List<Self>>> {
+        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetList"))).unwrap();
+        let get_list = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> Option<&'static mut StructList<List<Self>>>>(
+                method.method_ptr,
+            )
+        };
+        get_list(method)
+    }
+    pub fn get_aid(&self) -> Option<&'static Il2CppString> { unsafe { dispos_hub_get_aid(self, None)}}
     pub fn get_locator(&self) -> &'static Il2CppString { unsafe { dispos_hub_get_locator(self, None) } }
+    pub fn load() { unsafe { access_load(None); }}
+    pub fn set_aid(&self, value: &Il2CppString) { unsafe { dispos_hub_set_aid(self, value, None); }}
+
+    pub fn unload() {
+        let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        if method.is_none() {
+            method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        }
+        if method.is_none() {
+            return;
+        }
+        let unload = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> ()> (
+                method.unwrap().method_ptr,
+            )
+        };
+    
+        unload(method.unwrap());
+    }
 }
 
 impl HubAccessManager {
@@ -56,6 +85,12 @@ pub fn GetNotTakenPieceOfBond(this: &HubAccessManager, method_info: OptionalMeth
 #[unity::from_offset("App", "HubDisposData", "get_Locator")]
 pub fn dispos_hub_get_locator(this: &HubDisposData, method_info: OptionalMethod) -> &'static Il2CppString;
 
+#[unity::from_offset("App", "HubDisposData", "get_AID")]
+pub fn dispos_hub_get_aid(this: &HubDisposData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
+#[unity::from_offset("App", "HubDisposData", "set_AID")]
+pub fn dispos_hub_set_aid(this: &HubDisposData, value :&Il2CppString, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "HubAccessData", "get_IsDone")]
 pub fn access_data_is_done(this: &HubAccessData, method_info: OptionalMethod) -> bool;
 
@@ -68,6 +103,9 @@ pub fn access_data_item_count(this: &HubAccessData, method_info: OptionalMethod)
 #[unity::from_offset("App", "HubAccessData", "get_IsAnimal")]
 pub fn access_data_is_animal(this: &HubAccessData, method_info: OptionalMethod) -> bool;
 
-#[unity::from_offset("App", "HubAccessData", "TryGetPID")]
+#[unity::from_offset("App", "HubDisposData", "Load")]
+pub fn access_load(method_info: OptionalMethod);
+
+#[unity::from_offset("App", "HubAccessData", "DisposDat")]
 pub fn access_data_try_get_pid(this: &HubAccessData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 

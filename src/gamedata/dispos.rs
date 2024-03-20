@@ -63,11 +63,13 @@ pub struct ChapterData {
 impl Gamedata for ChapterData {}
 impl ChapterData {
     pub fn get_cleared_flag_name(&self) -> &'static Il2CppString { unsafe { get_cleared_flagname(self, None) }}
+    pub fn get_gmap_open_condition(&self) -> &'static Il2CppString { unsafe { chapter_get_gmapspotopencondition(self, None)} }
     pub fn get_recommended_level(&self) -> u8 { unsafe { chapter_get_recommended_level(self, None)}}
-
+    
     pub fn is_evil(&self) -> bool { unsafe {chapter_is_dlc_evil(self, None)} }
     pub fn is_god(&self) -> bool { unsafe {chapter_is_dlc_god(self, None)}}
     
+    pub fn set_gmap_open_condition(&self, value: &str) { unsafe { chapter_set_gmap_open_condition(self, value.into(), None); } }
     pub fn set_flag(&self, value: i32) { unsafe {chapter_set_flag(self, value, None); }}
     pub fn set_hold_level(&self, value: u8) { unsafe { chapter_set_hold_level(self, value, None); }}
     pub fn set_recommended_level(&self, level: u8 ) { unsafe { chapter_set_recommended_level(self, level, None );}}
@@ -135,5 +137,11 @@ fn chapter_is_dlc_god(this: &ChapterData, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "ChapterData", "IsDlcEvil")]
 fn chapter_is_dlc_evil(this: &ChapterData, method_info: OptionalMethod) -> bool;
 
+#[unity::from_offset("App", "ChapterData", "get_GmapSpotOpenCondition")]
+fn chapter_get_gmapspotopencondition(this:& ChapterData, method_info: OptionalMethod) -> &'static Il2CppString;
+
 #[skyline::from_offset(0x02af9850)]
 fn chapter_set_flag(this: &ChapterData, value: i32, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "ChapterData", "set_GmapSpotOpenCondition")]
+fn chapter_set_gmap_open_condition(this: &ChapterData, value: &Il2CppString, method_info: OptionalMethod);
