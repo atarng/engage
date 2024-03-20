@@ -56,12 +56,16 @@ impl ProcDesc {
     //     })
     // }
 
-    pub fn jump(to_label: i32) -> Il2CppResult<&'static mut ProcDescJump> {
-        ProcDescJump::instantiate().map(|desc| {
-            desc.desc.ty = ProcDescType::Jump;
-            desc.label = to_label;
-            desc
-        })
+    pub fn jump(to_label: i32) -> &'static mut ProcDesc {
+        let result = ProcDescJump::instantiate()
+            .map(|desc| {
+                desc.desc.ty = ProcDescType::Jump;
+                desc.label = to_label;
+                desc
+            }
+        ).unwrap();
+
+        unsafe { std::mem::transmute(result) }
     }
 
     pub fn yiel() -> Il2CppResult<&'static mut ProcDescYield> {
@@ -73,7 +77,6 @@ impl ProcDesc {
 
     pub fn wait_time(time: f32) -> &'static mut ProcDesc {
         unsafe { proc_wait_time(time, None) }
-
     }
 
     pub fn end() -> &'static mut ProcDesc {
@@ -88,16 +91,37 @@ impl ProcDesc {
         unsafe { std::mem::transmute::<&mut ProcDesc, &mut T>(self) }
     }
 
-    
-}
+    pub fn get_label(&self) -> i32 {
+        let method = self.get_class().get_virtual_method("get_Label").unwrap();
 
-pub trait ProcDescriptor: AsRef<ProcDescFields> + Sized {
-    fn get_type(&self) -> ProcDescType {
-        self.as_ref().ty
+        let get_label = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&Self, &MethodInfo) -> i32>(
+                method.method_info.method_ptr,
+            )
+        };
+
+        get_label(self, method.method_info)
     }
+
+    pub fn get_desc_type(&self) -> ProcDescType {
+        let method = self.get_class().get_method_from_name("get_DescType", 0).unwrap();
+
+        let get_desc_type = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&Self, &MethodInfo) -> ProcDescType>(
+                method.method_ptr,
+            )
+        };
+
+        get_desc_type(self, method)
+    }  
 }
 
-impl<T: AsRef<ProcDescFields>> ProcDescriptor for T { }
+#[unity::from_offset("App", "ProcDescJump", ".ctor")]
+fn procdescjump_ctor(
+    this: &'static mut ProcDesc,
+    label: i32,
+    method_info: OptionalMethod,
+);
 
 #[repr(C)]
 #[unity::class("App", "ProcDescLabel")]
