@@ -53,9 +53,9 @@ impl UnitItem {
 	pub fn get_power(&self) -> i32 { unsafe { unititem_get_power(self, None)}}
 
 	pub fn is_empty(&self) -> bool { unsafe { unititem_is_empty(self, None) } }
-	pub fn is_weapon(&self) -> bool { { unsafe { unititem_is_weapon(self, None) }}}
-	pub fn is_drop(&self) -> bool { { unsafe {  unititem_get_is_drop(self, None)}}}
-	pub fn refine_data_exist(&self) -> bool { {unsafe { unititem_is_exsistrefinedata(self, None)}}}
+	pub fn is_weapon(&self) -> bool {  unsafe { unititem_is_weapon(self, None) } }
+	pub fn is_drop(&self) -> bool { unsafe {  unititem_get_is_drop(self, None) } }
+	pub fn refine_data_exist(&self) -> bool { unsafe { unititem_is_exsistrefinedata(self, None)} }
 
 	pub fn set_engrave(&self, engrave: &GodData) -> bool { unsafe { unititem_set_engrave(self, engrave, None)}}
 	pub fn set_refine_level(&self, level: i32) { unsafe { unititem_set_refine_level(self, level, None); }}
