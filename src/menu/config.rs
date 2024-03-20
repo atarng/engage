@@ -102,6 +102,10 @@ impl ConfigBasicMenuItem {
             .map(|method| method.method_ptr = Methods::set_command_text as _);
 
         item.get_class_mut()
+            .get_virtual_method_mut("SetHelpText")
+            .map(|method| method.method_ptr = Methods::set_help_text as _);
+
+        item.get_class_mut()
             .get_virtual_method_mut("OnSelect")
             .map(|method| method.method_ptr = Self::on_select as _)
             .unwrap();
@@ -169,49 +173,7 @@ pub trait ConfigBasicMenuItemCommandMethods {
         
     }
 
-    fn menu_entries() -> Vec<&'static mut ConfigBasicMenuItem>;
-    
-    extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult {
-        let pad_instance = get_instance::<Pad>();
-
-        // Check if A is pressed before executing any of this
-        if pad_instance.npad_state.buttons.a() {
-            // Close the original Settings menu temporarily so it doesn't get drawn in the background
-            this.menu.get_class().get_virtual_method("CloseAnimeAll").map(|method| {
-                let close_anime_all =
-                    unsafe { std::mem::transmute::<_, extern "C" fn(&BasicMenu<ConfigBasicMenuItem>, &MethodInfo)>(method.method_info.method_ptr) };
-                close_anime_all(this.menu, method.method_info);
-            });
-
-            // Initialize the menu
-            unsafe { configmenu_createbind(this.menu, None) }
-            
-            let config_menu = this.menu.proc.child.cast_mut::<BasicMenu<ConfigBasicMenuItem>>();
-
-            // Register a OnDispose callback to restore the previous menu
-            config_menu
-                .get_class_mut()
-                .get_virtual_method_mut("OnDispose")
-                .map(|method| method.method_ptr = open_anime_all_ondispose as _)
-                .unwrap();
-
-            // Clear the buttons in the List so we can add our own
-            config_menu.full_menu_item_list.get_class().get_virtual_method("Clear").map(|method| {
-                let clear = unsafe { std::mem::transmute::<_, extern "C" fn(&List<ConfigBasicMenuItem>, &MethodInfo)>(method.method_info.method_ptr) };
-                clear(&config_menu.full_menu_item_list, method.method_info);
-            }).unwrap();
-            
-            let mut entries = Self::menu_entries();
-            
-            entries.into_iter().for_each(|cb| {
-                config_menu.add_item(cb);
-            });
-            
-            BasicMenuResult::se_cursor()
-        } else {
-            BasicMenuResult::new()
-        }
-    }
+    extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_command_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 }
