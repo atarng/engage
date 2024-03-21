@@ -45,7 +45,7 @@ impl Proc {
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
-    pub descs: &'static mut UnsafeCell<Il2CppArray<&'static mut ProcDesc>>,
+    descs: &'static mut UnsafeCell<Il2CppArray<&'static mut ProcDesc>>,
     pub desc_index: i32,
     pub name: Option<&'static Il2CppString>,
     pub hashcode: i32,
