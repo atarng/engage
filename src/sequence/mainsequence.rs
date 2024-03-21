@@ -1,6 +1,6 @@
 use unity::prelude::*;
 
-use crate::{proc::{ProcInstFields, Bindable}, singleton::SingletonProcInst};
+use crate::proc::ProcInstFields;
 
 #[repr(C)]
 #[unity::class("App", "MainSequence")]

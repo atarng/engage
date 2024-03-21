@@ -1,8 +1,8 @@
-use unity::{prelude::*, system::List};
+use unity::prelude::*;
 
-use crate::{pad::Pad, proc::ProcInst, titlebar::TitleBar, util::get_instance};
+use crate::proc::ProcInst;
 
-use super::{configmenu_createbind, BasicMenu, BasicMenuResult};
+use super::{BasicMenu, BasicMenuResult};
 
 #[repr(C)]
 #[unity::class("", "ConfigBasicMenuItem")]
