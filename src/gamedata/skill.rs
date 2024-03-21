@@ -1,8 +1,5 @@
 pub use unity::prelude::*;
-use unity::il2cpp::object::Array;
-use unity::system::List;
 use super::*;
-use std::ops::Deref;
 // Structs, methods required for SkillArray and SkillData
 
 #[unity::class("App", "SkillArray")]

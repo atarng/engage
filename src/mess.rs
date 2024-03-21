@@ -8,12 +8,8 @@ use unity::{prelude::*, system::Dictionary};
 pub struct Mess { }
 
 impl Mess {
-    pub fn get(label: impl AsRef<str>) -> &'static Il2CppString {
-        unsafe { mess_get(label.as_ref().into(), None) }
-    }
-
-    pub fn get_il2Cpp(label: &Il2CppString) -> &'static Il2CppString {
-        unsafe { mess_get(label, None) }
+    pub fn get<'a>(label: impl Into<&'a Il2CppString>) -> &'static Il2CppString {
+        unsafe { mess_get(label.into(), None) }
     }
 
     pub fn load(filename: &Il2CppString) -> bool {

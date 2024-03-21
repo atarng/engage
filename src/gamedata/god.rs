@@ -1,7 +1,7 @@
 pub use unity::prelude::*;
 use unity::il2cpp::object::Array;
 use unity::system::List;
-use super::{GodData, skill::*, *};
+use super::GodData;
 
 impl GodData {
     pub fn get_engage_attack(&self) -> &'static Il2CppString { unsafe { goddata_get_engage_attack(self, None) }}

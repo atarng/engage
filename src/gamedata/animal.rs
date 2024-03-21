@@ -1,5 +1,4 @@
 pub use unity::prelude::*;
-use unity::system::List;
 use super::*;
 
 #[unity::class("App", "AnimalData")]

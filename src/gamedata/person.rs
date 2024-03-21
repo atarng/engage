@@ -1,6 +1,5 @@
 pub use unity::prelude::*;
 use unity::il2cpp::object::Array;
-use unity::system::List;
 use super::{JobData, PersonData, skill::SkillArray, WeaponMask};
 use std::ops::Deref;
 use std::ops::DerefMut;
@@ -81,7 +80,6 @@ impl PersonData {
     pub fn on_complete(&self) { unsafe { person_on_release(self, None); }}
 
     // Setters
-    pub fn set_aid(&self, aid: &Il2CppString) { unsafe { }}
     pub fn set_sub_aptitude(&self, mask: &WeaponMask) { unsafe { person_set_sub_apt(self, mask, None)}}
     pub fn set_ascii_name(&self, name: &Il2CppString) { unsafe { person_set_ascii_name(self, name, None); }}
     pub fn set_attrs(&self, attr: i32) { unsafe { person_set_attrs(self, attr, None); }}

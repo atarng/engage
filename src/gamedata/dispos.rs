@@ -1,5 +1,4 @@
-use unity::{prelude::*, system::ListFields};
-use unity::il2cpp::object::Array;
+use unity::prelude::*;
 use unity::system::List;
 use super::{StructList, PersonData, StructBaseFields};
 use crate::gamedata::Gamedata;

@@ -2,7 +2,6 @@ pub use unity::prelude::*;
 use unity::il2cpp::object::Array;
 use unity::system::List;
 use super::{*, JobData, person::{Capability, CapabilitySbyte}};
-use std::ops::Deref;
 // Structs, methods required for PersonData, JobData, SkillArray
 
 #[unity::class("App", "JobDataFlag")]

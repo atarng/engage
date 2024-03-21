@@ -1,9 +1,7 @@
 //! Structures representing a singular entry from the gamedata files in memory.
 
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 use unity::{prelude::*, system::ListFields};
-use unity::il2cpp::object::Array;
-use unity::system::List;
 
 pub mod person;
 pub mod skill;
@@ -144,6 +142,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     
         get(name.into(), method.unwrap())
     }
+    
     fn get_mut(name: &str) -> Option<&'static mut Self> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Get")));
         if method.is_none() {
@@ -160,6 +159,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     
         get(name.into(), method.unwrap())
     }
+
     fn get_index(name: &Il2CppString) ->  i32 {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetIndex")));
         if method.is_none() {
@@ -176,6 +176,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     
         get(name, method.unwrap())
     }
+
     fn get_list() -> Option<&'static StructList<Self>> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetList")));
         if method.is_none() {
@@ -192,16 +193,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     
         get_list(method?)
     }
-    fn get_count() -> i32 {
-        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetCount"))).unwrap();
-        
-        let getCount = unsafe {
-            std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> i32>(
-                method.method_ptr,
-            )
-        };
-        getCount(method)
-    }
+    
     fn get_list_mut() -> Option<&'static mut StructList<Self>> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetList")));
         if method.is_none() {
@@ -218,6 +210,18 @@ pub trait Gamedata: Il2CppClassData + Sized {
     
         get_list(method?)
     }
+
+    fn get_count() -> i32 {
+        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetCount"))).unwrap();
+        
+        let get_count = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> i32>(
+                method.method_ptr,
+            )
+        };
+        get_count(method)
+    }
+
     fn unload() {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
         if method.is_none() {

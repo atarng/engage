@@ -18,7 +18,7 @@ pub struct ItemData {
 	pub kind: u32,
 	pub attr: u32,
 	pub usetype: u32,
-	pub weaponattr: u32,
+	pub weapon_attr: u32,
 	pub icon: &'static Il2CppString,
 	pub endurance: u8,
 	pub power: u8,
@@ -27,13 +27,13 @@ impl Gamedata for ItemData { }
 
 #[unity::class("App", "UnitItem")]
 pub struct UnitItem {
-    pub m_index: i32,
-    pub m_item: &'static ItemData,
-    pub m_endurance: u8,
-    pub m_RefineLevel: u8,
-    pub m_Flags :i32,
-    pub m_Engrave: Option<&'static GodData>,
-    pub m_GodUnit: Option<&'static GodUnit>,
+    pub index: i32,
+    pub item: &'static ItemData,
+    pub endurance: u8,
+    pub refine_level: u8,
+    pub flags :i32,
+    pub engrave: Option<&'static GodData>,
+    pub god_unit: Option<&'static GodUnit>,
 }
 impl ItemData {
 	pub fn get_kind(&self) -> i32 { unsafe { itemdata_get_kind(self, None)}}

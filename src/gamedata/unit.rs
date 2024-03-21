@@ -4,7 +4,7 @@ use crate::force::Force;
 use crate::random::*;
 use super::{JobData, WeaponMask, PersonData, 
     item::{UnitItemList, ItemData}, 
-    person::{CapabilitySbyte, Capability}, 
+    person::Capability, 
     skill::{SkillData, SkillArray},
     GodData,
 };
@@ -12,7 +12,7 @@ use super::{JobData, WeaponMask, PersonData,
 #[unity::class("App", "GodUnit")]
 pub struct GodUnit {
     parent: [u8; 0x10],
-    pub m_Data: &'static GodData,
+    pub data: &'static GodData,
 }
 
 #[unity::class("App", "UnitRing")]
@@ -24,8 +24,8 @@ pub struct UnitEdit {
     pub morphname: Option<&'static Il2CppString>,
     pub gender: i32,
     pub langague: i32,
-    pub BirthMonth: u8,
-    pub BirthDay: u8,
+    pub birth_month: u8,
+    pub birth_day: u8,
 }
 
 #[unity::class("App", "Unit_Status")]
@@ -47,83 +47,83 @@ pub struct Unit {
     pub edit: &'static UnitEdit,
     pub ident: i32,
     pub person: &'static mut PersonData,
-    pub m_Job : &'static mut JobData,
-    pub m_Force : Option<&'static Force>,
-    pub m_BaseCapability : &'static mut UnitBaseCapability,
-    pub m_GrowCapability: &'static mut Capability,
-    pub m_LevelCapability: &'static mut UnitBaseCapability,
-    pub m_GrowSeed :i32,
-    m_DropSeed :i32,
-    m_Actor :u64,
-    m_Info :u64,
-    m_Index :u8,
-    pub m_Level :u8,
-    pub m_Exp :u8,
+    pub job : &'static mut JobData,
+    pub force : Option<&'static Force>,
+    pub base_capability : &'static mut UnitBaseCapability,
+    pub grow_capability: &'static mut Capability,
+    pub level_capability: &'static mut UnitBaseCapability,
+    pub grow_ssed :i32,
+    drop_seed :i32,
+    actor :u64,
+    info :u64,
+    index :u8,
+    pub level :u8,
+    pub exp :u8,
     pub hp_value: u8,
     pub hp_display: u8,
-    pub m_HpStockCount :u8,
-    pub m_HpStockCountMax :u8,
-    m_ExtraHpStockCount :u8,
-    m_ExtraHpStockCountMax :u8,
-    m_EngageCount :u8,
-    m_EngageTurn :u8,
-    m_EngageCountView :u8,
-    m_GodStates :u64,
-    m_X :u8,
-    m_Z :u8,
-    m_DisposX :u8,
-    m_DisposZ :u8,
-    m_Angle :f32,
-    m_DontAttackPerson :u64,
-    m_DontAttackForceMask :i32,
-    pub m_ItemList : &'static UnitItemList,
-    m_ItemSelected :u64,
-    m_AccessoryList :u64,
-    pub m_GodUnit :Option<&'static GodUnit>,
-    pub m_GodLink :Option<&'static GodUnit>,
-    pub m_Ring :Option<&'static UnitRing>,
-    m_ExtraSight :i32,
-    pub m_MoveDistance :i32,
-    pub m_MaskSkill : Option<&'static SkillArray>,
-    pub m_EquipSkill :&'static SkillArray,
-    pub m_PrivateSkill :&'static SkillArray,
-    pub m_ReceiveSkill :&'static SkillArray,
-    pub m_SupportedSkill :&'static SkillArray,
-    pub m_EquipSkillPool :&'static SkillArray,
-    pub m_LearnedJobSkill :&'static SkillArray,
-    pub m_OriginalAptitude : &'static mut WeaponMask,
-    pub m_Aptitude : &'static mut WeaponMask,
-    pub m_WeaponMask :&'static mut WeaponMask,
-    pub m_SelectedWeaponMask :&'static mut WeaponMask,
-    m_EnhanceFactors :u64,
-    m_EnhanceCalculator :u64,
-    pub m_InternalLevel :i8,
-    m_LastPickVoice :u8,
-    m_AttackImage :u64,
-    m_RodImage :u64,
-    m_HealImage :u64,
-    m_SupportImage :u64,
-    m_InterferenceImage :u64,
-    m_EngageImage :u64,
-    m_MoveImage :u64,
-    m_Record :u64,
-    m_MapHistoryIndex :u8,
-    m_MaskSkillLock :u64,
-    m_FortuneTarget :u64,
-    m_FortuneSeed :i32,
-    m_RelayPlayerIndex :u8,
-    m_SkillPoint :u8,
-    m_OwnerUnit :u16,
-    m_LockTargetX :u8,
-    m_LockTargetZ :u8,
-    _TotalOrder_k__BackingField :i32,
-    _TotalAction_k__BackingField :i32,
-    _TotalAttack_k__BackingField :i32,
-    _TotalDamage_k__BackingField :i32,
-    _TotalResult_k__BackingField :i32,
-    _SideType_k__BackingField :i32,
-    _BattleTemporary_k__BackingField :i32,
-    m_CalcInfo :i32
+    pub hp_stock_count :u8,
+    pub hp_stock_count_max :u8,
+    extra_hp_stock_count :u8,
+    extra_hp_stock_count_max :u8,
+    engage_count :u8,
+    engage_turn :u8,
+    engage_count_view :u8,
+    god_states :u64,
+    x :u8,
+    z :u8,
+    dispos_y :u8,
+    dispos_z :u8,
+    angle :f32,
+    dont_attack_person :u64,
+    dont_attack_force_mask :i32,
+    pub item_list : &'static UnitItemList,
+    item_selected :u64,
+    accessory_list :u64,
+    pub god_unit :Option<&'static GodUnit>,
+    pub god_link :Option<&'static GodUnit>,
+    pub ring :Option<&'static UnitRing>,
+    extra_sight :i32,
+    pub move_distance :i32,
+    pub mask_skill : Option<&'static SkillArray>,
+    pub equip_skill :&'static SkillArray,
+    pub private_skill :&'static SkillArray,
+    pub receive_skill :&'static SkillArray,
+    pub supported_skill :&'static SkillArray,
+    pub equip_skill_pool :&'static SkillArray,
+    pub learned_job_skill :&'static SkillArray,
+    pub original_aptitude : &'static mut WeaponMask,
+    pub aptitude : &'static mut WeaponMask,
+    pub weapon_mask :&'static mut WeaponMask,
+    pub selected_weapon_mask :&'static mut WeaponMask,
+    enhance_factors :u64,
+    enhance_calculator :u64,
+    pub internal_level :i8,
+    last_pick_voice :u8,
+    attack_image :u64,
+    rod_image :u64,
+    heal_image :u64,
+    support_image :u64,
+    interference_image :u64,
+    engage_image :u64,
+    move_image :u64,
+    record :u64,
+    map_history_index :u8,
+    mask_skill_lock :u64,
+    fortune_target :u64,
+    fortune_seed :i32,
+    relay_player_index :u8,
+    skill_point :u8,
+    owner_unit :u16,
+    lock_target_x :u8,
+    lock_target_z :u8,
+    total_order :i32,
+    total_action :i32,
+    total_attack :i32,
+    total_damage :i32,
+    total_result :i32,
+    side_type :i32,
+    battle_temporary :i32,
+    calc_info :i32
 }
 
 impl Unit {
@@ -171,7 +171,7 @@ impl Unit {
     // Setters
     pub fn set_base_capability(&self, index: i32, value: i32) { unsafe { unit_set_base_capability(self, index, value, None);}}
     pub fn set_exp(&self, exp: i32){  unsafe { unit_set_exp(self, exp, None); }  }
-    pub fn set_hp(&self, HP: i32) {  unsafe { unit_set_Hp(self, HP, None); } }
+    pub fn set_hp(&self, hp: i32) {  unsafe { unit_set_hp(self, hp, None); } }
     pub fn set_internal_level(&self, internal: i32) {  unsafe {unit_set_internal_level(self, internal, None); }  }
     pub fn set_job(&self, job: &JobData) { unsafe { unit_set_job(self, job, None); } }
     pub fn set_level(&self, level: i32){  unsafe {  unit_set_level(self, level, None);} }
@@ -252,7 +252,7 @@ extern "C" fn unit_is_engage_owner(this: &Unit, method_info: OptionalMethod) -> 
 fn unit_add_sp(this: &Unit, value: i32, method_info: OptionalMethod);
 
 #[unity::from_offset("App","Unit", "set_Hp")]
-fn unit_set_Hp(this: &Unit, value: i32, method_info: OptionalMethod);
+fn unit_set_hp(this: &Unit, value: i32, method_info: OptionalMethod);
 
 #[unity::from_offset("App", "Unit", "set_Exp")]
 fn unit_set_exp(this: &Unit, exp: i32, method_info: OptionalMethod);
@@ -267,7 +267,7 @@ fn unit_set_internal_level(this: &Unit, level: i32, method_info: OptionalMethod)
 fn unit_get_hp(this: &Unit, method_info: OptionalMethod) -> i32;
 
 #[skyline::from_offset(0x01a5ba20)]
-fn unit_getcapability(this: &Unit, type_: i32, calcEnhance: bool, method_info: OptionalMethod) -> i32;
+fn unit_getcapability(this: &Unit, type_: i32, calc_enhance: bool, method_info: OptionalMethod) -> i32;
 
 #[unity::from_offset("App", "Unit", "set_SkillPoint")]
 fn unit_set_sp(this: &Unit, value: i32, method_info: OptionalMethod);

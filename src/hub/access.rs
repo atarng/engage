@@ -1,7 +1,8 @@
 use unity::prelude::*;
 use unity::system::List;
-use crate::gamedata::{*,
-    item::ItemData,
+
+use crate::gamedata::{
+    StructList,
     animal::AnimalData,
 };
 
@@ -59,7 +60,7 @@ impl HubDisposData {
 }
 
 impl HubAccessManager {
-    pub fn get_not_taken_bond_frags(&self) -> i32 { unsafe { GetNotTakenPieceOfBond(self, None) }}
+    pub fn get_not_taken_bond_frags(&self) -> i32 { unsafe { get_not_taken_piece_of_bond(self, None) }}
 }
 
 impl HubAccessData {
@@ -80,7 +81,7 @@ impl HubAccessData {
 pub fn hub_access_get_talk_item(this: &HubAccessData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
 #[skyline::from_offset(0x21733a0)]
-pub fn GetNotTakenPieceOfBond(this: &HubAccessManager, method_info: OptionalMethod) -> i32;
+pub fn get_not_taken_piece_of_bond(this: &HubAccessManager, method_info: OptionalMethod) -> i32;
 
 #[unity::from_offset("App", "HubDisposData", "get_Locator")]
 pub fn dispos_hub_get_locator(this: &HubDisposData, method_info: OptionalMethod) -> &'static Il2CppString;

@@ -1,7 +1,6 @@
 use unity::prelude::*;
-use unity::system::List;
-use crate::proc::{desc::ProcDesc, ProcInst, ProcInstFields, Bindable};
-use super::access::{HubAccessManager, HubAccessData};
+use crate::proc::{ProcInst, Bindable};
+use super::access::HubAccessManager;
 
 #[unity::class("App", "HubSequence")]
 pub struct HubSequence {
@@ -18,7 +17,7 @@ pub struct HubMiniMap {}
 
 impl HubSequence {
     pub fn get_instance() -> &'static Self {
-        let mut method = HubSequence::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("get_Instance")));
+        let method = HubSequence::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("get_Instance")));
         let get_instance = unsafe { std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> &'static HubSequence>( method.unwrap().method_ptr, ) };
         get_instance(method.unwrap())
     }
@@ -31,7 +30,7 @@ impl HubSequence {
 impl HubMiniMap {
     pub fn hide(&self) { unsafe { hub_mini_map_hide(self, None); }}
     pub fn hide_system_menu(&self) { unsafe { hub_mini_map_system_hide(self, None); } }
-    pub fn is_show(&self) -> bool { unsafe { hub_mini_map_Is_Show(self, None)}}
+    pub fn is_show(&self) -> bool { unsafe { hub_mini_map_is_show(self, None)}}
     pub fn set_mode(&self, mode: i32) { unsafe { hub_mini_map_set_mode(self, mode, None); }}
 }
 
@@ -56,4 +55,4 @@ fn hub_mini_map_set_mode(this: &HubMiniMap, mode: i32, method_info: OptionalMeth
 fn hub_mini_map_hide(this: &HubMiniMap, method_info: OptionalMethod);
 
 #[unity::from_offset("App", "HubMiniMap", "IsShow")]
-fn hub_mini_map_Is_Show(this: &HubMiniMap, method_info: OptionalMethod) -> bool;
+fn hub_mini_map_is_show(this: &HubMiniMap, method_info: OptionalMethod) -> bool;
