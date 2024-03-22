@@ -66,7 +66,7 @@ impl PersonData {
     pub fn get_gender(&self) -> i32 { unsafe { person_get_gender(self, None)}  }
     pub fn get_grow(&self) -> &mut Capability { unsafe { person_get_grow(self, None) } }
     pub fn get_help(&self) -> &Il2CppString { unsafe {person_get_help(self, None) }}
-    pub fn get_internal_level(&self) -> i8 { unsafe { person_get_internallevel(self, None)} }
+    pub fn get_internal_level(&self) -> i8 { unsafe { person_get_internal_level(self, None)} }
     pub fn get_job(&self) -> Option<&JobData> { unsafe { person_get_job(self, None) } }
     pub fn get_jid(&self) -> Option<&Il2CppString> { unsafe { person_get_jid(self, None) }}
     pub fn get_level(&self) -> u8 { unsafe { person_get_level(self, None) } }
@@ -89,7 +89,7 @@ impl PersonData {
     pub fn set_grow(&self, value: &Capability) { unsafe { person_set_grow(self, value, None); }}
     pub fn set_flag(&self, value: &PersonDataFlag) { unsafe { person_set_flag(self, value, None); }}
     pub fn set_help(&self, help: &Il2CppString) { unsafe { person_set_help(self, help, None); }}
-    pub fn set_internal_level(&self, value: i8) { unsafe { person_set_InternalLevel(self, value, None); }}
+    pub fn set_internal_level(&self, value: i8) { unsafe { person_set_internal_level(self, value, None); }}
 
     pub fn set_jid(&self, jid: &Il2CppString) { unsafe { person_set_jid(self, jid, None); }}
     pub fn set_level(&self, level: u8) { unsafe { person_set_level(self, level, None); }}
@@ -152,10 +152,10 @@ fn person_get_jid(this: &PersonData, method_info: OptionalMethod) -> Option<&Il2
 fn person_get_level(this: &PersonData, method_info: OptionalMethod) -> u8;
 
 #[skyline::from_offset(0x1f25de0)]
-fn person_get_internallevel(this: &PersonData, method_info: OptionalMethod) -> i8;
+fn person_get_internal_level(this: &PersonData, method_info: OptionalMethod) -> i8;
 
 #[skyline::from_offset(0x1f25df0)]
-fn person_set_InternalLevel(this: &PersonData, value: i8, method_info: OptionalMethod);
+fn person_set_internal_level(this: &PersonData, value: i8, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x1f25dd0)]
 fn person_set_level(this: &PersonData, value: u8, method_info: OptionalMethod);

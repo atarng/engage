@@ -42,7 +42,7 @@ impl JobData {
     pub fn set_learning_skill(&self, sid: &Il2CppString) { unsafe { job_set_learn_skill(self, sid, None); }}
     pub fn set_limit(&self, limits: &Capability) { unsafe { job_set_limit(self, limits, None); }}
     pub fn set_lunatic_skill(&self, sid: &Il2CppString) { unsafe { job_set_lunatic_skill(self, sid, None); }}
-    pub fn set_max_level(&self, value: u8) { unsafe { job_set_maxLevel(self, value, None); }}
+    pub fn set_max_level(&self, value: u8) { unsafe { job_set_max_level(self, value, None); }}
 }
 // JobData 
 #[skyline::from_offset(0x2055d20)]
@@ -88,7 +88,7 @@ fn job_gethighjobs(this: &JobData, method_info: OptionalMethod) -> &List<JobData
 fn job_max_level(this: &JobData, method_info: OptionalMethod) -> u8;
 
 #[skyline::from_offset(0x02053e90)]
-fn job_set_maxLevel(this: &JobData, value: u8, method_info: OptionalMethod);
+fn job_set_max_level(this: &JobData, value: u8, method_info: OptionalMethod);
 
 #[unity::from_offset("App", "JobData", "set_Limit")]
 fn job_set_limit(this: &JobData, value :&Capability, method_info: OptionalMethod);

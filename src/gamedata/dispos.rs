@@ -37,7 +37,7 @@ impl DisposData {
     pub fn get_flag(&self) -> &'static mut DisposDataFlag { unsafe { disposdata_get_flag(self, None)}}
     pub fn get_force(&self) -> i8 { unsafe {disposdata_get_force(self, None)}}
     pub fn get_gid(&self) -> &'static Il2CppString { unsafe { disposdata_get_gid(self, None)} }
-    pub fn get_hp_stock_count(&self) -> u8 { unsafe {disposdata_get_hp_stockCount(self, None)}}
+    pub fn get_hp_stock_count(&self) -> u8 { unsafe {disposdata_get_hp_stock_count(self, None)}}
     pub fn get_person(&self) -> Option<&PersonData> { unsafe { disposdata_get_person(self, None)}}
     pub fn get_pid(&self) -> Option<&'static Il2CppString> { unsafe { disposdata_get_pid(self, None)}}
     pub fn get_sid(&self) -> Option<&'static Il2CppString> { unsafe { disposdata_get_sid(self, None)}}
@@ -46,7 +46,7 @@ impl DisposData {
     pub fn set_ai_attack_value(&self, value: &Il2CppString) { unsafe { disposdata_set_ai_attack_value(self, value, None);}}
     pub fn set_flag(&self, flag: &mut DisposDataFlag) { unsafe {disposdata_set_flag(self, flag, None);}} 
     pub fn set_gid(&self, gid: &Il2CppString) { unsafe { disposdata_set_gid(self, gid, None); }}
-    pub fn set_hp_stock_count(&self, value: u8) { unsafe { disposdata_set_hp_stockcount(self, value, None);}}
+    pub fn set_hp_stock_count(&self, value: u8) { unsafe { disposdata_set_hp_stock_count(self, value, None);}}
     pub fn set_pid(&self, pid: &Il2CppString) { unsafe { disposdata_set_pid(self, pid, None); }}
     pub fn set_sid(&self, sid: &Il2CppString) { unsafe { disposdata_set_sid(self, sid, None);}}
 }
@@ -91,10 +91,10 @@ fn disposdata_get_force(this: &DisposData, method_info: OptionalMethod) -> i8;
 fn disposdata_set_ai_attack_name(this: &DisposData, value: &Il2CppString, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x01cfa840)]
-fn disposdata_get_hp_stockCount(this: &DisposData, method_info: OptionalMethod) -> u8;
+fn disposdata_get_hp_stock_count(this: &DisposData, method_info: OptionalMethod) -> u8;
 
 #[skyline::from_offset(0x01cfa850)]
-fn disposdata_set_hp_stockcount(this: &DisposData, value: u8, method_info: OptionalMethod);
+fn disposdata_set_hp_stock_count(this: &DisposData, value: u8, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x01cfa9d0)]
 fn disposdata_set_ai_attack_value(this: &DisposData, value: &Il2CppString, method_info: OptionalMethod);

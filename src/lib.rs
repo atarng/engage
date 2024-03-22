@@ -26,6 +26,7 @@ pub mod script;
 pub mod sequence;
 pub mod singleton;
 pub mod titlebar;
+pub mod tmpro;
 pub mod uniticon;
 pub mod unitpool;
 pub mod unityengine;

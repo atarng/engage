@@ -61,7 +61,7 @@ fn force_gettype(ty: ForceType, _method_info: OptionalMethod) -> Option<&'static
 fn force_get_count(this: &Force, method_info: OptionalMethod) -> i32;
 
 #[unity::from_offset("App","Force","Transfer")]
-fn force_transfer(this: &Force, forcetype: i32, isLast: bool,method_info: OptionalMethod);
+fn force_transfer(this: &Force, forcetype: i32, is_last: bool,method_info: OptionalMethod);
 
 #[unity::from_offset("App", "Force", "GetHeroUnit")]
 fn force_get_hero_unit(this: &Force, method_info: OptionalMethod) -> &'static mut Unit;

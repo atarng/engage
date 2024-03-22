@@ -7,6 +7,7 @@ use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields};
 
 pub mod config;
 pub mod content;
+pub mod savedata;
 
 /// Represents the base Menu from which every other inherits.
 ///
