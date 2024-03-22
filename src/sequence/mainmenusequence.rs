@@ -36,7 +36,7 @@ impl MainMenuSequence {
 
     pub fn jump_to_next_sequence() {
         let instance = Self::get();
-        unsafe { mainmenusequence_jumptonextsequence(instance) };
+        unsafe { mainmenusequence_jumptonextsequence(instance, None) };
     }
 }
 
@@ -55,4 +55,4 @@ impl AsMut<ProcInstFields> for MainMenuSequence {
 impl Bindable for MainMenuSequence {}
 
 #[unity::from_offset("App", "MainMenuSequence", "JumpToNextSequence")]
-fn mainmenusequence_jumptonextsequence(this: &MainMenuSequence);
+fn mainmenusequence_jumptonextsequence(this: &MainMenuSequence, method_info: OptionalMethod);

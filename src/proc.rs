@@ -193,15 +193,15 @@ impl<T: Bindable> ProcVoidMethod<T> {
     ///
     /// Do be aware that despite the target argument being immutable, the receiving method can, in fact, mutate the target.
     pub fn new(
-        target: Option<&'static T>,
+        target: impl Into<Option<&'static T>>,
         method: extern "C" fn(&'static mut T, OptionalMethod),
-    ) -> Il2CppResult<&'static mut ProcVoidMethod<T>> {
+    ) -> &'static mut ProcVoidMethod<T> {
         ProcVoidMethod::<T>::instantiate().map(|proc| {
             proc.method_ptr = method as _;
-            proc.target = target;
+            proc.target = target.into();
             proc.method = Box::leak(Box::new(MethodInfo::new())) as *mut MethodInfo;
             proc
-        })
+        }).unwrap()
     }
 }
 
@@ -227,13 +227,13 @@ impl<T> ProcBoolMethod<T> {
     pub fn new(
         target: &'static T,
         method: extern "C" fn(&'static mut T, OptionalMethod) -> bool,
-    ) -> Il2CppResult<&'static mut ProcBoolMethod<T>> {
+    ) -> &'static mut ProcBoolMethod<T> {
         ProcBoolMethod::<T>::instantiate().map(|proc| {
             proc.method_ptr = method as _;
             proc.target = target;
             proc.method = Box::leak(Box::new(MethodInfo::new())) as *mut MethodInfo;
             proc
-        })
+        }).unwrap()
     }
 }
 
@@ -254,15 +254,15 @@ impl<T> ProcVoidFunction<T> {
     ///
     /// Do be aware that despite the target argument being immutable, the receiving method can, in fact, mutate to target.
     pub fn new(
-        target: Option<&'static T>,
+        target: impl Into<Option<&'static T>>,
         method: extern "C" fn(&'static mut T, OptionalMethod),
-    ) -> Il2CppResult<&'static mut ProcVoidFunction<T>> {
+    ) -> &'static mut ProcVoidFunction<T> {
         ProcVoidFunction::<T>::instantiate().map(|proc| {
             proc.method_ptr = method;
-            proc.target = target;
+            proc.target = target.into();
             proc.method = Box::leak(Box::new(MethodInfo::new())) as *mut MethodInfo;
             proc
-        })
+        }).unwrap()
     }
 }
 

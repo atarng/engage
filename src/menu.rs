@@ -104,7 +104,7 @@ fn basicmenu_createdefaultdesc<P: BasicMenuMethods + ?Sized>(
 pub trait MenuSequence {
     fn bind(parent: &impl Bindable) {
         let proc = ProcInst::instantiate().unwrap();
-        let descs = Il2CppArray::new_from(Self::get_proc_desc(proc)).unwrap();
+        let descs = Il2CppArray::from_slice(Self::get_proc_desc(proc)).unwrap();
         println!("CobaltMenuSequence before create_bind");
 
         proc.create_bind(parent, descs, Self::proc_name());
