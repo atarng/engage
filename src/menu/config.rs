@@ -35,7 +35,7 @@ impl ConfigBasicMenuItem {
     }
 
     pub fn new_switch<Methods: ConfigBasicMenuItemSwitchMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
-        let mut item = Self::new();
+        let item = Self::new();
 
         Methods::init_content(item);
 
@@ -62,7 +62,7 @@ impl ConfigBasicMenuItem {
     }
 
     pub fn new_gauge<Methods: ConfigBasicMenuItemGaugeMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
-        let mut item = Self::new();
+        let item = Self::new();
 
         Methods::init_content(item);
 
@@ -84,7 +84,7 @@ impl ConfigBasicMenuItem {
     }
 
     pub fn new_command<Methods: ConfigBasicMenuItemCommandMethods>(title: impl AsRef<str>) -> &'static mut ConfigBasicMenuItem {
-        let mut item = Self::new();
+        let item = Self::new();
 
         Methods::init_content(item);
 
@@ -107,12 +107,12 @@ impl ConfigBasicMenuItem {
 
         item.get_class_mut()
             .get_virtual_method_mut("OnSelect")
-            .map(|method| method.method_ptr = Self::on_select as _)
+            .map(|method| method.method_ptr = Methods::on_select as _)
             .unwrap();
 
         item.get_class_mut()
             .get_virtual_method_mut("OnDeselect")
-            .map(|method| method.method_ptr = Self::on_deselect as _)
+            .map(|method| method.method_ptr = Methods::on_deselect as _)
             .unwrap();
 
         item.title_text = title.into();
@@ -121,18 +121,6 @@ impl ConfigBasicMenuItem {
         Methods::set_help_text(item, None);
 
         item
-    }
-
-    extern "C" fn on_select(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) {
-        unsafe { configbasicmenuitem_on_select(this, method_info) }
-        this.is_arrow = false;
-        unsafe { configbasicmenuitem_update_text(this, method_info) }
-    }
-
-    extern "C" fn on_deselect(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) {
-        unsafe { configbasicmenuitem_on_deselect(this, method_info) }
-        this.is_arrow = false;
-        unsafe { configbasicmenuitem_update_text(this, method_info) }
     }
     
     pub fn update_text(&self) {
@@ -156,6 +144,14 @@ impl ConfigBasicMenuItem {
     pub fn change_key_value_f(value: f32, min: f32, max: f32, step: f32) -> f32 {
         unsafe { configbasicmenuitem_change_key_value_float(value, min, max, step, None) }
     }
+
+    pub fn on_select(&self) {
+        unsafe { configbasicmenuitem_on_select(self, None) }
+    }
+
+    pub fn on_deselect(&self) {
+        unsafe { configbasicmenuitem_on_deselect(self, None) }
+    }
 }
 
 pub trait ConfigBasicMenuItemSwitchMethods {
@@ -176,6 +172,18 @@ pub trait ConfigBasicMenuItemCommandMethods {
     extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_command_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
+
+    extern "C" fn on_select(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) {
+        ConfigBasicMenuItem::on_select(this);
+        this.is_arrow = false;
+        ConfigBasicMenuItem::on_deselect(this);
+    }
+    
+    extern "C" fn on_deselect(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) {
+        ConfigBasicMenuItem::on_select(this);
+        this.is_arrow = false;
+        ConfigBasicMenuItem::on_deselect(this);
+    }
 }
 
 extern "C" fn open_anime_all_ondispose(this: &mut ProcInst, _method_info: OptionalMethod) {

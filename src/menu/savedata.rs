@@ -1,4 +1,4 @@
-use unity::{engine::ui::Image, prelude::*};
+use unity::engine::ui::Image;
 
 use crate::{gameuserdata::GameMode, tmpro::TextMeshProUGUI};
 

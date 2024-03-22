@@ -1,5 +1,6 @@
 #![feature(ptr_sub_ptr, lazy_cell)]
 
+pub mod bundle;
 pub mod combat;
 pub mod database;
 pub mod dialog;

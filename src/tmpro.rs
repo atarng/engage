@@ -1,6 +1,4 @@
-use unity::{prelude::*, system::List};
-
-use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields};
+use unity::prelude::*;
 
 /// You can usually use this instead of a class inheriting from it at the risk of missing fields and methods.
 #[unity::class("TMPro", "TextMeshProUGUI")]
