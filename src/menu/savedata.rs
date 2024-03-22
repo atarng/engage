@@ -1,6 +1,6 @@
 use unity::{engine::ui::Image, prelude::*};
 
-use crate::tmpro::TextMeshProUGUI;
+use crate::{gameuserdata::GameMode, tmpro::TextMeshProUGUI};
 
 use super::BasicMenuItem;
 
@@ -32,6 +32,6 @@ pub struct GameSaveDataHeaderReaderHandle {
 #[unity::class("App", "GameSaveDataHeader")]
 pub struct GameSaveDataHeader {
     __: [u8; 0x24],
-    pub gamemode: i32,
+    pub gamemode: GameMode,
     // ...
 }
