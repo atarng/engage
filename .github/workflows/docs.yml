@@ -35,12 +35,14 @@ jobs:
         run: cargo clean --doc
       - name: Build docs
         run: RUSTFLAGS=-g cargo-skyline skyline doc
+      - name: Add redirect
+        run: echo '<meta http-equiv="refresh" content="0;url=engage/index.html">' > target/aarch64-skyline-switch/doc/index.html
       - name: Remove lock file
         run: rm target/aarch64-skyline-switch/doc/.lock
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: target/aarch64-skyline-switch/doc/engage
+          path: target/aarch64-skyline-switch/doc
   deploy:
     name: Deploy
     environment:
