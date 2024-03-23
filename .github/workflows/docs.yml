@@ -26,9 +26,6 @@ jobs:
         run: |
           cargo install cargo-skyline
           cargo-skyline skyline update-std
-      - name: Build release NRO
-        id: build_release
-        run: RUSTFLAGS=-g cargo-skyline skyline build --release
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v4
