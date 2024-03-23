@@ -36,7 +36,7 @@ jobs:
       - name: Build docs
         run: RUSTFLAGS=-g cargo-skyline skyline doc
       - name: Remove lock file
-        run: rm ttarget/aarch64-skyline-switch/doc/engage/.lock
+        run: rm ttarget/aarch64-skyline-switch/doc/.lock
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
