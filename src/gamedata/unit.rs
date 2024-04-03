@@ -1,6 +1,6 @@
 use unity::prelude::*;
 use unity::il2cpp::object::*;
-use crate::force::Force;
+use crate::{force::Force, stream::Stream};
 use crate::random::*;
 use super::{JobData, WeaponMask, PersonData, 
     item::{UnitItemList, ItemData}, 
@@ -36,6 +36,32 @@ pub struct UnitStatus {
 #[unity::class("App", "UnitBaseCapability")]
 pub struct UnitBaseCapability {
     pub capability: &'static mut Array<i8>,
+}
+
+#[unity::class("App", "UnitAccessory")]
+pub struct UnitAccessory {
+    pub index: i32,
+}
+
+#[unity::from_offset("App", "UnitAccessory", "Serialize")]
+extern "C" fn unitaccessory_serialize(this: &UnitAccessory, stream: &mut Stream, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "UnitAccessory", "Deserialize")]
+extern "C" fn unitaccessory_deserialize(this: &mut UnitAccessory, stream: &Stream, method_info: OptionalMethod);
+
+impl UnitAccessory {
+    pub fn serialize(&self, stream: &mut Stream) {
+        unsafe { unitaccessory_serialize(self, stream, None) };
+    }
+
+    pub fn deserialize(&mut self, stream: &Stream) {
+        unsafe { unitaccessory_deserialize(self, stream, None) }
+    }
+}
+
+#[unity::class("App", "UnitAccessoryList")]
+pub struct UnitAccessoryList {
+    pub unit_accessory_array: &'static mut Il2CppArray<&'static mut UnitAccessory>
 }
 
 #[unity::class("App", "Unit")]

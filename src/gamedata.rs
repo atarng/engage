@@ -3,6 +3,7 @@
 use std::ops::Deref;
 use unity::{prelude::*, system::ListFields};
 
+pub mod accessory;
 pub mod person;
 pub mod skill;
 pub mod job;
