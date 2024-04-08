@@ -58,7 +58,7 @@ pub struct ProcInst {
     persistent: *const u8,
     /// Note: Actually a bitfield to mark ProcInsts for death (to be destroyed)
     state: i32,
-    suspend: i32,
+    pub suspend: i32,
     wait_time: f32,
     tick_time: f32,
     // RawValueStack
