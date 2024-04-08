@@ -73,7 +73,7 @@ impl Drop for ProcInst {
 
 impl ProcInst {
     pub fn get_child(&self) -> Option<&ProcInst> {
-        self.child
+        self.child.as_deref()
     }
 
     pub fn get_child_mut(&mut self) -> Option<&mut ProcInst> {
