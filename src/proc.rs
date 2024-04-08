@@ -72,12 +72,14 @@ impl Drop for ProcInst {
 }
 
 impl ProcInst {
-    pub fn get_child(&self) -> Option<&ProcInst> {
-        self.child.as_deref()
+    pub fn get_child(&self) -> &ProcInst {
+        // Ray: yes, this'd crash if null. I'll fix later.
+        self.child.unwrap()
     }
 
-    pub fn get_child_mut(&mut self) -> Option<&mut ProcInst> {
-        self.child
+    pub fn get_child_mut(&mut self) -> &mut ProcInst {
+        // Ray: yes, this'd crash if null. I'll fix later.
+        self.child.unwrap()
     }
 
     pub fn get_descs(&self) -> &Il2CppArray<&'static mut ProcDesc> {
