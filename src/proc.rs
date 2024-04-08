@@ -72,12 +72,12 @@ impl Drop for ProcInst {
 }
 
 impl ProcInst {
-    pub fn get_child(&self) -> &ProcInst {
+    pub fn get_child(&self) -> &'static ProcInst {
         // Ray: yes, this'd crash if null. I'll fix later.
         self.child.unwrap()
     }
 
-    pub fn get_child_mut(&mut self) -> &mut ProcInst {
+    pub fn get_child_mut(&mut self) -> &'static mut ProcInst {
         // Ray: yes, this'd crash if null. I'll fix later.
         self.child.unwrap()
     }
