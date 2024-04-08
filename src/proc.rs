@@ -51,7 +51,7 @@ pub struct ProcInst {
     pub hashcode: i32,
     /// The ProcInst this instance is attached to
     pub parent: &'static mut ProcInst,
-    pub child: &'static mut ProcInst,
+    pub child: Option<&'static mut ProcInst>,
     pub prev: &'static ProcInst,
     pub next: &'static ProcInst,
     /// Note:  Observed a ProcVoidMethod being set here
