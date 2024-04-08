@@ -72,11 +72,11 @@ impl Drop for ProcInst {
 }
 
 impl ProcInst {
-    pub fn get_child(&self) -> &ProcInst {
+    pub fn get_child(&self) -> Option<&ProcInst> {
         self.child
     }
 
-    pub fn get_child_mut(&mut self) -> &mut ProcInst {
+    pub fn get_child_mut(&mut self) -> Option<&mut ProcInst> {
         self.child
     }
 
