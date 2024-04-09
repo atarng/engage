@@ -52,8 +52,8 @@ pub struct ProcInst {
     /// The ProcInst this instance is attached to
     pub parent: &'static mut ProcInst,
     pub child: Option<&'static mut ProcInst>,
-    pub prev: &'static ProcInst,
-    pub next: &'static ProcInst,
+    pub prev: Option<&'static mut ProcInst>,
+    pub next: Option<&'static mut ProcInst>,
     /// Note:  Observed a ProcVoidMethod being set here
     persistent: *const u8,
     /// Note: Actually a bitfield to mark ProcInsts for death (to be destroyed)
