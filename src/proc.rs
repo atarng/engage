@@ -57,7 +57,7 @@ pub struct ProcInst {
     /// Note:  Observed a ProcVoidMethod being set here
     persistent: *const u8,
     /// Note: Actually a bitfield to mark ProcInsts for death (to be destroyed)
-    state: i32,
+    pub state: i32,
     pub suspend: i32,
     wait_time: f32,
     tick_time: f32,
