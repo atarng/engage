@@ -187,9 +187,9 @@ pub trait ConfigBasicMenuItemCommandMethods {
 }
 
 extern "C" fn open_anime_all_ondispose(this: &mut ProcInst, _method_info: OptionalMethod) {
-    this.parent.get_class().get_virtual_method("OpenAnimeAll").map(|method| {
+    this.parent.as_ref().unwrap().get_class().get_virtual_method("OpenAnimeAll").map(|method| {
         let open_anime_all = unsafe { std::mem::transmute::<_, extern "C" fn(&ProcInst, &MethodInfo)>(method.method_info.method_ptr) };
-        open_anime_all(this.parent, method.method_info);
+        open_anime_all(this.parent.as_ref().unwrap(), method.method_info);
     });
 }
 
