@@ -10,5 +10,7 @@ skyline = { git = "https://github.com/Raytwo/skyline-rs", branch = "preview" }
 unity = { version = "0.3.0", git = "https://github.com/DivineDragonFanClub/unity" }
 modular-bitfield = "0.11.2"
 once_cell = "1.17.0"
-lazysimd = { git = "https://github.com/Raytwo/lazysimd" }
 bitflags = "2.4.0"
+
+[target.aarch64-skyline-switch.dependencies]
+lazysimd = { git = "https://github.com/Raytwo/lazysimd" }
