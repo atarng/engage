@@ -16,7 +16,7 @@ impl UnitIcon {
         unsafe { uniticon_set_material(&self, material, None) }
     }
 
-    pub fn get_material(&self) -> &'static Material {
+    pub fn get_material(&self) -> &'static mut Material {
         unsafe { uniticon_get_material(&self, None) }
     }
 }
@@ -24,7 +24,7 @@ impl UnitIcon {
 impl IsImage for UnitIcon { }
 
 #[unity::from_offset("App", "UnitIcon", "get_material")]
-fn uniticon_get_material(this: &UnitIcon, method_info: OptionalMethod) -> &'static Material;
+fn uniticon_get_material(this: &UnitIcon, method_info: OptionalMethod) -> &'static mut Material;
 
 #[unity::from_offset("App", "UnitIcon", "set_material")]
 fn uniticon_set_material(this: &UnitIcon, material: &'static Material, method_info: OptionalMethod);

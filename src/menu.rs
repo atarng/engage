@@ -5,10 +5,9 @@ use unity::{prelude::*, system::List};
 
 use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields};
 
-use self::config::ConfigBasicMenuItem;
-
 pub mod config;
 pub mod content;
+pub mod savedata;
 
 /// Represents the base Menu from which every other inherits.
 ///
@@ -30,6 +29,14 @@ pub struct BasicMenu<T: 'static> {
 impl<T> BasicMenu<T> {
     pub fn add_item(&mut self, item: &'static mut T) {
         self.full_menu_item_list.add(item);
+    }
+
+    pub fn close_anime_all(&self) {
+        self.get_class().get_virtual_method("CloseAnimeAll").map(|method| {
+            let close_anime_all =
+                unsafe { std::mem::transmute::<_, extern "C" fn(&BasicMenu<T>, &MethodInfo)>(method.method_info.method_ptr) };
+            close_anime_all(&self, method.method_info);
+        });
     }
 }
 
@@ -97,7 +104,7 @@ fn basicmenu_createdefaultdesc<P: BasicMenuMethods + ?Sized>(
 pub trait MenuSequence {
     fn bind(parent: &impl Bindable) {
         let proc = ProcInst::instantiate().unwrap();
-        let descs = Il2CppArray::new_from(ProcDesc::class(), Self::get_proc_desc(proc)).unwrap();
+        let descs = Il2CppArray::from_slice(Self::get_proc_desc(proc)).unwrap();
         println!("CobaltMenuSequence before create_bind");
 
         proc.create_bind(parent, descs, Self::proc_name());
@@ -172,7 +179,6 @@ impl BasicMenuItem {
 
         item
     }
-
     pub fn is_attribute_disable(&self) -> bool {
         unsafe {
             basicmenuitem_is_attribute_disable(self, None)
@@ -198,7 +204,6 @@ pub trait BasicMenuItemMethods {
 
 #[skyline::from_offset(0x2455fc0)]
 fn basicmenuitem_ctor(this: &BasicMenuItem, method_info: OptionalMethod);
-
 #[skyline::from_offset(0x2457540)]
 fn basicmenuitem_is_attribute_disable(this: &BasicMenuItem, method_info: OptionalMethod) -> bool;
 
@@ -253,14 +258,14 @@ impl BasicMenuResult {
         Self::new().with_se_decide(true)
     }
 
-    pub fn se_miss() -> Self {
-        Self::new().with_se_miss(true)
-    }
-
     pub fn close_decide() -> Self {
         Self::new().with_close_this(true).with_se_decide(true)
     }
 
+    pub fn se_miss() -> Self {
+        Self::new().with_se_miss(true)
+    }
+    
     pub fn close_parent_decide() -> Self {
         Self::new().with_close_parent(true).with_se_decide(true)
     }
@@ -291,5 +296,30 @@ pub struct ConfigMenu<T: 'static> {
     pub suspend: i32,
 }
 
+// Workaround to not specify a generic type when using as a static method
+impl ConfigMenu<()> {
+    pub fn create_bind(parent: &impl Bindable) {
+        unsafe { configmenu_createbind(parent, None) }
+    }
+}
+
+impl<T> ConfigMenu<T> {
+    pub fn add_item(&mut self, item: &'static mut T) {
+        self.full_menu_item_list.add(item);
+    }
+}
+
+impl<T> AsRef<ProcInstFields> for ConfigMenu<T> {
+    fn as_ref(&self) -> &ProcInstFields {
+        &self.proc
+    }
+}
+
+impl<T> AsMut<ProcInstFields> for ConfigMenu<T> {
+    fn as_mut(&mut self) -> &mut ProcInstFields {
+        &mut self.proc
+    }
+}
+
 #[unity::from_offset("", "ConfigMenu", "CreateBind")]
-pub fn configmenu_createbind(parent: &mut BasicMenu<ConfigBasicMenuItem>, method_info: OptionalMethod);
+fn configmenu_createbind<T: Bindable + ?Sized>(parent: &T, method_info: OptionalMethod); // Apparently returns a GameObject?

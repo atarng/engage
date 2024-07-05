@@ -1,5 +1,6 @@
 #![feature(ptr_sub_ptr, lazy_cell)]
 
+pub mod bundle;
 pub mod combat;
 pub mod database;
 pub mod dialog;
@@ -7,6 +8,7 @@ pub mod eventsequence;
 pub mod fade;
 pub mod force;
 pub mod gamedata;
+pub mod gameicon;
 pub mod gamemessage;
 pub mod gametime;
 pub mod gameuserdata;
@@ -25,9 +27,14 @@ pub mod resourcemanager;
 pub mod script;
 pub mod sequence;
 pub mod singleton;
+pub mod spriteatlasmanager;
+pub mod stream;
 pub mod titlebar;
+pub mod tmpro;
 pub mod uniticon;
 pub mod unitpool;
 pub mod unityengine;
 pub mod util;
 pub mod vibrationmanager;
+pub mod random;
+pub mod hub;
