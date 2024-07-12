@@ -186,6 +186,8 @@ impl BasicMenuItem {
     }
 }
 
+impl Bindable for BasicMenuItem {}
+
 pub trait BasicMenuItemMethods {
     extern "C" fn get_name(_this: &mut BasicMenuItem, _method_info: OptionalMethod) -> &'static Il2CppString;
 
