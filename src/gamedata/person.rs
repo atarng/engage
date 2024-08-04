@@ -56,7 +56,7 @@ impl PersonData {
     // Getters
     pub fn get_aptitude(&self) -> &'static WeaponMask { unsafe {person_get_apt(self, None)}}
     pub fn get_sub_aptitude(&self) -> &'static WeaponMask { unsafe { person_get_sub_apt(self, None)}}
-    pub fn get_ascii_name(&self) -> &Il2CppString { unsafe {person_get_ascii_name(self, None) } }
+    pub fn get_ascii_name(&self) -> Option<&Il2CppString> { unsafe {person_get_ascii_name(self, None) } }
     pub fn get_asset_force(&self) -> i32 { unsafe { person_get_asset_force(self, None) }  }
     pub fn get_attrs(&self) -> i32 { unsafe { person_get_attrs(self, None)} }
     pub fn get_combat_bgm(&self) -> &Il2CppString { unsafe { person_get_combat_bgm(self, None)}}
@@ -72,6 +72,7 @@ impl PersonData {
     pub fn get_level(&self) -> u8 { unsafe { person_get_level(self, None) } }
     pub fn get_limit(&self) -> &mut CapabilitySbyte {  unsafe { person_get_limit(self, None) } }
     pub fn get_name(&self) -> Option<&Il2CppString> {  unsafe { person_get_name(self, None) } }
+    pub fn get_sp(&self) -> i32 { unsafe { person_get_sp(self, None)}}
     pub fn get_summon_color(&self) -> i32 { unsafe { person_get_summoncolor(self, None)}}
     pub fn get_summon_rank(&self) -> i32 { unsafe { person_get_summon_rank(self, None)}}
     pub fn get_unit_icon_id(&self) -> &'static Il2CppString { unsafe { get_uniticonid(self, None )}}
@@ -84,6 +85,7 @@ impl PersonData {
     pub fn set_ascii_name(&self, name: &Il2CppString) { unsafe { person_set_ascii_name(self, name, None); }}
     pub fn set_attrs(&self, attr: i32) { unsafe { person_set_attrs(self, attr, None); }}
     pub fn set_common_skills(&self, skill: &SkillArray) { unsafe { set_commonskill(self, skill, None); }}
+    pub fn set_common_sids(&self, sids: &Array<&Il2CppString>) { unsafe { person_set_common_sids(self, sids, None); }}
     pub fn set_fid(&self, fid: &Il2CppString) {  unsafe { person_set_fid(self, fid, None);}}
     pub fn set_gender(&self, gender: i32) { unsafe { person_set_gender(self, gender, None); }}
     pub fn set_grow(&self, value: &Capability) { unsafe { person_set_grow(self, value, None); }}
@@ -134,7 +136,7 @@ fn person_get_limit(this: &PersonData, method_info: OptionalMethod) -> & mut Cap
 fn get_facedata(this: &PersonData, method_info: OptionalMethod) -> &PersonData;
 
 #[skyline::from_offset(0x1f26160)]
-fn person_get_ascii_name(this: &PersonData, method_info: OptionalMethod) -> &Il2CppString;
+fn person_get_ascii_name(this: &PersonData, method_info: OptionalMethod) -> Option<&Il2CppString>;
 
 #[skyline::from_offset(0x1f25f40)]
 fn person_get_flag(this: &PersonData, method_info: OptionalMethod) -> &mut PersonDataFlag;
@@ -222,6 +224,12 @@ fn person_get_summoncolor(this: &PersonData, method_info: OptionalMethod) -> i32
 
 #[unity::from_offset("App", "PersonData", "Load")]
 fn persondata_load(method_info: OptionalMethod);
+
+#[unity::from_offset("App", "PersonData", "get_SkillPoint")]
+fn person_get_sp(this: &PersonData, method_info: OptionalMethod) -> i32;
+
+#[unity::from_offset("App", "PersonData", "set_CommonSids")]
+fn person_set_common_sids(this: &PersonData, sids: &Array<&Il2CppString>, method_info: OptionalMethod);
 //Capability
 
 #[skyline::from_offset(0x25bcda0)]

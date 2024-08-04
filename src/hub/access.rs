@@ -4,6 +4,7 @@ use unity::system::List;
 use crate::gamedata::{
     StructList,
     animal::AnimalData,
+    *,
 };
 
 #[unity::class("App", "HubAccessData")]
@@ -14,7 +15,9 @@ pub struct HubAccessData {
 }
 
 #[unity::class("App", "HubDisposData")]
-pub struct HubDisposData {}
+pub struct HubDisposData {
+    pub parent: StructDataArrayFields,
+}
 
 #[unity::class("App", "HubAccessManager")]
 pub struct HubAccessManager {
@@ -40,9 +43,12 @@ impl HubDisposData {
     pub fn get_locator(&self) -> &'static Il2CppString { unsafe { dispos_hub_get_locator(self, None) } }
     pub fn load() { unsafe { access_load(None); }}
     pub fn set_aid(&self, value: &Il2CppString) { unsafe { dispos_hub_set_aid(self, value, None); }}
-
+    pub fn set_chapter(&self, value: &Il2CppString) { unsafe { dispos_hub_set_chapter(self, value, None); }}
     pub fn unload() {
-        let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        let mut method =  Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        if method.is_none() {
+            method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
+        }
         if method.is_none() {
             method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Unload")));
         }
@@ -92,6 +98,9 @@ pub fn dispos_hub_get_aid(this: &HubDisposData, method_info: OptionalMethod) -> 
 #[unity::from_offset("App", "HubDisposData", "set_AID")]
 pub fn dispos_hub_set_aid(this: &HubDisposData, value :&Il2CppString, method_info: OptionalMethod);
 
+#[unity::from_offset("App", "HubDisposData", "set_Chapter")]
+pub fn dispos_hub_set_chapter(this: &HubDisposData, value :&Il2CppString, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "HubAccessData", "get_IsDone")]
 pub fn access_data_is_done(this: &HubAccessData, method_info: OptionalMethod) -> bool;
 
@@ -107,6 +116,6 @@ pub fn access_data_is_animal(this: &HubAccessData, method_info: OptionalMethod) 
 #[unity::from_offset("App", "HubDisposData", "Load")]
 pub fn access_load(method_info: OptionalMethod);
 
-#[unity::from_offset("App", "HubAccessData", "DisposDat")]
+#[unity::from_offset("App", "HubAccessData", "TryGetPID")]
 pub fn access_data_try_get_pid(this: &HubAccessData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 

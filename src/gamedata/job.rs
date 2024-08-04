@@ -33,7 +33,8 @@ impl JobData {
     pub fn get_max_weapon_level(&self, index: i32) -> i32 { unsafe { job_get_max_weapon_level1(self, index, None)}}
     pub fn get_weapon_mask(&self) -> &'static WeaponMask { unsafe { job_get_weapon_mask2(self, None)}}
     pub fn get_unique_items(&self) -> &Array<&Il2CppString> { unsafe { job_get_unique_items(self, None)}}
-
+    pub fn get_equippable_item_kinds(&self) -> &'static Array<i32> { unsafe { job_equipped_weapon_kinds(self, None)}}
+    pub fn get_sort(&self) -> u16 { unsafe { job_get_sort(self, None)}}
     pub fn load() {unsafe { jobdata_load(None); }}
     pub fn set_diff_grow(&self, grow: &CapabilitySbyte) {  unsafe { job_set_diffgrow(self, grow, None);}}
     pub fn set_diff_grow_l(&self,grow: &CapabilitySbyte) { unsafe { job_set_diffgrow_l(self, grow, None); }}
@@ -137,3 +138,9 @@ fn job_set_learn_skill(this: &JobData, sid: &Il2CppString, method_info: Optional
 
 #[unity::from_offset("App","JobData","Load")]
 fn jobdata_load(method_info: OptionalMethod);
+
+#[skyline::from_offset(0x02053ec0)]
+pub fn job_get_sort(this: &JobData, method_info: OptionalMethod) -> u16;
+
+#[unity::from_offset("App","JobData","GetEquipableWeaponKinds")]
+fn job_equipped_weapon_kinds(this: &JobData, method_info: OptionalMethod) -> &'static Array<i32>;

@@ -1,39 +1,60 @@
 use unity::prelude::*;
 use unity::system::List;
 use super::{StructList, PersonData, StructBaseFields};
-use crate::gamedata::Gamedata;
+use crate::gamedata::*;
 // Contains DisposData and ChapterData Impls
 #[unity::class("App", "DisposData")]
 pub struct DisposData {
-    pub parent: StructBaseFields,
-    pub array_name: &'static Il2CppString,
+    pub parent: StructDataArrayFields,
     pub _group: &'static Il2CppString,
     pub pid: &'static Il2CppString,
     tid: &'static Il2CppString,
-    flag: &'static DisposDataFlag,
+    pub flag: &'static DisposDataFlag,
     jid: &'static Il2CppString,
     sid: &'static Il2CppString,
     bid: &'static Il2CppString,
-    appear_x: i8,
-    appear_y: i8,
+    pub appear_x: i8,
+    pub appear_y: i8,
     pub dispos_x: i8,
     pub dispos_y: i8,
+    pub direction: i32,
+    pub rotation: i8,
+    pub level_n: u8,
+    pub level_h: u8,
+    pub level_l: u8,
+    __: i32,
+    items: u64,
+    item1: u64,
+    item2: u64,
+    item3: u64,
+    item4: u64,
+    item5: u64,
+    item6: u64,
+    pub gid: Option<&'static Il2CppString>,
+    pub hp_stock_count: u32,
+    state0: i32,
+    state1: i32,
+    state2: i32,
+    state3: i32,
+    state4: i32,
+    state5: i32,
+    ___: i32,
+    pub ai_action_name: &'static Il2CppString,
+    pub ai_action_value: Option<&'static Il2CppString>,
+    pub ai_mind_name: &'static Il2CppString,
+    pub ai_mind_value: Option<&'static Il2CppString>,
+    pub ai_attack_name: &'static Il2CppString,
+    pub ai_attack_value: Option<&'static Il2CppString>,
+    pub ai_move_name: &'static Il2CppString,
+    pub ai_move_value: Option<&'static Il2CppString>,
 }
 #[unity::class("App", "DisposDataFlag")]
 pub struct DisposDataFlag {
     pub value: i32,
 }
-impl DisposData {
-    pub fn get_array_mut() -> Option<&'static mut StructList<List<Self>>> {
-        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetList"))).unwrap();
-        let get_list = unsafe {
-            std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> Option<&'static mut StructList<List<Self>>>>(
-                method.method_ptr,
-            )
-        };
-        get_list(method)
-    }
+impl GamedataArray for DisposData {}
 
+impl DisposData {
     pub fn get_flag(&self) -> &'static mut DisposDataFlag { unsafe { disposdata_get_flag(self, None)}}
     pub fn get_force(&self) -> i8 { unsafe {disposdata_get_force(self, None)}}
     pub fn get_gid(&self) -> &'static Il2CppString { unsafe { disposdata_get_gid(self, None)} }
@@ -49,6 +70,7 @@ impl DisposData {
     pub fn set_hp_stock_count(&self, value: u8) { unsafe { disposdata_set_hp_stock_count(self, value, None);}}
     pub fn set_pid(&self, pid: &Il2CppString) { unsafe { disposdata_set_pid(self, pid, None); }}
     pub fn set_sid(&self, sid: &Il2CppString) { unsafe { disposdata_set_sid(self, sid, None);}}
+
 }
 
 #[unity::class("App", "ChapterData")]
@@ -60,16 +82,19 @@ pub struct ChapterData {
 }
 
 impl Gamedata for ChapterData {}
+
 impl ChapterData {
+    pub fn get_flag(&self) -> i32 { unsafe { get_chapter_flag(self, None)}}
     pub fn get_cleared_flag_name(&self) -> &'static Il2CppString { unsafe { get_cleared_flagname(self, None) }}
     pub fn get_gmap_open_condition(&self) -> &'static Il2CppString { unsafe { chapter_get_gmapspotopencondition(self, None)} }
     pub fn get_recommended_level(&self) -> u8 { unsafe { chapter_get_recommended_level(self, None)}}
-    
+    pub fn get_prefixless_cid(&self) -> &'static Il2CppString { unsafe { chapter_get_prefixless_cid(self, None)}}
     pub fn is_evil(&self) -> bool { unsafe {chapter_is_dlc_evil(self, None)} }
     pub fn is_god(&self) -> bool { unsafe {chapter_is_dlc_god(self, None)}}
     
     pub fn set_gmap_open_condition(&self, value: &str) { unsafe { chapter_set_gmap_open_condition(self, value.into(), None); } }
     pub fn set_flag(&self, value: i32) { unsafe {chapter_set_flag(self, value, None); }}
+    pub fn set_next_chapter(&self, value: &str) { unsafe {chapter_set_next_chapter(self, value.into(), None); }}
     pub fn set_hold_level(&self, value: u8) { unsafe { chapter_set_hold_level(self, value, None); }}
     pub fn set_recommended_level(&self, level: u8 ) { unsafe { chapter_set_recommended_level(self, level, None );}}
 }
@@ -144,3 +169,12 @@ fn chapter_set_flag(this: &ChapterData, value: i32, method_info: OptionalMethod)
 
 #[unity::from_offset("App", "ChapterData", "set_GmapSpotOpenCondition")]
 fn chapter_set_gmap_open_condition(this: &ChapterData, value: &Il2CppString, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "ChapterData", "GetPrefixlessCid")]
+fn chapter_get_prefixless_cid(this: &ChapterData, method_info: OptionalMethod) -> &'static Il2CppString;
+
+#[unity::from_offset("App", "ChapterData", "set_NextChapter")]
+fn chapter_set_next_chapter(this: &ChapterData, value: &Il2CppString, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "ChapterData", "get_Flag")]
+fn get_chapter_flag(this: &ChapterData, method_info: OptionalMethod) -> i32;

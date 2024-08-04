@@ -28,12 +28,17 @@ pub struct CookData {
     pub taste2: &'static Il2CppString,
     pub taste3: &'static Il2CppString,
 }
-
+#[unity::class("App", "NameTypeData")]
+pub struct NameTypeData {
+    pub parent: StructBaseFields,
+    pub pid: &'static Il2CppString,
+}
 #[unity::class("App", "TasteConditionData")]
 pub struct TasteConditionData {}
 
 impl Gamedata for CookData { }
 impl Gamedata for TasteData { }
+impl Gamedata for NameTypeData { }
 impl Gamedata for TasteConditionData {}
 
 impl TasteData {

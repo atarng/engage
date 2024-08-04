@@ -66,7 +66,7 @@ pub struct UnitAccessoryList {
 
 #[unity::class("App", "Unit")]
 pub struct Unit {
-    pub status: &'static UnitStatus,
+    pub status: &'static mut UnitStatus,
     pub prev: Option<&'static Unit>,
     pub next: Option<&'static Unit>,
     ai: &'static (),
@@ -82,7 +82,7 @@ pub struct Unit {
     drop_seed :i32,
     actor :u64,
     info :u64,
-    index :u8,
+    pub index :u8,
     pub level :u8,
     pub exp :u8,
     pub hp_value: u8,
@@ -104,7 +104,7 @@ pub struct Unit {
     dont_attack_force_mask :i32,
     pub item_list : &'static UnitItemList,
     item_selected :u64,
-    accessory_list :u64,
+    pub accessory_list : &'static mut UnitAccessoryList,
     pub god_unit :Option<&'static GodUnit>,
     pub god_link :Option<&'static GodUnit>,
     pub ring :Option<&'static UnitRing>,
@@ -116,7 +116,7 @@ pub struct Unit {
     pub receive_skill :&'static SkillArray,
     pub supported_skill :&'static SkillArray,
     pub equip_skill_pool :&'static SkillArray,
-    pub learned_job_skill :&'static SkillArray,
+    pub learned_job_skill :Option<&'static SkillData>,
     pub original_aptitude : &'static mut WeaponMask,
     pub aptitude : &'static mut WeaponMask,
     pub weapon_mask :&'static mut WeaponMask,
@@ -194,6 +194,7 @@ impl Unit {
     pub fn get_learn_job_skill(&self) -> Option<&SkillData> { unsafe { learn_job_kill_unit(self, None)}}
     pub fn get_pid(&self) -> &'static Il2CppString {  unsafe { unit_get_pid(self, None)} }
     pub fn get_person(&self) -> &'static PersonData { unsafe { unit_get_person(self, None)}}
+    pub fn get_god_unit(&self) -> Option<&'static GodUnit> { unsafe { unit_get_god_unit(self, None)}}
     // Setters
     pub fn set_base_capability(&self, index: i32, value: i32) { unsafe { unit_set_base_capability(self, index, value, None);}}
     pub fn set_exp(&self, exp: i32){  unsafe { unit_set_exp(self, exp, None); }  }
@@ -221,7 +222,9 @@ impl Unit {
     pub fn has_private_skill(&self, sid: &Il2CppString) -> bool { unsafe { unit_has_private_skill(self, sid, None) } }
     pub fn has_sid(&self, sid: &Il2CppString) -> bool { unsafe { unit_has_skill_sid(self, sid, None) }}
     pub fn has_skill(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill(self, skill, None)}}
-
+    pub fn has_interfence_rod(&self) -> bool { unsafe { unit_inference_rod(self, None)}}
+    pub fn has_heal_rod(&self) -> bool { unsafe { unit_heal_rod(self, None)}}
+    
     pub fn auto_grow_capability(&self, level: i32, target_level: i32) { unsafe { unit_auto_grow_cap(self, level, target_level, None); }}
     pub fn level_up(&self, num_min_stats: i32) { unsafe { unit_level_up(self, num_min_stats, None); } }
     pub fn level_down(&self) { unsafe { unit_level_down(self, None); }}
@@ -237,6 +240,7 @@ impl Unit {
 impl UnitEdit {
     pub fn set_gender(&self, gender: i32) { unsafe { unit_edit_set_gender(self, gender, None);}}
     pub fn set_name(&self, name: &Il2CppString) { unsafe { unit_edit_set_name(self, name, None); }}
+    pub fn is_enabled(&self) -> bool { unsafe { unit_edit_is_enable(self, None)}}
 }
 
 impl GodUnit {
@@ -382,6 +386,15 @@ fn unit_get_person(this: &Unit, method_info: OptionalMethod) -> &'static PersonD
 #[skyline::from_offset(0x01a0b1b0)]
 fn unit_auto_grow_cap(this: &Unit, level: i32, target_level: i32, method_info: OptionalMethod);
 
+#[unity::from_offset("App", "Unit", "get_GodUnit")]
+fn unit_get_god_unit(this: &Unit, method_info: OptionalMethod) -> Option<&'static GodUnit>;
+
+#[unity::from_offset("App", "Unit", "HasInterferenceRod")]
+fn unit_inference_rod(this: &Unit, method_info: OptionalMethod) -> bool;
+
+#[unity::from_offset("App", "Unit", "HasHealRod")]
+fn unit_heal_rod(this: &Unit, method_info: OptionalMethod) -> bool;
+
 // UnitEdit 
 #[skyline::from_offset(0x01f73e50)]
 fn unit_edit_set_gender(this: &UnitEdit, gender: i32, method_info: OptionalMethod);
@@ -389,6 +402,8 @@ fn unit_edit_set_gender(this: &UnitEdit, gender: i32, method_info: OptionalMetho
 #[unity::from_offset("App", "UnitEdit", "SetName")]
 fn unit_edit_set_name(this: &UnitEdit, name: &Il2CppString, method_info: OptionalMethod);
 
+#[unity::from_offset("App", "UnitEdit", "IsEnable")]
+pub fn unit_edit_is_enable(this: &UnitEdit, method_info: OptionalMethod) -> bool;
 
 // God Unit
 #[skyline::from_offset(0x0233eae0)]
