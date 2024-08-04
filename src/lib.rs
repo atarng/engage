@@ -1,6 +1,8 @@
 #![feature(ptr_sub_ptr, lazy_cell)]
 
+pub mod battle;
 pub mod bundle;
+pub mod calculator;
 pub mod combat;
 pub mod database;
 pub mod dialog;

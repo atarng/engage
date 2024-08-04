@@ -187,7 +187,7 @@ impl Unit {
     }
     // Getters 
     pub fn get_aptitude(&self) -> &'static mut WeaponMask { unsafe { get_unit_aptitude(self, None) } }
-    pub fn get_capability(&self, index: i32, enhance: bool) -> i32 { unsafe { unit_getcapability(self, index, enhance, None)} }
+    pub fn get_capability(&self, index: i32, calc_enhance: bool) -> i32 { unsafe { unit_getcapability(self, index, calc_enhance, None)} }
     pub fn get_capability_grow(&self, index: i32, auto_level: bool) -> i32 { unsafe { unit_get_capability_grow(self, index, auto_level, None)}}
     pub fn get_enchanced_level(&self) -> i32 { unsafe { unit_get_enhance_level(self, None)}}
     pub fn get_hp(&self) -> i32 { unsafe { unit_get_hp(self, None) } }
@@ -195,6 +195,8 @@ impl Unit {
     pub fn get_pid(&self) -> &'static Il2CppString {  unsafe { unit_get_pid(self, None)} }
     pub fn get_person(&self) -> &'static PersonData { unsafe { unit_get_person(self, None)}}
     pub fn get_god_unit(&self) -> Option<&'static GodUnit> { unsafe { unit_get_god_unit(self, None)}}
+    pub fn get_x(&self) -> i32 { unsafe { unit_get_x(self, None) } }
+    pub fn get_z(&self) -> i32 { unsafe { unit_get_z(self, None) } }
     // Setters
     pub fn set_base_capability(&self, index: i32, value: i32) { unsafe { unit_set_base_capability(self, index, value, None);}}
     pub fn set_exp(&self, exp: i32){  unsafe { unit_set_exp(self, exp, None); }  }
@@ -222,6 +224,8 @@ impl Unit {
     pub fn has_private_skill(&self, sid: &Il2CppString) -> bool { unsafe { unit_has_private_skill(self, sid, None) } }
     pub fn has_sid(&self, sid: &Il2CppString) -> bool { unsafe { unit_has_skill_sid(self, sid, None) }}
     pub fn has_skill(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill(self, skill, None)}}
+    pub fn has_skill_equip(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill_equip(self, skill, None)}}
+    pub fn has_skill_private(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill_private(self, skill, None)}}
     pub fn has_interfence_rod(&self) -> bool { unsafe { unit_inference_rod(self, None)}}
     pub fn has_heal_rod(&self) -> bool { unsafe { unit_heal_rod(self, None)}}
     
@@ -341,6 +345,12 @@ fn unit_set_job(this: &Unit, value: &JobData, method_info: OptionalMethod);
 #[skyline::from_offset(0x01a35520)]
 fn unit_has_skill(this: &Unit, skill: &SkillData, method_info: OptionalMethod) -> bool;
 
+#[skyline::from_offset(0x01a35ec0)]
+fn unit_has_skill_equip(this: &Unit, skill: &SkillData, method_info: OptionalMethod) -> bool;
+
+#[skyline::from_offset(0x01a37970)]
+fn unit_has_skill_private(this: &Unit, skill: &SkillData, method_info: OptionalMethod) -> bool;
+
 #[skyline::from_offset(0x01a35540)]
 fn unit_has_skill_sid(this: &Unit, sid: &Il2CppString, method_info: OptionalMethod) -> bool;
 
@@ -395,6 +405,12 @@ fn unit_inference_rod(this: &Unit, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "Unit", "HasHealRod")]
 fn unit_heal_rod(this: &Unit, method_info: OptionalMethod) -> bool;
 
+#[unity::from_offset("App", "Unit", "get_X")]
+fn unit_get_x(this: &Unit, method_info: OptionalMethod) -> i32;
+
+#[unity::from_offset("App", "Unit", "get_Z")]
+fn unit_get_z(this: &Unit, method_info: OptionalMethod) -> i32;
+
 // UnitEdit 
 #[skyline::from_offset(0x01f73e50)]
 fn unit_edit_set_gender(this: &UnitEdit, gender: i32, method_info: OptionalMethod);
@@ -404,6 +420,8 @@ fn unit_edit_set_name(this: &UnitEdit, name: &Il2CppString, method_info: Optiona
 
 #[unity::from_offset("App", "UnitEdit", "IsEnable")]
 pub fn unit_edit_is_enable(this: &UnitEdit, method_info: OptionalMethod) -> bool;
+
+
 
 // God Unit
 #[skyline::from_offset(0x0233eae0)]

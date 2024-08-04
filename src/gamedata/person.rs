@@ -9,6 +9,7 @@ use std::ops::DerefMut;
 pub struct Capability { 
     pub data: &'static mut Array<u8>, 
 }
+
 impl Capability {
     pub fn is_zero(&self) -> bool { unsafe { capability_is_zero(self, None)} }
     pub fn add(&self, index: i32, value: u8) { unsafe { capability_add(self, index, value, None); }}
@@ -76,6 +77,7 @@ impl PersonData {
     pub fn get_summon_color(&self) -> i32 { unsafe { person_get_summoncolor(self, None)}}
     pub fn get_summon_rank(&self) -> i32 { unsafe { person_get_summon_rank(self, None)}}
     pub fn get_unit_icon_id(&self) -> &'static Il2CppString { unsafe { get_uniticonid(self, None )}}
+    pub fn get_bmap_size(&self) -> u8 { unsafe { person_get_bmapsize(self, None) } }
 
     pub fn load() { unsafe { persondata_load(None); }}
     pub fn on_complete(&self) { unsafe { person_on_release(self, None); }}
@@ -230,6 +232,10 @@ fn person_get_sp(this: &PersonData, method_info: OptionalMethod) -> i32;
 
 #[unity::from_offset("App", "PersonData", "set_CommonSids")]
 fn person_set_common_sids(this: &PersonData, sids: &Array<&Il2CppString>, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "PersonData", "get_BmapSize")]
+fn person_get_bmapsize(this: &PersonData, method_info: OptionalMethod) -> u8;
+
 //Capability
 
 #[skyline::from_offset(0x25bcda0)]
