@@ -1,8 +1,15 @@
 use unity::{prelude::OptionalMethod, system::Il2CppString};
 
+/// Trait to simulate inheritance for [`CalculatorCommand`].
+/// 
+/// A method expecting a `&impl IsCalculatorCommand` or `<P: IsCalculatorCommand>(parent: &P, ...)` will accept any type that inherits from [`CalculatorCommand`].
+pub trait IsCalculatorCommand {
+
+}
+
 #[unity::class("App", "GameCalculatorCommand")]
 pub struct GameCalculatorCommand {
-    pub parent: CalculatorCommand,
+    pub parent: CalculatorCommandFields,
 }
 
 impl GameCalculatorCommand {
@@ -11,6 +18,8 @@ impl GameCalculatorCommand {
     }
 }
 
+impl IsCalculatorCommand for GameCalculatorCommand { }
+
 #[unity::class("App", "CalculatorCommand")]
 pub struct CalculatorCommand {}
 
@@ -18,7 +27,7 @@ pub struct CalculatorCommand {}
 pub struct CalculatorManager {}
 
 impl CalculatorManager {
-    pub fn add_command(&mut self, command: &CalculatorCommand) -> &'static mut CalculatorCommand {
+    pub fn add_command(&mut self, command: &impl IsCalculatorCommand) -> &'static mut CalculatorCommand {
         unsafe { calculator_manager_add_command(self, command, None) }
     }
 
@@ -27,8 +36,11 @@ impl CalculatorManager {
     }
 }
 
+impl IsCalculatorCommand for CalculatorCommand { }
+
+
 #[unity::from_offset("App", "CalculatorManager", "AddCommand")]
-fn calculator_manager_add_command(this: &mut CalculatorManager, command: &CalculatorCommand, method_info: OptionalMethod) -> &'static mut CalculatorCommand;
+fn calculator_manager_add_command<Command: IsCalculatorCommand + ?Sized>(this: &mut CalculatorManager, command: &Command, method_info: OptionalMethod) -> &'static mut CalculatorCommand;
 
 #[skyline::from_offset(0x0298daa0)]
 fn calculator_manager_find_command(this: &CalculatorManager, name: &Il2CppString, method_info: OptionalMethod) -> &'static mut CalculatorCommand;

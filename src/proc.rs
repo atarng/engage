@@ -34,8 +34,6 @@ impl Proc {
 
 /// Trait to simulate inheritance for [`ProcInst`].
 /// 
-/// If the trait is in scope, it is automatically implemented for objects that implement `AsMut<ProcInst>`.
-/// 
 /// A method expecting a `&impl Bindable` or `<P: Bindable>(parent: &P, ...)` will accept any type that inherits from [`ProcInst`].
 pub trait Bindable {
     fn create_bind(&self, parent: &impl Bindable, descs: &'static mut Il2CppArray<&'static mut ProcDesc>, name: impl AsRef<str>) {
