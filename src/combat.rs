@@ -14,7 +14,7 @@ pub struct Character {
     idle_smb: *const u8,
     fsm: *const u8,
     brain: *const u8,
-    pub game_status: &'static mut CharacterGameStatus,
+    pub game_status: Option<&'static mut CharacterGameStatus>,
     is_done_setup: bool,
     head_look_at_ik: *const u8,
     body_look_at_ik: *const u8,
