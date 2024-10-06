@@ -1,6 +1,7 @@
 //! Types and methods to query the state of [`Unit`](crate::gamedata::unit::Unit)s in battle.
 
 use unity::prelude::*;
+use crate::gamedata::unit::Unit;
 
 #[unity::class("Combat", "Character")]
 pub struct Character {
@@ -13,7 +14,7 @@ pub struct Character {
     idle_smb: *const u8,
     fsm: *const u8,
     brain: *const u8,
-    game_status: *const u8,
+    pub game_status: &'static mut CharacterGameStatus,
     is_done_setup: bool,
     head_look_at_ik: *const u8,
     body_look_at_ik: *const u8,
@@ -104,6 +105,14 @@ bitflags::bitflags! {
         const ChainGrd4 = 131072;
         const ChainGrd = 245760;
     }
+}
+
+
+#[unity::class("Combat", "CharacterGameStatus")]
+pub struct CharacterGameStatus {
+    appearance: [u8; 0x18],
+    pub unit: &'static mut Unit,
+    // too lazy to do the rest for now
 }
 
 #[repr(C)]
