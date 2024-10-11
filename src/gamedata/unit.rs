@@ -124,7 +124,7 @@ pub struct Unit {
     enhance_factors :u64,
     enhance_calculator :u64,
     pub internal_level :i8,
-    last_pick_voice :u8,
+    pub last_pick_voice :u8,
     attack_image :u64,
     rod_image :u64,
     heal_image :u64,
