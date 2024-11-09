@@ -55,7 +55,7 @@ impl Drop for ProcInst {
     }
 }
 
-impl ProcInst {
+impl ProcInstFields {
     pub fn get_child(&'static self) -> &'static ProcInst {
         // Ray: yes, this'd crash if null. I'll fix later.
         *self.child.as_ref().unwrap()
