@@ -66,6 +66,16 @@ impl ProcInst {
 }
 
 impl ProcInstFields {
+    pub fn get_parent(&'static self) -> &'static ProcInst {
+        // Ray: yes, this'd crash if null. I'll fix later.
+        *self.parent.as_ref().unwrap()
+    }
+
+    pub fn get_parent_mut(&'static mut self) -> &'static mut ProcInst {
+        // Ray: yes, this'd crash if null. I'll fix later.
+        *self.parent.as_mut().unwrap()
+    }
+    
     pub fn get_child(&'static self) -> &'static ProcInst {
         // Ray: yes, this'd crash if null. I'll fix later.
         *self.child.as_ref().unwrap()
