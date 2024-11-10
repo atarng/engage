@@ -26,7 +26,7 @@ use super::{Bindable, ProcDesc, RawValueStack};
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
-    descs: &'static mut UnsafeCell<Il2CppArray<&'static mut ProcDesc>>,
+    pub descs: &'static mut Il2CppArray<&'static mut ProcDesc>,
     pub desc_index: i32,
     pub name: Option<&'static Il2CppString>,
     /// Unique ID derived from the name of the ProcInst.
