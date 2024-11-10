@@ -90,7 +90,7 @@ impl ProcInstFields {
         self.descs
     }
 
-    pub fn get_descs_mut(&self) -> &mut Il2CppArray<&'static mut ProcDesc> {
+    pub fn get_descs_mut(&mut self) -> &mut Il2CppArray<&'static mut ProcDesc> {
         self.descs
     }
 }
