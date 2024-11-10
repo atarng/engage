@@ -55,6 +55,16 @@ impl Drop for ProcInst {
     }
 }
 
+impl ProcInst {
+    pub fn cast<T: AsRef<ProcInstFields>>(&self) -> &T {
+        unsafe { std::mem::transmute::<&ProcInst, &T>(self) }
+    }
+
+    pub fn cast_mut<T: AsMut<ProcInstFields>>(&mut self) -> &mut T {
+        unsafe { std::mem::transmute::<&mut ProcInst, &mut T>(self) }
+    }
+}
+
 impl ProcInstFields {
     pub fn get_child(&'static self) -> &'static ProcInst {
         // Ray: yes, this'd crash if null. I'll fix later.
@@ -82,14 +92,6 @@ impl ProcInstFields {
 
     pub fn get_descs_mut(&self) -> &mut Il2CppArray<&'static mut ProcDesc> {
         unsafe {&mut *self.descs.get() }
-    }
-
-    pub fn cast<T: AsRef<ProcInstFields>>(&self) -> &T {
-        unsafe { std::mem::transmute::<&ProcInst, &T>(self) }
-    }
-
-    pub fn cast_mut<T: AsMut<ProcInstFields>>(&mut self) -> &mut T {
-        unsafe { std::mem::transmute::<&mut ProcInst, &mut T>(self) }
     }
 }
 
