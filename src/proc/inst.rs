@@ -87,11 +87,11 @@ impl ProcInstFields {
     }
 
     pub fn get_descs(&self) -> &Il2CppArray<&'static mut ProcDesc> {
-        unsafe { &*self.descs.get() }
+        self.descs
     }
 
     pub fn get_descs_mut(&self) -> &mut Il2CppArray<&'static mut ProcDesc> {
-        unsafe {&mut *self.descs.get() }
+        self.descs
     }
 }
 
