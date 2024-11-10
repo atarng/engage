@@ -112,7 +112,7 @@ pub trait MenuSequence {
         println!("CobaltMenuSequence after create_bind");
     }
 
-    fn get_proc_desc(_this: &'static impl Bindable) -> Vec<&mut ProcDesc> {
+    fn get_proc_desc(_this: &'static ProcInst) -> Vec<&mut ProcDesc> {
         vec![ProcDesc::end()]
     }
 
