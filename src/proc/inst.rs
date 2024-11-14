@@ -26,7 +26,7 @@ use super::{Bindable, ProcDesc, RawValueStack};
 #[repr(C)]
 #[unity::class("App", "ProcInst")]
 pub struct ProcInst {
-    pub descs: &'static mut Il2CppArray<&'static mut ProcDesc>,
+    pub descs: &'static mut UnsafeCell<Il2CppArray<&'static mut ProcDesc>>,
     pub desc_index: i32,
     pub name: Option<&'static Il2CppString>,
     /// Unique ID derived from the name of the ProcInst.
@@ -97,11 +97,11 @@ impl ProcInstFields {
     }
 
     pub fn get_descs(&self) -> &Il2CppArray<&'static mut ProcDesc> {
-        self.descs
+        unsafe { &*self.descs.get() }
     }
 
     pub fn get_descs_mut(&self) -> &mut Il2CppArray<&'static mut ProcDesc> {
-        self.descs
+        unsafe {&mut *self.descs.get() }
     }
 }
 
