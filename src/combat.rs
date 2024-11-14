@@ -47,6 +47,12 @@ pub struct Character {
     // too lazy to do the rest for now
 }
 
+impl Character {
+    pub fn get_phase(&self) -> &Phase {
+        unsafe { character_get_phase(self, None) }
+    }
+}
+
 // Combat.Character$$get_Side	7102afc5a0	int32_t Combat.Character$$get_Side(Combat_Character_o * __this, MethodInfo * method)	8
 #[unity::from_offset("Combat", "Character", "get_Side")]
 pub fn character_get_side(this: &Character, method_info: OptionalMethod) -> i32;
