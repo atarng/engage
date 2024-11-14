@@ -84,6 +84,7 @@ pub struct ChapterData {
 impl Gamedata for ChapterData {}
 
 impl ChapterData {
+    pub fn try_set_spot_state(&self, state: i32) { unsafe { chapter_data_try_set_spot_state(self, value, None); } }
     pub fn get_flag(&self) -> i32 { unsafe { get_chapter_flag(self, None)}}
     pub fn get_cleared_flag_name(&self) -> &'static Il2CppString { unsafe { get_cleared_flagname(self, None) }}
     pub fn get_gmap_spot_flag_name(&self) -> &'static Il2CppString { unsafe { get_gmap_spot_flagname(self, None) }}
@@ -144,6 +145,9 @@ fn disposdata_set_sid(this: &DisposData, value: &Il2CppString, method_info: Opti
 fn disposdata_get_person(this: &DisposData, method_info: OptionalMethod) -> Option<&PersonData>;
 
 // Chapter Data
+#[unity::from_offset("App", "ChapterData", "TrySetSpotState")]
+fn chapter_data_try_set_spot_state(this: &ChapterData, state: i32, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "ChapterData", "set_RecommendedLevel")]
 fn chapter_set_recommended_level(this: &ChapterData, value: u8, method_info: OptionalMethod);
 
