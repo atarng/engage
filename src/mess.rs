@@ -8,7 +8,7 @@ use unity::{prelude::*, system::Dictionary};
 pub struct Mess { }
 
 impl Mess {
-    pub fn get<'a>(label: impl Into<&'a Il2CppString>) -> &'static Il2CppString {
+    pub fn get<'a>(label: impl Into<&'a Il2CppString>) -> &'static mut Il2CppString {
         unsafe { mess_get(label.into(), None) }
     }
 
@@ -54,7 +54,7 @@ fn mess_get_language_directory_name(method_info: OptionalMethod) -> &'static Il2
 pub fn mess_load_impl(filename: &Il2CppString, is_warning: bool, method_info: OptionalMethod) -> bool;
 
 #[unity::from_offset("App", "Mess", "Get")]
-fn mess_get(label: &Il2CppString, method_info: OptionalMethod) -> &'static Il2CppString;
+fn mess_get(label: &Il2CppString, method_info: OptionalMethod) -> &'static mut Il2CppString;
 
 #[skyline::from_offset(0x25d3e40)]
 fn mess_load(filename: &Il2CppString, method_info: OptionalMethod) -> bool;
