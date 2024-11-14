@@ -86,6 +86,7 @@ impl Gamedata for ChapterData {}
 impl ChapterData {
     pub fn get_flag(&self) -> i32 { unsafe { get_chapter_flag(self, None)}}
     pub fn get_cleared_flag_name(&self) -> &'static Il2CppString { unsafe { get_cleared_flagname(self, None) }}
+    pub fn get_gmap_spot_flag_name(&self) -> &'static Il2CppString { unsafe { get_gmap_spot_flagname(self, None) }}
     pub fn get_gmap_open_condition(&self) -> &'static Il2CppString { unsafe { chapter_get_gmapspotopencondition(self, None)} }
     pub fn get_recommended_level(&self) -> u8 { unsafe { chapter_get_recommended_level(self, None)}}
     pub fn get_prefixless_cid(&self) -> &'static Il2CppString { unsafe { chapter_get_prefixless_cid(self, None)}}
@@ -154,6 +155,9 @@ fn chapter_get_recommended_level(this: &ChapterData, method_info: OptionalMethod
 
 #[skyline::from_offset(0x02af9b40)]
 fn get_cleared_flagname(this: &ChapterData, method_info: OptionalMethod) -> &'static Il2CppString;
+
+#[unity::from_offset("App", "ChapterData", "GetGmapSpotFlagName")]
+fn get_gmap_spot_flagname(this: &ChapterData, method_info: OptionalMethod) -> &'static Il2CppString;
 
 #[unity::from_offset("App", "ChapterData", "IsDlcGod")]
 fn chapter_is_dlc_god(this: &ChapterData, method_info: OptionalMethod) -> bool;
