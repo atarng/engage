@@ -6,7 +6,11 @@ use unity::{il2cpp::class::Il2CppRGCTXData, prelude::*};
 
 #[repr(C)]
 #[unity::class("App", "GameUserData")]
-pub struct GameUserData {}
+pub struct GameUserData {
+    parent: [u8;0x10],
+    padding: [u8;0x20],
+    pub gmap_spot: &'static mut Il2CppString,
+}
 
 #[unity::from_offset("App", "GameUserData", "get_Variable")]
 fn get_variable(this: &GameUserData, method_info: OptionalMethod) -> &'static mut GameVariable;
