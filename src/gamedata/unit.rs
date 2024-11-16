@@ -254,7 +254,7 @@ impl GodUnit {
 pub struct UnitUtil;
 
 impl UnitUtil {
-    pub fn join_unit(pid: impl AsRef<str>) -> &'static mut Unit {
+    pub fn join_unit(pid: impl AsRef<str>) -> Option<&'static mut Unit> {
         unsafe { join_unit(pid.as_ref().into(), None) }
     }
 }
@@ -436,4 +436,4 @@ pub fn god_unit_escaped(this: &GodUnit, method_info: OptionalMethod) -> bool;
 
 // Unit Util
 #[unity::from_offset("App", "UnitUtil", "JoinUnit")]
-fn join_unit(pid: &Il2CppString, method_info: OptionalMethod) -> &'static mut Unit;
+fn join_unit(pid: &Il2CppString, method_info: OptionalMethod) -> Option<&'static mut Unit>;
