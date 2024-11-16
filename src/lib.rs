@@ -16,6 +16,7 @@ pub mod gametime;
 pub mod gameuserdata;
 pub mod gameuserglobaldata;
 pub mod gamevariable;
+pub mod gmapspotmanager;
 pub mod godpool;
 pub mod language;
 pub mod loadingmanager;
