@@ -251,6 +251,13 @@ impl GodUnit {
     pub fn get_escape(&self) -> bool { unsafe { god_unit_escaped(self, None)}}
 }
 
+pub struct UnitUtil;
+
+impl UnitUtil {
+    pub fn join_unit(pid: impl AsRef<str>) -> &'static mut Unit {
+        unsafe { join_unit(pid.as_ref().into(), None) }
+    }
+}
 
 #[skyline::from_offset(0x1a3f400)]
 extern "C" fn unit_itemadd(this: &Unit, item: &ItemData, method_info: OptionalMethod);
@@ -427,3 +434,6 @@ pub fn unit_edit_is_enable(this: &UnitEdit, method_info: OptionalMethod) -> bool
 #[skyline::from_offset(0x0233eae0)]
 pub fn god_unit_escaped(this: &GodUnit, method_info: OptionalMethod) -> bool;
 
+// Unit Util
+#[unity::from_offset("App", "UnitUtil", "JoinUnit")]
+fn join_unit(pid: &Il2CppString, method_info: OptionalMethod) -> &'static mut Unit;
