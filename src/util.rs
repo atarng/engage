@@ -19,7 +19,7 @@ pub fn get_instance<T: unity::prelude::Il2CppClassData>() -> &'static mut T {
 pub fn get_instance_monobehaviour<T: unity::prelude::Il2CppClassData>() -> &'static mut T {
     let idk = get_generic_class!(SingletonMonoBehaviour<T>).unwrap();
     let pointer = unsafe {
-        &*(idk.rgctx_data as *const Il2CppRGCTXData as *const u8 as *const [&'static MethodInfo; 5])
+        &*(idk.rgctx_data as *const Il2CppRGCTXData as *const u8 as *const [&'static MethodInfo; 6])
     };
     let get_instance = unsafe {
         std::mem::transmute::<_, extern "C" fn(OptionalMethod) -> &'static mut T>(
