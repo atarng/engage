@@ -7,7 +7,7 @@ pub struct SkillArrayEntity {
 
 #[unity::class("App", "SkillArrayList")]
 pub struct SkillArrayEntityList {
-    pub item: &'static Array<SkillArrayEntity>,
+    pub item: &'static mut Array<SkillArrayEntity>,
     pub size: i32,
     pub version: i32,
     sync_root: *const u8,
