@@ -3,7 +3,7 @@ use crate::gamedata::{*, item::ItemData, skill::SkillArray, WeaponMask};
 use super::GodData;
 
 impl GodData {
-    pub fn get_gid(&self) -> &'static Il2CppString { unsafe { goddata_get_gid(self, None) }}
+    pub fn get_gid(&self) -> &'static Il2CppString { unsafe { god_data_get_gid(self, None) }}
     pub fn get_engage_attack(&self) -> &'static Il2CppString { unsafe { goddata_get_engage_attack(self, None) }}
     pub fn get_engrave_avoid(&self) -> i8 { unsafe{ goddata_get_engrave_avoid(self, None) }}
     pub fn get_engage_attack_link(&self) -> Option<&'static Il2CppString> { unsafe { god_data_get_engage_link(self, None)}}
