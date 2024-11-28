@@ -254,7 +254,7 @@ fn god_growth_on_completed_end(this: Option<&GodGrowthData>, method_info: Option
 fn ringdata_get_skill_array(this: &RingData, method_info: OptionalMethod) -> &'static SkillArray;
 
 #[skyline::from_offset(0x2424700)]
-fn ringdata_set_skill_array(this: &RingData, value: &'static SkillArray, method_info: OptionalMethod);
+fn ringdata_set_skill_array(this: &RingData, value: &SkillArray, method_info: OptionalMethod);
 
 // God Growth Data Style Item
 #[skyline::from_offset(0x01cd8cd0)]
