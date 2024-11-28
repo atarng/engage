@@ -3,6 +3,7 @@ use crate::gamedata::{*, item::ItemData, skill::SkillArray, WeaponMask};
 use super::GodData;
 
 impl GodData {
+    pub fn get_gid(&self) -> &'static Il2CppString { unsafe { goddata_get_gid(self, None) }}
     pub fn get_engage_attack(&self) -> &'static Il2CppString { unsafe { goddata_get_engage_attack(self, None) }}
     pub fn get_engrave_avoid(&self) -> i8 { unsafe{ goddata_get_engrave_avoid(self, None) }}
     pub fn get_engage_attack_link(&self) -> Option<&'static Il2CppString> { unsafe { god_data_get_engage_link(self, None)}}
@@ -147,7 +148,10 @@ impl RingData {
     pub fn set_equip_skills(&self, value: &SkillArray) { unsafe { ringdata_set_skill_array(self, value, None); } }
 }
 
-// GodData 
+// GodData
+#[unity::from_offset("App", "GodData", "get_Gid")]
+fn god_data_get_gid(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
 #[unity::from_offset("App", "GodData", "get_GrowTable")]
 fn god_data_get_grow_table(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
