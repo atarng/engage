@@ -139,10 +139,12 @@ pub struct RingData {
     pub rank: i32,
     pub icon: &'static Il2CppString,
 }
+
 impl Gamedata for RingData {}
 
 impl RingData {
-    pub fn get_equip_skills(&self) -> &'static SkillArray { unsafe { ringdata_get_skill_array(self, None)}}
+    pub fn get_equip_skills(&self) -> &'static SkillArray { unsafe { ringdata_get_skill_array(self, None)} }
+    pub fn set_equip_skills(&self, value: &SkillArray) { unsafe { ringdata_set_skill_array(self, value, None); } }
 }
 
 // GodData 
@@ -250,6 +252,9 @@ fn god_growth_on_completed_end(this: Option<&GodGrowthData>, method_info: Option
 //Ring
 #[skyline::from_offset(0x024246f0)]
 fn ringdata_get_skill_array(this: &RingData, method_info: OptionalMethod) -> &'static SkillArray;
+
+#[skyline::from_offset(0x2424700)]
+fn ringdata_set_skill_array(this: &RingData, value: &'static SkillArray, method_info: OptionalMethod);
 
 // God Growth Data Style Item
 #[skyline::from_offset(0x01cd8cd0)]
