@@ -111,7 +111,7 @@ pub struct Unit {
     extra_sight :i32,
     pub move_distance :i32,
     pub mask_skill : Option<&'static SkillArray>,
-    pub equip_skill :&'static SkillArray,
+    pub equip_skill :&'static mut SkillArray,
     pub private_skill :&'static SkillArray,
     pub receive_skill :&'static SkillArray,
     pub supported_skill :&'static SkillArray,
