@@ -4,6 +4,7 @@ use super::{*, person::CapabilitySbyte};
 pub struct SkillArrayEntity {
     pub value : u32,
 }
+
 #[unity::class("App", "SkillArrayList")]
 pub struct SkillArrayEntityList {
     pub item: &'static Array<SkillArrayEntity>,
@@ -15,7 +16,7 @@ pub struct SkillArrayEntityList {
 #[unity::class("App", "SkillArray")]
 pub struct SkillArray {
     mask: &'static Array<u8>,
-    pub list: &'static SkillArrayEntityList,
+    pub list: &'static mut SkillArrayEntityList,
     pub flags: i64,
     pub cycles: i32,
     pub timing: i32,
