@@ -24,12 +24,18 @@ pub struct HubFacilityData {
     pub icon_name: &'static Il2CppString,
 }
 impl Gamedata for HubFacilityData { }
+
 impl HubFacilityData {
     pub fn is_complete(&self) -> bool { unsafe { hubdatafacility_iscomplete(self, None) } }
+
+    pub fn set_first_access_flag(&self) { unsafe { hubdatafacility_set_first_access_flag(self, None); } }
 }
 
 #[skyline::from_offset(0x28a80d0)]
 fn hubdatafacility_iscomplete(this: &HubFacilityData, _method_info: OptionalMethod) -> bool;
+
+#[skyline::from_offset(0x28a7b30)]
+fn hubdatafacility_set_first_access_flag(this: &HubFacilityData, _method_info: OptionalMethod);
 
 #[unity::class("App", "JobData")]
 pub struct JobData {
