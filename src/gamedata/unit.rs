@@ -195,6 +195,7 @@ impl Unit {
     pub fn get_pid(&self) -> &'static Il2CppString {  unsafe { unit_get_pid(self, None)} }
     pub fn get_person(&self) -> &'static PersonData { unsafe { unit_get_person(self, None)}}
     pub fn get_god_unit(&self) -> Option<&'static GodUnit> { unsafe { unit_get_god_unit(self, None)}}
+    pub fn get_ring(&self) -> Option<&'static UnitRing> { unsafe { unit_get_ring(self, None)}}
     pub fn get_x(&self) -> i32 { unsafe { unit_get_x(self, None) } }
     pub fn get_z(&self) -> i32 { unsafe { unit_get_z(self, None) } }
     // Setters
@@ -208,6 +209,7 @@ impl Unit {
     pub fn set_select_weapon_from_original_aptitude(&self, mask: &WeaponMask) { unsafe {  unit_set_select_weapon_from_original_aptitude(self, mask, None); } } 
     pub fn set_sp(&self, sp: i32) { unsafe { unit_set_sp(self, sp, None); } }
     pub fn set_god_unit(&self, god: &GodUnit) { unsafe { unit_set_god_unit(self, god, None); } }
+    pub fn set_ring(&self, ring: &UnitRing) { unsafe { unit_set_ring(self, ring, None); } }
     pub fn set_status(&self, status: i64) { unsafe { unit_set_status(self, status, None); }}
 
     // Others
@@ -382,6 +384,9 @@ fn unit_try_create_actor(this: &Unit, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "Unit", "SetGodUnit")]
 fn unit_set_god_unit(this: &Unit, god: &GodUnit, method_info: OptionalMethod);
 
+#[unity::from_offset("App", "Unit", "SetRing")]
+fn unit_set_ring(this: &Unit, ring: &UnitRing, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "Unit", "SetStatus")]
 fn unit_set_status(this: &Unit, status: i64, method_info: OptionalMethod);
 
@@ -405,6 +410,9 @@ fn unit_auto_grow_cap(this: &Unit, level: i32, target_level: i32, method_info: O
 
 #[unity::from_offset("App", "Unit", "get_GodUnit")]
 fn unit_get_god_unit(this: &Unit, method_info: OptionalMethod) -> Option<&'static GodUnit>;
+
+#[unity::from_offset("App", "Unit", "get_Ring")]
+fn unit_get_ring(this: &Unit, method_info: OptionalMethod) -> Option<&'static UnitRing>;
 
 #[unity::from_offset("App", "Unit", "HasInterferenceRod")]
 fn unit_inference_rod(this: &Unit, method_info: OptionalMethod) -> bool;
