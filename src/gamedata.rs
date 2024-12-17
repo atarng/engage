@@ -55,7 +55,8 @@ pub struct JobData {
     pub max_level: u8,
     pub internal_level: i8,
     pub sort: u16,
-    junk: [u8; 0x98],
+    junk: [u8; 0x90],
+    pub skills: Option<&'static mut Il2CppArray<&'static mut Il2CppString>>,
     pub learn_skill: Option<&'static Il2CppString>, // 0x100
     pub lunatic_skill: Option<&'static Il2CppString>, //0x108
 }
