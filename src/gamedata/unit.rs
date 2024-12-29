@@ -198,7 +198,7 @@ impl Unit {
     pub fn get_enchanced_level(&self) -> i32 { unsafe { unit_get_enhance_level(self, None)}}
     pub fn get_hp(&self) -> i32 { unsafe { unit_get_hp(self, None) } }
     pub fn get_learn_job_skill(&self) -> Option<&SkillData> { unsafe { learn_job_kill_unit(self, None)}}
-    pub fn get_pid(&self) -> &'static Il2CppString {  unsafe { unit_get_pid(self, None)} }
+    pub fn get_pid(&self) -> Option<&'static Il2CppString> {  unsafe { unit_get_pid(self, None)} }
     pub fn get_person(&self) -> &'static PersonData { unsafe { unit_get_person(self, None)}}
     pub fn get_god_unit(&self) -> Option<&'static GodUnit> { unsafe { unit_get_god_unit(self, None)}}
     pub fn get_ring(&self) -> Option<&'static UnitRing> { unsafe { unit_get_ring(self, None)}}
@@ -283,7 +283,7 @@ extern fn unit_set_level(this: &Unit, level: i32, method_info: OptionalMethod);
 extern "C" fn unit_get_job(this: &Unit, method_info: OptionalMethod) -> &'static JobData;
 
 #[unity::from_offset("App", "Unit", "get_Pid")]
-extern fn unit_get_pid(this: &Unit,  method_info: OptionalMethod) -> &'static Il2CppString;
+extern fn unit_get_pid(this: &Unit,  method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
 #[unity::from_offset("App", "Unit", "SetSelectedWeapon")]
 extern "C" fn unit_setselectedweapon(this: &Unit, weapon_mask: &WeaponMask, method_info: OptionalMethod);
