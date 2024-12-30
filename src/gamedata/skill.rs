@@ -22,6 +22,8 @@ pub struct SkillArray {
     pub timing: i32,
     pub efficacys: i32,
     pub efficacy_ignore: i32,
+    pub bad_States: i32,
+    pub bad_Ignore: i32,
 }
 impl Deref for SkillArrayFields {
     type Target = [SkillArrayEntity];
