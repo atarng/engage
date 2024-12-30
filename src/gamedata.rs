@@ -13,6 +13,7 @@ pub mod item;
 pub mod cook;
 pub mod animal;
 pub mod god;
+pub mod ring;
 pub mod terrain;
 
 #[unity::class("App", "HubFacilityData")]

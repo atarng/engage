@@ -128,26 +128,6 @@ impl Deref for GodGrowthDataStyleItemsFields {
     }
 }
 
-#[unity::class("App", "RingData")]
-pub struct RingData {
-    pub parent: StructBaseFields,
-    pub rid: &'static Il2CppString,
-    pub name: &'static Il2CppString,
-    pub help: &'static Il2CppString,
-    pub gid: Option<&'static Il2CppString>,
-    ring_model: &'static Il2CppString,
-    pub kind: i32,
-    pub rank: i32,
-    pub icon: &'static Il2CppString,
-}
-
-impl Gamedata for RingData {}
-
-impl RingData {
-    pub fn get_equip_skills(&self) -> &'static SkillArray { unsafe { ringdata_get_skill_array(self, None)} }
-    pub fn set_equip_skills(&self, value: &SkillArray) { unsafe { ringdata_set_skill_array(self, value, None); } }
-}
-
 // GodData
 #[unity::from_offset("App", "GodData", "get_Gid")]
 fn god_data_get_gid(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
@@ -252,13 +232,6 @@ fn ggd_try_get_from_god(god: &GodData, method_info: OptionalMethod) -> Option<&'
 
 #[skyline::from_offset(0x02332320)]
 fn god_growth_on_completed_end(this: Option<&GodGrowthData>, method_info: OptionalMethod);
-
-//Ring
-#[skyline::from_offset(0x024246f0)]
-fn ringdata_get_skill_array(this: &RingData, method_info: OptionalMethod) -> &'static SkillArray;
-
-#[skyline::from_offset(0x2424700)]
-fn ringdata_set_skill_array(this: &RingData, value: &SkillArray, method_info: OptionalMethod);
 
 // God Growth Data Style Item
 #[skyline::from_offset(0x01cd8cd0)]

@@ -7,6 +7,7 @@ use super::{JobData, WeaponMask, PersonData,
     person::Capability, 
     skill::{SkillData, SkillArray},
     GodData,
+    ring::{RingData}
 };
 
 #[unity::class("App", "GodUnit")]
@@ -16,7 +17,12 @@ pub struct GodUnit {
 }
 
 #[unity::class("App", "UnitRing")]
-pub struct UnitRing { }
+pub struct UnitRing {
+    base: [u8;0x10],
+    pub data: &'static RingData,
+    pub owner: Option<&'static Unit>,
+    pub stock_count: u8
+}
 
 #[unity::class("App","UnitEdit")]
 pub struct UnitEdit {
