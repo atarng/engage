@@ -1,4 +1,4 @@
-#![feature(ptr_sub_ptr, lazy_cell)]
+#![feature(ptr_sub_ptr)]
 
 pub mod battle;
 pub mod bundle;

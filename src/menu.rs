@@ -109,7 +109,7 @@ pub trait MenuSequence {
         proc.create_bind(parent, descs, Self::proc_name());
     }
 
-    fn get_proc_desc(_this: &'static ProcInst) -> Vec<&mut ProcDesc> {
+    fn get_proc_desc(_this: &'static ProcInst) -> Vec<&'static mut ProcDesc> {
         vec![ProcDesc::end()]
     }
 

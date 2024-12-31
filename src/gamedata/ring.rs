@@ -1,5 +1,6 @@
-pub use unity::{prelude::*, system::{List, Dictionary}, il2cpp::object::Array};
-use crate::gamedata::{*, item::ItemData, skill::SkillArray, WeaponMask};
+use unity::prelude::*;
+
+use crate::gamedata::{Gamedata, StructBaseFields, skill::SkillArray};
 
 #[unity::class("App", "RingData")]
 pub struct RingData {

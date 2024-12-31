@@ -1,6 +1,5 @@
 use unity::prelude::*;
-use unity::system::List;
-use super::{StructList, PersonData, StructBaseFields};
+use super::{PersonData, StructBaseFields};
 use crate::gamedata::*;
 // Contains DisposData and ChapterData Impls
 #[unity::class("App", "DisposData")]

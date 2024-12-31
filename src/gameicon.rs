@@ -13,6 +13,7 @@ impl GameIcon {
     }
 }
 
+#[allow(dead_code)]
 pub struct GameIconStaticFields {
     skill: SpriteAtlasManager,
     item: SpriteAtlasManager,

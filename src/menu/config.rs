@@ -155,7 +155,7 @@ impl ConfigBasicMenuItem {
 }
 
 pub trait ConfigBasicMenuItemSwitchMethods {
-    fn init_content(this: &mut ConfigBasicMenuItem) {
+    fn init_content(_this: &mut ConfigBasicMenuItem) {
         
     }
     
@@ -165,7 +165,7 @@ pub trait ConfigBasicMenuItemSwitchMethods {
 }
 
 pub trait ConfigBasicMenuItemCommandMethods {
-    fn init_content(this: &mut ConfigBasicMenuItem) {
+    fn init_content(_this: &mut ConfigBasicMenuItem) {
         
     }
 
@@ -173,19 +173,20 @@ pub trait ConfigBasicMenuItemCommandMethods {
     extern "C" fn set_command_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);
 
-    extern "C" fn on_select(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) {
+    extern "C" fn on_select(this: &mut ConfigBasicMenuItem, _method_info: OptionalMethod) {
         ConfigBasicMenuItem::on_select(this);
         this.is_arrow = false;
         ConfigBasicMenuItem::on_deselect(this);
     }
     
-    extern "C" fn on_deselect(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) {
+    extern "C" fn on_deselect(this: &mut ConfigBasicMenuItem, _method_info: OptionalMethod) {
         ConfigBasicMenuItem::on_select(this);
         this.is_arrow = false;
         ConfigBasicMenuItem::on_deselect(this);
     }
 }
 
+#[allow(dead_code)]
 extern "C" fn open_anime_all_ondispose(this: &mut ProcInst, _method_info: OptionalMethod) {
     this.parent.as_ref().unwrap().get_class().get_virtual_method("OpenAnimeAll").map(|method| {
         let open_anime_all = unsafe { std::mem::transmute::<_, extern "C" fn(&ProcInst, &MethodInfo)>(method.method_info.method_ptr) };
@@ -194,7 +195,7 @@ extern "C" fn open_anime_all_ondispose(this: &mut ProcInst, _method_info: Option
 }
 
 pub trait ConfigBasicMenuItemGaugeMethods {
-    fn init_content(this: &mut ConfigBasicMenuItem) { }
+    fn init_content(_this: &mut ConfigBasicMenuItem) { }
     
     extern "C" fn custom_call(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod) -> BasicMenuResult;
     extern "C" fn set_help_text(this: &mut ConfigBasicMenuItem, method_info: OptionalMethod);

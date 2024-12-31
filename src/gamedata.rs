@@ -176,7 +176,7 @@ pub struct WeaponMask {
 
 pub trait Gamedata: Il2CppClassData + Sized {
     fn ctor(&self) {
-        let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from(".ctor")));
+        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from(".ctor")));
         if method.is_none() { println!("Cannot find method .ctor :("); return; }
         let ctor = unsafe {
             std::mem::transmute::<_, extern "C" fn(&Self, &MethodInfo) -> ()>(
@@ -340,7 +340,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     }
     fn load_data() {
         //From the class itself instead of StructData since StructData load requires arguments to load the xml data
-        let mut method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Load")));
+        let method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Load")));
         if method.is_none() { return; }
         let load = unsafe {
             std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> ()> (
@@ -350,7 +350,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
         load(method.unwrap());
     }
     fn try_index_get(index: i32) -> Option<&'static Self> {
-        let mut method = 
+        let method = 
         if Self::class()._1.parent.get_methods().len() < 10 {
             Self::class()._1.parent._1.parent.get_methods()[9]
         }
@@ -366,7 +366,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     }
     
     fn try_index_get_mut(index: i32) -> Option<&'static mut Self> {
-        let mut method = Self::class()._1.parent.get_methods()[9];
+        let method = Self::class()._1.parent.get_methods()[9];
         let get = unsafe {
             std::mem::transmute::<_, extern "C" fn(i32, &MethodInfo) -> Option<&'static mut Self>>(
                 method.method_ptr,
@@ -464,7 +464,7 @@ pub trait GamedataArray: Il2CppClassData + Sized {
         unload(method.unwrap());
     }
     fn load() {
-        let mut method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Load")));
+        let method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Load")));
         if method.is_none() { return; }
         let load = unsafe { std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> ()> ( method.unwrap().method_ptr, )  };
         load(method.unwrap());
