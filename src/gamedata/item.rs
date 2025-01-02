@@ -29,6 +29,16 @@ pub struct ItemData {
 	pub secure: i16,
 	__: i16,	//
 	pub price: i32, 
+  	___: i32,	//
+  	pub weapon_level: &'static Il2CppString,
+  	pub rod_type: i32,
+  	pub rod_exp: i8,
+  	pub rod_arena: i8,
+  	pub shoot_effect: &'static Il2CppString,
+  	pub hit_effect: &'static Il2CppString,
+  	pub cannon_effect: &'static Il2CppString,
+  	pub overlap_effect: &'static Il2CppString,
+  	pub flag: &'static ItemDataFlag,
 }
 impl Gamedata for ItemData { }
 
