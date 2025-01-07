@@ -119,5 +119,5 @@ pub fn procinst_createbind<T: Bindable + ?Sized, P: Bindable>(
 #[unity::from_offset("App", "ProcInst", "OnDispose")]
 pub fn procinst_ondispose(this: &ProcInst, method_info: OptionalMethod);
 
-#[unity::from_offset("App", "ProcInst", "Jump")]
+#[skyline::from_offset(0x281E6F0)]
 pub fn procinst_jump<T: Bindable + ?Sized>(this: &T, label: i32, method_info: OptionalMethod);
