@@ -1,7 +1,7 @@
 use unity::prelude::*;
 
 #[repr(C)]
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone, Copy)]
 pub struct MapRange {
   pub x: i32,
   pub z: i32,
@@ -9,7 +9,7 @@ pub struct MapRange {
 }
 
 #[repr(C)]
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone, Copy)]
 pub struct RangeEnumerator {
   pub current: MapRange,
   pub pivot_x: i32,
