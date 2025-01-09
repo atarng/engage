@@ -2,7 +2,6 @@ use unity::prelude::*;
 use unity::system::List;
 
 use crate::gamedata::{
-    StructList,
     animal::AnimalData,
     *,
 };
@@ -18,6 +17,15 @@ pub struct HubAccessData {
 pub struct HubDisposData {
     pub parent: StructDataArrayFields,
 }
+
+#[unity::class("App", "HubRandomSet")]
+pub struct HubRandomSet {
+    pub parent: StructDataArrayFields,
+    pub iid: &'static Il2CppString,
+    pub rate: i32,
+    pub count: i32,
+}
+impl GamedataArray for HubRandomSet {}
 
 #[unity::class("App", "HubAccessManager")]
 pub struct HubAccessManager {

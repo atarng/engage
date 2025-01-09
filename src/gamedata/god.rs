@@ -15,7 +15,6 @@ impl GodData {
     pub fn get_force_type(&self) -> i32 { unsafe {  god_data_force_type(self, None)}}
     pub fn get_link_gid(&self) -> Option<&'static Il2CppString> { unsafe { god_data_get_link_gid(self, None)}}
     pub fn get_link(&self) -> Option<&'static Il2CppString> { unsafe { god_data_get_link(self, None) }}
-    pub fn get_ascii_name(&self) -> Option<&'static Il2CppString> { unsafe { god_data_get_ascii(self, None) }}
     pub fn get_flag(&self) -> &'static mut WeaponMask { unsafe { god_data_get_flag(self, None)}}
     pub fn get_grow_table(&self) -> Option<&'static Il2CppString> { unsafe { god_data_get_grow_table(self, None)}}
     pub fn load() { unsafe { goddata_load(None); }}
@@ -30,6 +29,7 @@ impl GodData {
     pub fn set_engrave_secure(&self, value: i8)  { unsafe{ goddata_set_engrave_secure(self, value, None); }}
     pub fn set_engrave_weight(&self, value: i8) { unsafe{ goddata_set_engrave_weight(self, value, None); }}
     pub fn set_link_gid(&self, value: &Il2CppString) { unsafe { god_data_set_link_gid(self, value, None); }}
+    pub fn set_link(&self, value: &Il2CppString) { unsafe { god_data_set_link(self, value, None); }}
     pub fn set_ascii_name(&self, value: &Il2CppString) { unsafe { god_data_set_ascii(self, value, None); }}
     pub fn set_engrave(&self, index: i32, value: i8){
         match index {
@@ -47,6 +47,11 @@ impl GodData {
     }
     pub fn try_get_link(person: &PersonData) -> Option<&'static GodData> {
         unsafe { goddata_try_get_link(person, None)}
+    }
+
+    pub fn get_level_data(&self) -> Option<&'static mut List<GodGrowthDataLevelData>> {
+        if self.get_grow_table().is_none() { return None; }
+        GodGrowthData::get_level_data(&self.get_grow_table().unwrap().get_string().unwrap())
     }
 }
 
@@ -68,6 +73,7 @@ pub struct GodGrowthData {
     pub engage_magics: Option<&'static mut Array<&'static Il2CppString>>,	
     pub engage_pranas: Option<&'static mut Array<&'static Il2CppString>>,	
     pub engage_dragons: Option<&'static mut Array<&'static Il2CppString>>,
+    pub aptitude: &'static mut WeaponMask,
 }
 impl GamedataArray for GodGrowthData {}
 
@@ -99,7 +105,7 @@ pub struct GodGrowthDataLevelData {
     pub engaged_skills: &'static SkillArray,
     pub engage_skills: &'static SkillArray,
     pub style_items: &'static GodGrowthDataStyleItems,
-    pub aptitude: &'static WeaponMask,
+    pub aptitude: &'static mut WeaponMask,
     pub flags: &'static WeaponMask,
 }
 
@@ -119,6 +125,7 @@ pub struct GodGrowthDataStyleItems {
 impl GodGrowthDataStyleItems {
     pub fn clear(&self){ unsafe { ggd_style_clear(self, None); }}
     pub fn add_item(&self, style: i32, item: &ItemData) { unsafe { ggd_style_add_item(self, style, item, None); }}
+    pub fn get_items(&self, style: i32) -> &'static List<ItemData> { unsafe { ggd_get_style_items(self, style, None)}}
 }
 
 impl Deref for GodGrowthDataStyleItemsFields {
@@ -128,19 +135,29 @@ impl Deref for GodGrowthDataStyleItemsFields {
     }
 }
 
+#[unity::class("App", "GodBond")]
+pub struct GodBond {
+    pub god: &'static GodData,
+    reliance_s: u64,
+    pub pid: &'static Il2CppString,
+    pub level: u8,
+    __: u8,
+    pub exp: u16,
+}
+impl GodBond {
+    pub fn level_up(&self) { unsafe { level_up_bond(self, None);} }
+}
+
+#[skyline::from_offset(0x02b4dff0)]
+fn level_up_bond(this: &GodBond, method_info: OptionalMethod);
 // GodData
 #[unity::from_offset("App", "GodData", "get_Gid")]
 fn god_data_get_gid(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
 #[unity::from_offset("App", "GodData", "get_GrowTable")]
 fn god_data_get_grow_table(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
-
-#[unity::from_offset("App", "GodData", "get_AsciiName")]
-fn god_data_get_ascii(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
-
 #[unity::from_offset("App", "GodData", "set_AsciiName")]
 fn god_data_set_ascii(this: &GodData, value: &Il2CppString, method_info: OptionalMethod);
-
 #[unity::from_offset("App", "GodData", "get_Flag")]
 fn god_data_get_flag(this: &GodData, method_info: OptionalMethod) -> &'static mut WeaponMask;
 
@@ -239,3 +256,8 @@ fn ggd_style_clear(this: &GodGrowthDataStyleItems, method_info: OptionalMethod);
 
 #[skyline::from_offset(0x01cd8aa0)]
 fn ggd_style_add_item(this: &GodGrowthDataStyleItems, style: i32, item: &ItemData, method_info: OptionalMethod);
+
+#[skyline::from_offset(0x01cd8db0)]
+fn ggd_get_style_items(this: &GodGrowthDataStyleItems, style: i32, method_info: OptionalMethod) -> &'static List<ItemData>;
+#[unity::from_offset("App", "GodData", "set_Link")]
+fn god_data_set_link(this: &GodData, value: &Il2CppString, method_info: OptionalMethod);

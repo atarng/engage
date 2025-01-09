@@ -3,7 +3,6 @@ use unity::il2cpp::object::Array;
 use super::{*, GodData, unit::GodUnit, skill::SkillArray};
 use crate::gamedata::StructBaseFields;
 
-
 #[unity::class("App", "ItemData")]
 pub struct ItemData {
 	pub parent: StructBaseFields,
@@ -29,18 +28,19 @@ pub struct ItemData {
 	pub secure: i16,
 	__: i16,	//
 	pub price: i32, 
-  	___: i32,	//
-  	pub weapon_level: &'static Il2CppString,
-  	pub rod_type: i32,
-  	pub rod_exp: i8,
-  	pub rod_arena: i8,
-  	pub shoot_effect: &'static Il2CppString,
-  	pub hit_effect: &'static Il2CppString,
-  	pub cannon_effect: &'static Il2CppString,
-  	pub overlap_effect: &'static Il2CppString,
-  	pub flag: &'static ItemDataFlag,
+	pub weapon_level: &'static Il2CppString,
+	pub rod_type: i32, 
+	pub rod_exp: u8,
+	pub rate_arena: u8,
+	pub shoot_effect: Option<&'static Il2CppString>,
+	pub hit_effect: Option<&'static Il2CppString>, 
+	pub cannon_effect: Option<&'static Il2CppString>,
+	pub overlap_terrain: Option<&'static Il2CppString>,
+	pub flag: &'static mut ItemDataFlag,
+	pub enchance: &'static CapabilitySbyte,
+	pub grow_ratio: &'static CapabilitySbyte,
+	pub equip_condition: Option<&'static Il2CppString>,
 }
-
 impl Gamedata for ItemData { }
 
 #[unity::class("App", "ItemDataFlag")]
@@ -76,6 +76,18 @@ pub struct RewardData {
 }
 
 impl GamedataArray for RewardData {}
+
+#[unity::class("App", "ItemEvolveData")]
+pub struct ItemEvolveData {
+    pub parent: StructDataArrayFields,
+    pub iid: &'static Il2CppString,
+    pub iron: u16,
+    pub steel: u16,
+    pub silver: u16,
+    pub price: u16,
+    pub refine_level: u8,
+}
+impl GamedataArray for ItemEvolveData  {}
 
 impl RewardData {
 	pub fn ctor(&self) { unsafe { rewarddata_ctor(self, None); }}
@@ -119,6 +131,7 @@ impl UnitItem {
 	pub fn set_engrave(&self, engrave: &GodData) -> bool { unsafe { unititem_set_engrave(self, engrave, None)}}
 	pub fn set_refine_level(&self, level: i32) { unsafe { unititem_set_refine_level(self, level, None); }}
 	pub fn set_flags(&self, value: i32) { unsafe { unititem_set_flags(self, value, None);}}
+	pub fn set_endurance(&self, value: i32) { unsafe { unititem_set_endurance(self, value, None) } }
 }
 
 impl UnitItemList {
@@ -136,9 +149,19 @@ impl UnitItemList {
 	pub fn add_item_no_duplicate(&self, item: &ItemData){
 		if !self.has_item(item) { self.add(item); }
 	}
+	pub fn add_iid_no_duplicate(&self, iid: &str){
+		let item = ItemData::get(iid);
+		if !self.has_item_iid(iid) && item.is_some() { self.add(item.unwrap()); }
+	}
 	pub fn move_item(&self, from: i32, to: i32) { unsafe { unititemlist_move(self, from, to, None) } }
 	pub fn put_off_all_item(&self) { unsafe { unititemlist_putoffall(self, None); } }
 }
+impl ItemEvolveData {
+	pub fn register() { unsafe { regist_evolve_flags(None);} }
+}
+
+#[skyline::from_offset(0x0203dfd0)]
+fn regist_evolve_flags(method_info: OptionalMethod);
 
 #[unity::from_offset("App", "ItemData", "get_Flag")]
 pub fn item_data_flag(this: &ItemData, method_info: OptionalMethod) -> &'static ItemDataFlag;
@@ -220,6 +243,8 @@ pub fn unititem_is_weapon(this: &UnitItem, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "UnitItem", "get_IsDrop")]
 pub fn unititem_get_is_drop(this: &UnitItem, method_info: OptionalMethod) -> bool;
 
+#[skyline::from_offset(0x01fb2df0)]
+fn unititem_set_endurance(this: &UnitItem, value: i32, method_info: OptionalMethod);
 #[unity::from_offset("App", "UnitItem", "GetPower")]
 pub fn unititem_get_power(this: &UnitItem, method_info: OptionalMethod) -> i32;
 

@@ -31,7 +31,9 @@ impl JobData {
     pub fn get_low_jobs(&self) -> &List<JobData> { unsafe {job_getlowjobs(self, None)} }
     pub fn get_max_level(&self) -> u8 { unsafe { job_max_level(self, None)}}
     pub fn get_max_weapon_level(&self, index: i32) -> i32 { unsafe { job_get_max_weapon_level1(self, index, None)}}
+    pub fn get_selectable_weapon_mask(&self, select_count: &mut i32) -> &'static WeaponMask { unsafe { job_get_selectable_weapon_mask(self, select_count, None) } }
     pub fn get_weapon_mask(&self) -> &'static WeaponMask { unsafe { job_get_weapon_mask2(self, None)}}
+    pub fn get_weapon_mask_with_selected(&self, mask: &WeaponMask, select: &WeaponMask) -> &'static WeaponMask { unsafe { job_get_weapon_mask(self, mask, select, None)}}
     pub fn get_unique_items(&self) -> &Array<&Il2CppString> { unsafe { job_get_unique_items(self, None)}}
     pub fn get_equippable_item_kinds(&self) -> &'static Array<i32> { unsafe { job_equipped_weapon_kinds(self, None)}}
     pub fn get_sort(&self) -> u16 { unsafe { job_get_sort(self, None)}}
@@ -144,3 +146,9 @@ pub fn job_get_sort(this: &JobData, method_info: OptionalMethod) -> u16;
 
 #[unity::from_offset("App","JobData","GetEquipableWeaponKinds")]
 fn job_equipped_weapon_kinds(this: &JobData, method_info: OptionalMethod) -> &'static Array<i32>;
+
+#[skyline::from_offset(0x020564f0)]
+pub fn job_get_selectable_weapon_mask(this: &JobData, select_count: &mut i32, method: OptionalMethod) -> &'static WeaponMask;
+
+#[skyline::from_offset(0x02056300)]
+fn job_get_weapon_mask(this: &JobData, weapon_mask: &WeaponMask, select: &WeaponMask, method: OptionalMethod) -> &'static WeaponMask;

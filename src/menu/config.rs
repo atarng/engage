@@ -3,7 +3,6 @@ use unity::prelude::*;
 use crate::proc::ProcInst;
 
 use super::{BasicMenu, BasicMenuResult};
-
 #[repr(C)]
 #[unity::class("", "ConfigBasicMenuItem")]
 pub struct ConfigBasicMenuItem {
@@ -11,7 +10,7 @@ pub struct ConfigBasicMenuItem {
     pub menu: &'static mut BasicMenu<ConfigBasicMenuItem>,
     menu_item_content: *const u8,
     name: &'static Il2CppString,
-    index: i32,
+    pub index: i32,
     full_index: i32,
     attribute: i32,
     cursor_color: unity::engine::Color,
@@ -25,8 +24,6 @@ pub struct ConfigBasicMenuItem {
     pub is_command_icon: bool,
     pub gauge_ratio: f32,
 }
-
-
 impl ConfigBasicMenuItem {
     fn new() -> &'static mut ConfigBasicMenuItem {
         let item = il2cpp::instantiate_class(ConfigBasicMenuItem::class().clone()).unwrap();

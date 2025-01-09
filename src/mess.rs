@@ -19,6 +19,9 @@ impl Mess {
     pub fn get_language_directory_name() -> &'static Il2CppString {
         unsafe { mess_get_language_directory_name(None) }
     }
+    pub fn get_name<'a>(value: impl Into<&'a Il2CppString>) -> &'static Il2CppString {
+        unsafe { mess_get_name_data_name(value.into(), None) }
+    }
 }
 
 #[repr(C)]
@@ -73,3 +76,6 @@ pub fn msbt_get_label(this: &MsgFile, index: usize, method_info: OptionalMethod)
 
 #[skyline::from_offset(0x1e97770)]
 pub fn msbt_get_text(this: &MsgFile, index: usize, method_info: OptionalMethod) -> *const u8;
+
+#[skyline::from_offset(0x025daae0)]
+fn mess_get_name_data_name(value: &Il2CppString, method_info: OptionalMethod) -> &'static Il2CppString;

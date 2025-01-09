@@ -13,6 +13,20 @@ pub struct SkillArrayEntityList {
     sync_root: *const u8,
 }
 
+impl Deref for SkillArrayEntityListFields {
+    type Target = [SkillArrayEntity];
+    fn deref(&self) -> &Self::Target {
+        unsafe { std::slice::from_raw_parts(self.item.m_items.as_ptr(), self.size as usize) }
+    }
+}
+
+impl DerefMut for SkillArrayEntityListFields  {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { std::slice::from_raw_parts_mut(self.item.m_items.as_mut_ptr(), self.size as usize) }
+    }
+}
+
+
 #[unity::class("App", "SkillArray")]
 pub struct SkillArray {
     mask: &'static Array<u8>,
@@ -51,8 +65,6 @@ pub struct SkillData {
     pub timing: i32,
     pub target: i32,
     pub equip_iids: Option<&'static Array<&'static Il2CppString>>,
-
-    
 }
 impl Gamedata for SkillData{}
 
@@ -62,19 +74,23 @@ impl SkillArray {
     pub fn ctor(&self, src: &SkillArray) { unsafe { skillarray_ctor(self, src, None); }}
     pub fn add_skill(&self, skill: &SkillData, category: i32, age: i32) -> bool { unsafe { skill_array_add_skill(self, skill, category, age, None) } }
     pub fn add_sid(&self, sid: &str, category: i32, age: i32) -> bool {
-        let skill = SkillData::get(sid);
-        if skill.is_none() { 
-            return false;
-        }
-        self.add_skill(skill.unwrap(), category, age)
+        if let Some(skill) = SkillData::get(sid) { self.add_skill(skill, category, age) }
+        else {false }
     }
-
+    pub fn get_category(&self, index: i32) -> i32 { unsafe { skill_array_get_category(self, index, None) }}
     pub fn find_sid(&self, sid: &Il2CppString) -> Option<&'static SkillData> { unsafe { skillarray_find(self, sid, None)}}
     pub fn remove_skill(&self, skill: &SkillData) -> bool { unsafe { skill_array_remove_skill(self, skill, None)}}
     pub fn remove_sid(&self, sid: &Il2CppString) -> bool { unsafe { skill_array_remove(self, sid, None)}}
     pub fn replace(&self, index: i32, skill: &SkillData, category: i32 ) { unsafe { skill_array_replace(self, index, skill, category, None); }}
     pub fn skill_array_add(&self, add: &SkillArray) -> bool { unsafe { add_skill_array(self, add, None)}}
     pub fn index_of(&self, sid: &Il2CppString) -> i32 { unsafe { sid_index_of(self, sid, None)}}
+
+    pub fn replace_sid(&self, sid: &Il2CppString, skill: &SkillData) {
+        let index = self.index_of(sid);
+        if index == -1 { return; }
+        let category = self.get_category(index);
+        self.replace(index, skill, category);
+    }
 }
 
 impl SkillData {
@@ -95,6 +111,7 @@ impl SkillData {
     pub fn set_range_target(&self, value: i32) { unsafe {skilldata_set_range_target(self, value, None); }}
     pub fn set_range_add(&self, value: i32) { unsafe {skilldata_set_range_add(self, value, None); }}
     pub fn get_priority(&self) -> i32 { unsafe { skilldata_priority(self, None) }}
+    pub fn set_priority(&self, value: i32)  { unsafe { skilldata_set_priority(self, value, None); }}
     pub fn has_effect(&self) -> bool { unsafe { skilldata_has_effect(self, None)}}
     pub fn is_style_skill(&self) -> bool { unsafe { skilldata_is_style(self, None)}}
     pub fn load() { unsafe { skilldata_load(None); }}
@@ -132,6 +149,8 @@ fn skill_array_remove(this: &SkillArray, sid: &Il2CppString, method_info: Option
 
 #[skyline::from_offset(0x02483080)]
 fn skill_array_remove_skill(this: &SkillArray, skill: &SkillData, method_info: OptionalMethod) -> bool;
+#[skyline::from_offset(0x024877e0)]
+fn skill_array_get_category(this: &SkillArray, index: i32, method_info: OptionalMethod) -> i32;
 
 #[skyline::from_offset(0x24820c0)]
 fn add_skill_array(this: &SkillArray, src: &SkillArray, method_info: OptionalMethod) -> bool;
@@ -213,3 +232,6 @@ fn skilldata_oncomplete(this: &SkillData,method_info: OptionalMethod);
 
 #[unity::from_offset("App", "SkillData", "set_EfficacyValue")]
 fn skilldata_set_efficacy_value(this: &SkillData, value: i32, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "SkillData", "set_Priority")]
+fn skilldata_set_priority(this: &SkillData, value: i32, method_info: OptionalMethod);

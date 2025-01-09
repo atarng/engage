@@ -1,6 +1,6 @@
 use unity::prelude::*;
 
-use super::{Gamedata, StructBaseFields};
+use super::{Gamedata, StructBaseFields, unit::Unit};
 
 #[unity::class("App", "AccessoryData")]
 pub struct AccessoryData {
@@ -27,8 +27,23 @@ pub struct AccessoryData {
     pub kind: i32,
     pub god_data: u64,
     pub flag_name: &'static Il2CppString,
-    
     // ...
 }
 
 impl Gamedata for AccessoryData { }
+
+impl AccessoryData {
+    pub fn can_equip(&self, unit: &Unit) -> bool {
+        unsafe { accessory_can_equip(self, unit, None )}
+    }
+    pub fn get_num(&self) -> i32 {
+        unsafe { accessory_get_num(self, None) }
+    }
+}
+
+
+#[unity::from_offset("App", "AccessoryData", "CanEquip")]
+fn accessory_can_equip(this: &AccessoryData, unit: &Unit, method_info: OptionalMethod) -> bool;
+
+#[unity::from_offset("App", "AccessoryData", "GetNum")]
+fn accessory_get_num(data: &AccessoryData, method_info: OptionalMethod) -> i32;

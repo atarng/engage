@@ -1,7 +1,10 @@
 //! Structures representing a singular entry from the gamedata files in memory.
 
 use std::ops::Deref;
+use job::JobDataFlag;
 use unity::{prelude::*, system::{List, ListFields}};
+use person::CapabilitySbyte;
+use unity::il2cpp::object::Array;
 
 pub mod accessory;
 pub mod person;
@@ -14,7 +17,10 @@ pub mod cook;
 pub mod animal;
 pub mod god;
 pub mod ring;
+pub mod assettable;
 pub mod terrain;
+pub mod shop;
+pub mod ai;
 
 #[unity::class("App", "HubFacilityData")]
 pub struct HubFacilityData {
@@ -56,8 +62,14 @@ pub struct JobData {
     pub max_level: u8,
     pub internal_level: i8,
     pub sort: u16,
-    junk: [u8; 0x90],
-    pub skills: Option<&'static mut Il2CppArray<&'static mut Il2CppString>>,
+    pub flag: &'static JobDataFlag,
+    cc_item: &'static Array<&'static Il2CppString>,
+    unique_item: &'static Array<&'static Il2CppString>,
+    style: i32,
+    pub weapons: &'static mut Array<i8>,
+    pub max_weapon_level: &'static mut Array<&'static Il2CppString>,
+    pub weapon_levels: &'static mut Array<i32>,
+    junk: [u8; 0x60],
     pub learn_skill: Option<&'static Il2CppString>, // 0x100
     pub lunatic_skill: Option<&'static Il2CppString>, //0x108
 }
@@ -92,6 +104,41 @@ pub struct GodData {
     pub help: &'static Il2CppString,
     pub sound_id: &'static Il2CppString,
     pub asset_id: &'static Il2CppString,
+    pub face_icon_name: &'static Il2CppString,
+    pub face_icon_name_darkness: &'static Il2CppString,
+    pub ring_name: Option<&'static Il2CppString>,
+    pub ring_help: Option<&'static Il2CppString>,
+    pub unit_icon_id: Option<&'static Il2CppString>,
+    pub change: Option<&'static Array<&'static Il2CppString>>,
+    pub link: Option<&'static Il2CppString>,
+    pub haunt: Option<&'static Il2CppString>,
+    pub level: i32,
+    pub force_type: i32,
+    pub female: i32,
+    pub good_weapon: i32,
+    pub sort: i16,
+    pub engage_count: i8,
+    pub engage_attack: Option<&'static Il2CppString>,
+    pub engage_attack_rampage: Option<&'static Il2CppString>,
+    pub engage_attack_link: Option<&'static Il2CppString>,
+    pub link_gid: Option<&'static Il2CppString>,
+    pub gbid: Option<&'static Il2CppString>,
+    pub grow_table: Option<&'static Il2CppString>,
+    pub level_cap: u8,
+    pub unlock_level_cap_flag: Option<&'static Il2CppString>,
+    pub engrave_word: Option<&'static Il2CppString>,
+    pub engrave_power: i8,
+    pub engrave_weight: i8,
+    pub engrave_hit: i8,
+    pub engrave_critical: i8,
+    pub engrave_avoid: i8,
+    pub engrave_secure: i8,
+    pub syncho_enhance: &'static CapabilitySbyte,
+    main_data: &'static GodData,
+    change_data: Option<&'static Array<&'static GodData>>,
+    change_index: i32,
+    pub ascii_name: Option<&'static Il2CppString>,
+    pub flag: &'static WeaponMask,
 }
 impl Gamedata for GodData {}
 
@@ -176,8 +223,8 @@ pub struct WeaponMask {
 
 pub trait Gamedata: Il2CppClassData + Sized {
     fn ctor(&self) {
-        let method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from(".ctor")));
-        if method.is_none() { println!("Cannot find method .ctor :("); return; }
+        let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from(".ctor")));
+        if method.is_none() { return; }
         let ctor = unsafe {
             std::mem::transmute::<_, extern "C" fn(&Self, &MethodInfo) -> ()>(
                 method.unwrap().method_ptr,
@@ -186,7 +233,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
     
         ctor(self, method.unwrap());
     }
-    fn get(name: &str) -> Option<&'static Self> {
+    fn get<'a>(name: impl Into<&'a Il2CppString>) -> Option<&'static Self> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Get")));
         if method.is_none() {
             method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Get")));
@@ -203,7 +250,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
         get(name.into(), method.unwrap())
     }
     
-    fn get_mut(name: &str) -> Option<&'static mut Self> {
+    fn get_mut<'a>(name: impl Into<&'a Il2CppString>) -> Option<&'static mut Self> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Get")));
         if method.is_none() {
             method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("Get")));
@@ -219,7 +266,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
         get(name.into(), method.unwrap())
     }
 
-    fn get_index(name: &Il2CppString) ->  i32 {
+    fn get_index<'a>(name: impl Into<&'a Il2CppString>) ->  i32 {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetIndex")));
         if method.is_none() {
             method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("GetIndex")));
@@ -232,7 +279,7 @@ pub trait Gamedata: Il2CppClassData + Sized {
                 method.unwrap().method_ptr,
             )
         };
-        get(name, method.unwrap())
+        get(name.into(), method.unwrap())
     }
 
     fn get_list() -> Option<&'static StructList<Self>> {
@@ -312,12 +359,27 @@ pub trait Gamedata: Il2CppClassData + Sized {
         };
         fxn(self, method.unwrap());
     }
+    fn on_release(&self) {
+        let mut method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("OnRelease")));
+        if method.is_none() {
+            method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("OnRelease")));
+        }
+        if method.is_none() { return; }
+        let fxn = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&Self, &MethodInfo) -> ()> (
+                method.unwrap().method_ptr,
+            )
+        };
+        fxn(self, method.unwrap());
+    }
     fn on_completed(&self) {
         let mut method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("OnCompleted")));
         if method.is_none() {
             method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("OnCompleted")));
         }
-        if method.is_none() { return; }
+        if method.is_none() {
+            return; 
+        }
         let fxn = unsafe {
             std::mem::transmute::<_, extern "C" fn(&Self, &MethodInfo) -> ()> (
                 method.unwrap().method_ptr,
@@ -340,8 +402,10 @@ pub trait Gamedata: Il2CppClassData + Sized {
     }
     fn load_data() {
         //From the class itself instead of StructData since StructData load requires arguments to load the xml data
-        let method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Load")));
-        if method.is_none() { return; }
+        let mut method = Self::class().get_methods().iter().find(|method| method.get_name() == Some(String::from("Load")));
+        if method.is_none() { 
+            return; 
+        }
         let load = unsafe {
             std::mem::transmute::<_, extern "C" fn(&MethodInfo) -> ()> (
                 method.unwrap().method_ptr,
@@ -350,13 +414,9 @@ pub trait Gamedata: Il2CppClassData + Sized {
         load(method.unwrap());
     }
     fn try_index_get(index: i32) -> Option<&'static Self> {
-        let method = 
-        if Self::class()._1.parent.get_methods().len() < 10 {
-            Self::class()._1.parent._1.parent.get_methods()[9]
-        }
-        else {
-            Self::class()._1.parent.get_methods()[9]
-        };
+        let mut method = 
+        if Self::class()._1.parent.get_methods().len() < 10 { Self::class()._1.parent._1.parent.get_methods()[9] }
+        else { Self::class()._1.parent.get_methods()[9] };
         let get = unsafe {
             std::mem::transmute::<_, extern "C" fn(i32, &MethodInfo) -> Option<&'static Self>>(
                 method.method_ptr,
@@ -366,13 +426,31 @@ pub trait Gamedata: Il2CppClassData + Sized {
     }
     
     fn try_index_get_mut(index: i32) -> Option<&'static mut Self> {
-        let method = Self::class()._1.parent.get_methods()[9];
+        let mut method = if Self::class()._1.parent.get_methods().len() < 9 {   //SkillData's Get method is one level lower
+            Self::class()._1.parent._1.parent.get_methods()[9]
+        } else {
+            Self::class()._1.parent.get_methods()[9]
+        };
         let get = unsafe {
             std::mem::transmute::<_, extern "C" fn(i32, &MethodInfo) -> Option<&'static mut Self>>(
                 method.method_ptr,
             )
         };
         get(index, method)
+    }
+    fn try_get_hash(hash: i32) -> Option<&'static Self> {
+        let mut method = if Self::class()._1.parent.get_methods().len() < 11 {
+            Self::class()._1.parent._1.parent.get_methods()[10]
+        }
+        else {
+            Self::class()._1.parent.get_methods()[10]
+        };
+        let get = unsafe {
+            std::mem::transmute::<_, extern "C" fn(i32, &MethodInfo) -> Option<&'static Self>>(
+                method.method_ptr,
+            )
+        };
+        get(hash, method)
     }
 }
 
@@ -395,7 +473,11 @@ impl<T> Deref for StructDataArrayListFields<T> {
         &self.parent.list
     }
 }
-
+impl<T> DerefMut for StructDataArrayListFields<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent.list
+    }
+}
 impl<T> StructDataArrayList<T> {
     pub fn add(&mut self, element: &'static mut T) {
         let method = self.get_class().get_virtual_method("Add").unwrap();
@@ -405,6 +487,15 @@ impl<T> StructDataArrayList<T> {
             )
         };
         add(self, element, method.method_info);
+    }
+    pub fn insert(&mut self, index: i32, element: &'static mut T) {
+        let method = self.get_class().get_virtual_method("Insert").unwrap();
+        let insert = unsafe {
+            std::mem::transmute::<_, extern "C" fn(&mut Self, i32, &'static mut T, &MethodInfo)>(
+                method.method_info.method_ptr,
+            )
+        };
+        insert(self, index, element, method.method_info);
     }
 }
 
@@ -439,7 +530,7 @@ pub trait GamedataArray: Il2CppClassData + Sized {
         };
         get_list(method.unwrap())
     }
-    fn try_get_mut(name: &str) -> Option<&'static mut StructDataArrayList<Self>> {
+    fn try_get_mut<'a>(name: impl Into<&'a Il2CppString>) -> Option<&'static mut StructDataArrayList<Self>> {
         let mut method = Self::class()._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("TryGet")));
         if method.is_none() {
             method = Self::class()._1.parent._1.parent.get_methods().iter().find(|method| method.get_name() == Some(String::from("TryGet")));

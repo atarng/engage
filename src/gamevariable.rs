@@ -62,7 +62,7 @@ impl GameVariableManager {
 
     /// Get a game variable as a boolean value.
     /// If the entry doesn't exist, this will always return false.
-    pub fn get_bool(key: &str) -> bool {
+    pub fn get_bool<'a>(key: impl Into<&'a Il2CppString>) -> bool {
         let game_variable = GameUserData::get_variable();
 
         unsafe { get_bool(game_variable, key.into(), None) }
@@ -70,21 +70,21 @@ impl GameVariableManager {
 
     /// Set a game variable to the provided boolean value.
     /// This will NOT create a new entry if it deosn't exist.
-    pub fn set_bool(key: &str, value: bool) {
+    pub fn set_bool<'a>(key: impl Into<&'a Il2CppString>, value: bool) {
         let game_variable = GameUserData::get_variable();
 
         unsafe {
             set_bool(game_variable, key.into(), value, None);
         }
     }
-    pub fn set_number(key: &str, value: i32) {
+    pub fn set_number<'a>(key: impl Into<&'a Il2CppString>, value: i32) {
         let game_variable = GameUserData::get_variable();
 
         unsafe {
             set_number(game_variable, key.into(), value, None);
         }   
     }
-    pub fn get_number(key: &str) -> i32 {
+    pub fn get_number<'a>(key: impl Into<&'a Il2CppString>) -> i32 {
         let game_variable = GameUserData::get_variable();
         unsafe {get_number(game_variable, key.into(), None) }
     }
@@ -96,15 +96,15 @@ impl GameVariableManager {
             set_string(game_variable, key.into(), value.into(), None);
         }   
     }
-    pub fn get_string(key: &str) -> &'static Il2CppString {
+    pub fn get_string<'a>(key: impl Into<&'a Il2CppString>) -> &'static Il2CppString {
         let game_variable = GameUserData::get_variable();
         unsafe {get_string(game_variable, key.into(), None) }
     }
-    pub fn find_starts_with(string: &str) -> &'static List<Il2CppString> {
+    pub fn find_starts_with<'a>(string: impl Into<&'a Il2CppString>) -> &'static List<Il2CppString> {
         let game_variable = GameUserData::get_variable();
         unsafe { gamevariable_find_start_with(game_variable, string.into(), None)  }
     }
-    pub fn exist(string: &str) -> bool {
+    pub fn exist<'a>(string: impl Into<&'a Il2CppString>) -> bool {
         let game_variable = GameUserData::get_variable();
         unsafe { gamevariable_is_exist(game_variable, string.into(), None)  }
     }

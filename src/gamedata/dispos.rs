@@ -7,10 +7,10 @@ pub struct DisposData {
     pub parent: StructDataArrayFields,
     pub _group: &'static Il2CppString,
     pub pid: &'static Il2CppString,
-    tid: &'static Il2CppString,
+    pub tid: &'static Il2CppString,
     pub flag: &'static DisposDataFlag,
-    jid: &'static Il2CppString,
-    sid: &'static Il2CppString,
+    pub jid: &'static Il2CppString,
+    pub sid: Option<&'static Il2CppString>,
     bid: &'static Il2CppString,
     pub appear_x: i8,
     pub appear_y: i8,
@@ -22,13 +22,13 @@ pub struct DisposData {
     pub level_h: u8,
     pub level_l: u8,
     __: i32,
-    items: u64,
-    item1: u64,
-    item2: u64,
-    item3: u64,
-    item4: u64,
-    item5: u64,
-    item6: u64,
+    pub items: &'static mut Array<&'static DisposDataItem>,
+    pub item1: &'static DisposDataItem,
+    pub item2: &'static DisposDataItem,
+    pub item3: &'static DisposDataItem,
+    pub item4: &'static DisposDataItem,
+    pub item5: &'static DisposDataItem,
+    pub item6: &'static DisposDataItem,
     pub gid: Option<&'static Il2CppString>,
     pub hp_stock_count: u32,
     state0: i32,
@@ -51,6 +51,13 @@ pub struct DisposData {
 pub struct DisposDataFlag {
     pub value: i32,
 }
+
+#[unity::class("App", "DisposDataItem")]
+pub struct DisposDataItem {
+    pub iid: Option<&'static mut Il2CppString>,
+    pub drop: i32,
+}
+
 impl GamedataArray for DisposData {}
 
 impl DisposData {
@@ -59,6 +66,7 @@ impl DisposData {
     pub fn get_gid(&self) -> &'static Il2CppString { unsafe { disposdata_get_gid(self, None)} }
     pub fn get_hp_stock_count(&self) -> u8 { unsafe {disposdata_get_hp_stock_count(self, None)}}
     pub fn get_person(&self) -> Option<&PersonData> { unsafe { disposdata_get_person(self, None)}}
+    pub fn get_job(&self) -> &'static JobData { unsafe { disposdata_get_job(self, None)}}
     pub fn get_pid(&self) -> Option<&'static Il2CppString> { unsafe { disposdata_get_pid(self, None)}}
     pub fn get_sid(&self) -> Option<&'static Il2CppString> { unsafe { disposdata_get_sid(self, None)}}
 
@@ -70,6 +78,9 @@ impl DisposData {
     pub fn set_pid(&self, pid: &Il2CppString) { unsafe { disposdata_set_pid(self, pid, None); }}
     pub fn set_sid(&self, sid: &Il2CppString) { unsafe { disposdata_set_sid(self, sid, None);}}
 
+}
+impl DisposDataItem {
+    pub fn set_iid(&self, iid: &Il2CppString) { unsafe { disposdata_item_set_iid(self, iid, None);}}
 }
 
 #[unity::class("App", "ChapterData")]
@@ -142,6 +153,12 @@ fn disposdata_set_sid(this: &DisposData, value: &Il2CppString, method_info: Opti
 
 #[unity::from_offset("App","DisposData", "GetPerson")]
 fn disposdata_get_person(this: &DisposData, method_info: OptionalMethod) -> Option<&PersonData>;
+
+#[unity::from_offset("App","DisposData", "GetJob")]
+fn disposdata_get_job(this: &DisposData, method_info: OptionalMethod) -> &'static JobData;
+
+#[skyline::from_offset(0x01bd3dd0)]
+fn disposdata_item_set_iid(this: &DisposDataItem, value: &Il2CppString, method_info: OptionalMethod);
 
 // Chapter Data
 #[unity::from_offset("App", "ChapterData", "TrySetSpotState")]
