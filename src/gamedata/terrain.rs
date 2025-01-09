@@ -3,7 +3,11 @@ use unity::prelude::*;
 use super::Gamedata;
 
 #[unity::class("App", "TerrainData")]
-pub struct TerrainData {}
+pub struct TerrainData {
+    sup: [u8;0x10],
+    pub tid: &'static Il2CppString,
+    pub name: &'static Il2CppString,
+  }
 
 impl Gamedata for TerrainData { }
 

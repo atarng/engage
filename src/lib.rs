@@ -21,6 +21,7 @@ pub mod gmapspotmanager;
 pub mod godpool;
 pub mod language;
 pub mod loadingmanager;
+pub mod map;
 pub mod mapmind;
 pub mod menu;
 pub mod mess;

@@ -5,8 +5,9 @@ use unity::{prelude::*, system::List};
 
 use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields};
 
-pub mod config;
 pub mod content;
+pub mod config;
+pub mod mapunitcommand;
 pub mod savedata;
 
 /// Represents the base Menu from which every other inherits.

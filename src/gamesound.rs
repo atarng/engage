@@ -1,9 +1,15 @@
 use unity::prelude::*;
 
-use crate::soundmanager::SoundSystemSoundHandle;
+use crate::{combat::Character, soundmanager::SoundSystemSoundHandle};
 
 #[unity::class("App", "GameSound")]
 pub struct GameSound {}
+
+impl GameSound {
+    pub fn post_event<'a>(event_name: impl Into<&'a Il2CppString>, character: Option<&Character>) -> *const u8 {
+        unsafe { gamesound_postevent(event_name.into(), character, None) }
+    }
+}
 
 #[unity::class("", "Handle")]
 pub struct GameSoundHandle {}
@@ -21,5 +27,8 @@ impl GameSoundHandle {
     }
 }
 
+#[skyline::from_offset(0x2272fd0)]
+extern "C" fn gamesound_postevent(event_name: &Il2CppString, character: Option<&Character>, method_info: OptionalMethod) -> *const u8;
+
 #[skyline::from_offset(0x1e6db20)]
-fn gamesound_handle_ctor(this: &GameSoundHandle, sound_handle: &SoundSystemSoundHandle, method_info: OptionalMethod);
+extern "C" fn gamesound_handle_ctor(this: &GameSoundHandle, sound_handle: &SoundSystemSoundHandle, method_info: OptionalMethod);

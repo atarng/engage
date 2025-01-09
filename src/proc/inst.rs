@@ -49,12 +49,6 @@ pub struct ProcInst {
     stack: &'static Il2CppObject<RawValueStack>,
 }
 
-impl Drop for ProcInst {
-    fn drop(&mut self) {
-        panic!("ProcInst dropped");
-    }
-}
-
 impl ProcInst {
     pub fn cast<T: AsRef<ProcInstFields>>(&self) -> &T {
         unsafe { std::mem::transmute::<&ProcInst, &T>(self) }
@@ -62,6 +56,10 @@ impl ProcInst {
 
     pub fn cast_mut<T: AsMut<ProcInstFields>>(&mut self) -> &mut T {
         unsafe { std::mem::transmute::<&mut ProcInst, &mut T>(self) }
+    }
+
+    pub fn jump<T: Bindable + ?Sized>(proc: &T, label: i32) {
+        unsafe { procinst_jump(proc, label, None) }
     }
 }
 

@@ -40,7 +40,13 @@ pub struct ItemData {
   	pub overlap_effect: &'static Il2CppString,
   	pub flag: &'static ItemDataFlag,
 }
+
 impl Gamedata for ItemData { }
+
+#[unity::class("App", "ItemDataFlag")]
+pub struct ItemDataFlag {
+    pub value: i32,
+}
 
 #[unity::class("App", "UnitItem")]
 pub struct UnitItem {
@@ -58,7 +64,6 @@ pub struct UnitItemList {
 	pub unit_items: &'static Array<&'static UnitItem>
 }
 
-
 #[unity::class("App", "RewardData")]
 pub struct RewardData {
 	pub parent: StructDataArrayFields,
@@ -69,6 +74,7 @@ pub struct RewardData {
 	pub max: f32, 
 	pub is_show: bool,
 }
+
 impl GamedataArray for RewardData {}
 
 impl RewardData {
@@ -132,11 +138,6 @@ impl UnitItemList {
 	}
 	pub fn move_item(&self, from: i32, to: i32) { unsafe { unititemlist_move(self, from, to, None) } }
 	pub fn put_off_all_item(&self) { unsafe { unititemlist_putoffall(self, None); } }
-}
-
-#[unity::class("App", "ItemDataFlag")]
-pub struct ItemDataFlag {
-    pub value: i32,
 }
 
 #[unity::from_offset("App", "ItemData", "get_Flag")]

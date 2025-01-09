@@ -5,5 +5,7 @@ pub mod gmap_sequence;
 pub mod hubrefineshopsequence;
 pub mod mainmenusequence;
 pub mod mainsequence;
+pub mod mapsequence;
+pub mod mapsequencetargetselect;
 pub mod skillinheritancesequence;
 pub mod titleloopsequence;
