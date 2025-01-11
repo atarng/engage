@@ -5,7 +5,7 @@ use crate::{gamedata::unit::Unit, proc::{Bindable, ProcInstFields}};
 #[repr(C)]
 #[unity::class("App", "MapSequenceHuman")]
 pub struct MapSequenceHuman {
-    sup: ProcInstFields,
+    pub sup: ProcInstFields,
     is_resume: bool,
     is_loaded: bool,
     job_intro_unit: Option<&'static Unit>,
