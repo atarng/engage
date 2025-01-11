@@ -1,11 +1,13 @@
 pub use unity::prelude::*;
 
-use crate::{gamedata::unit::Unit, proc::Bindable};
+use crate::{gamedata::unit::Unit, proc::{Bindable, ProcInstFields}};
 
 #[repr(C)]
 #[unity::class("App", "MapSequenceHuman")]
 pub struct MapSequenceHuman {
-    sup: [u8;0x68],
+    sup: ProcInstFields,
+    is_resume: bool,
+    is_loaded: bool,
     job_intro_unit: Option<&'static Unit>,
     job_intro_keyhelp_type: i32,
     return_label: i32,
