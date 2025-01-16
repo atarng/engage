@@ -113,7 +113,7 @@ pub struct Unit {
     angle :f32,
     dont_attack_person :u64,
     dont_attack_force_mask :i32,
-    pub item_list : &'static UnitItemList,
+    pub item_list : &'static mut UnitItemList,
     pub item_selected :u64,
     pub accessory_list : &'static mut UnitAccessoryList,
     pub god_unit :Option<&'static GodUnit>,
