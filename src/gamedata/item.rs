@@ -61,7 +61,7 @@ pub struct UnitItem {
 
 #[unity::class("App", "UnitItemList")]
 pub struct UnitItemList {
-	pub unit_items: &'static Array<&'static UnitItem>
+	pub unit_items: &'static mut Array<Option<&'static mut UnitItem>>
 }
 
 #[unity::class("App", "RewardData")]
