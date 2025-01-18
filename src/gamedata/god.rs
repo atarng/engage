@@ -157,8 +157,13 @@ fn god_data_get_gid(this: &GodData, method_info: OptionalMethod) -> Option<&'sta
 
 #[unity::from_offset("App", "GodData", "get_GrowTable")]
 fn god_data_get_grow_table(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
+#[unity::from_offset("App", "GodData", "get_AsciiName")]
+fn god_data_get_ascii(this: &GodData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
 #[unity::from_offset("App", "GodData", "set_AsciiName")]
 fn god_data_set_ascii(this: &GodData, value: &Il2CppString, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "GodData", "get_Flag")]
 fn god_data_get_flag(this: &GodData, method_info: OptionalMethod) -> &'static mut WeaponMask;
 
