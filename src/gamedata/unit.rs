@@ -54,6 +54,24 @@ pub struct UnitAccessory {
     pub index: i32,
 }
 
+#[unity::class("App", "UnitEnhanceCalculator")]
+pub struct UnitEnhanceCalculator {
+    pub values: Option<&'static UnitEnhanceValues>,
+    pub temp:   Option<&'static UnitEnhanceValues>,
+}
+
+#[unity::class("App", "UnitEnhanceValues")]
+pub struct UnitEnhanceValues {
+    pub values: Il2CppArray<i32>,
+}
+
+impl UnitEnhanceValues {
+    pub fn get_item(&self, index: i32) -> i32 { unsafe { return unitenhancevalues_getitem(self, index, None); } }
+}
+
+#[skyline::from_offset(0x01f781b0)]
+pub fn unitenhancevalues_getitem(this: &UnitEnhanceValues, index: i32, method_info: OptionalMethod) -> i32;
+
 #[unity::from_offset("App", "UnitAccessory", "Serialize")]
 extern "C" fn unitaccessory_serialize(this: &UnitAccessory, stream: &mut Stream, method_info: OptionalMethod);
 
@@ -133,7 +151,7 @@ pub struct Unit {
     pub weapon_mask :&'static mut WeaponMask,
     pub selected_weapon_mask :&'static mut WeaponMask,
     enhance_factors :u64,
-    enhance_calculator :u64,
+    pub enhance_calculator : Option<&'static UnitEnhanceCalculator>,
     pub internal_level :i8,
     pub last_pick_voice :u8,
     attack_image :u64,
