@@ -245,6 +245,8 @@ impl Unit {
     pub fn has_private_skill(&self, sid: &Il2CppString) -> bool { unsafe { unit_has_private_skill(self, sid, None) } }
     pub fn has_sid(&self, sid: &Il2CppString) -> bool { unsafe { unit_has_skill_sid(self, sid, None) }}
     pub fn has_skill(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill(self, skill, None)}}
+    pub fn has_skill_equip(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill_equip(self, skill, None)}}
+    pub fn has_skill_private(&self, skill: &SkillData) -> bool { unsafe { unit_has_skill_private(self, skill, None)}}
     pub fn has_interfence_rod(&self) -> bool { unsafe { unit_inference_rod(self, None)}}
     pub fn has_heal_rod(&self) -> bool { unsafe { unit_heal_rod(self, None)}}
     
