@@ -26,6 +26,10 @@ impl EventScript {
     pub fn get_instance() -> &'static EventScript {
         unsafe { eventscript_getinstance(None) }
     }
+
+    pub fn get_func<'a>(&self, name: impl Into<&'a Il2CppString>) -> Option<&'static mut DynValue> {
+        unsafe { eventscript_getfunc(self, name.into(), None) }
+    }
 }
 
 pub trait EventScriptCommand {
@@ -135,10 +139,30 @@ impl DynValue {
     pub fn new_boolean(value: bool) -> &'static DynValue {
         unsafe { dynvalue_newboolean(value, None) }
     }
+
+    // MoonSharp_Interpreter_Closure_o* MoonSharp.Interpreter.DynValue$$get_Function (MoonSharp_Interpreter_DynValue_o *__this,MethodInfo *method)
+    pub fn get_function(&self) -> Option<&'static Closure> { unsafe { dynvalue_getfunction(self, None) } } 
 }
 
 #[skyline::from_offset(0x2e200f0)]
 fn dynvalue_newboolean(v: bool, method_info: OptionalMethod) -> &'static DynValue;
+
+// 0x7102e36440
+#[skyline::from_offset(0x02e36440)]
+fn dynvalue_getfunction(this: &DynValue, method_info: OptionalMethod) -> Option<&'static Closure>;
+
+#[repr(C)]
+#[unity::class("MoonSharp.Interpreter", "Closure")]
+pub struct Closure {}
+
+impl Closure {
+    // MoonSharp_Interpreter_DynValue_o * MoonSharp.Interpreter.Closure$$Call(MoonSharp_Interpreter_Closure_o *__this,MethodInfo *method)
+    pub fn call(&self) -> Option<&'static DynValue> { unsafe { closure_call(self, None) } }
+}
+
+// 0x7102e31280
+#[skyline::from_offset(0x02e31280)]
+fn closure_call(this: &Closure, method_info: OptionalMethod) -> Option<&'static DynValue>;
 
 pub trait ScriptUtils {
     fn try_get_i32(&self, index: i32) -> i32;
@@ -192,6 +216,9 @@ fn scriptutil_trygetitem(
 
 #[skyline::from_offset(0x21994e0)]
 pub fn scriptutil_yield(method_info: OptionalMethod);
+
+#[unity::from_offset("App", "EventScript", "GetFunc")]
+fn eventscript_getfunc(this: &EventScript, name: &Il2CppString, method_info: OptionalMethod) -> Option<&'static mut DynValue>;
 
 #[unity::from_offset("App", "EventScript", "get_Instance")]
 fn eventscript_getinstance(method_info: OptionalMethod) -> &'static EventScript;
