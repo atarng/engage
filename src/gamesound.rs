@@ -9,6 +9,10 @@ impl GameSound {
     pub fn post_event<'a>(event_name: impl Into<&'a Il2CppString>, character: Option<&Character>) -> *const u8 {
         unsafe { gamesound_postevent(event_name.into(), character, None) }
     }
+
+    pub fn is_event_loaded(event_name: impl Into<&Il2CppString>) -> bool {
+        unsafe { gamesound_iseventloaded(event_name.into(), None) }
+    }
 }
 
 #[unity::class("", "Handle")]
@@ -24,10 +28,6 @@ impl GameSoundHandle {
     
     fn ctor(&self, sound_handle: &SoundSystemSoundHandle) {
         unsafe { gamesound_handle_ctor(self, sound_handle, None) }
-    }
-
-    pub fn is_event_loaded(event_name: impl Into<&Il2CppString>) -> bool {
-        unsafe { gamesound_iseventloaded(event_name.into(), None) }
     }
 }
 
