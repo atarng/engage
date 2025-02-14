@@ -25,6 +25,9 @@ impl GameSoundHandle {
     fn ctor(&self, sound_handle: &SoundSystemSoundHandle) {
         unsafe { gamesound_handle_ctor(self, sound_handle, None) }
     }
+
+    pub fn is_event_loaded(event_name: Into<&Il2CppString>) -> bool {
+        unsafe { gamesound_iseventloaded(event_name.into(), None) }
 }
 
 #[skyline::from_offset(0x2272fd0)]
@@ -32,3 +35,6 @@ extern "C" fn gamesound_postevent(event_name: &Il2CppString, character: Option<&
 
 #[skyline::from_offset(0x1e6db20)]
 extern "C" fn gamesound_handle_ctor(this: &GameSoundHandle, sound_handle: &SoundSystemSoundHandle, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "GameSound", "IsEventLoaded")]
+extern "C" fn gamesound_iseventloaded(event_name: &Il2CppString, method_info: OptionalMethod) -> bool;
