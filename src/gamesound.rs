@@ -26,7 +26,7 @@ impl GameSoundHandle {
         unsafe { gamesound_handle_ctor(self, sound_handle, None) }
     }
 
-    pub fn is_event_loaded(event_name: Into<&Il2CppString>) -> bool {
+    pub fn is_event_loaded(event_name: impl Into<&Il2CppString>) -> bool {
         unsafe { gamesound_iseventloaded(event_name.into(), None) }
     }
 }
