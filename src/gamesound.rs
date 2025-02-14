@@ -10,7 +10,7 @@ impl GameSound {
         unsafe { gamesound_postevent(event_name.into(), character, None) }
     }
 
-    pub fn is_event_loaded(event_name: impl Into<&Il2CppString>) -> bool {
+    pub fn is_event_loaded<'a>(event_name: impl Into<&'a Il2CppString>) -> bool {
         unsafe { gamesound_iseventloaded(event_name.into(), None) }
     }
 }
