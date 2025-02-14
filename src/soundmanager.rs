@@ -1,4 +1,7 @@
-use unity::prelude::*;
+use unity::{
+    prelude::*,
+    system::List,
+};
 use crate::combat::Character;
 
 // Careful, this is a nested class, do not instantiate this yourself
