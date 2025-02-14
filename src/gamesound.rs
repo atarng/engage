@@ -28,6 +28,7 @@ impl GameSoundHandle {
 
     pub fn is_event_loaded(event_name: Into<&Il2CppString>) -> bool {
         unsafe { gamesound_iseventloaded(event_name.into(), None) }
+    }
 }
 
 #[skyline::from_offset(0x2272fd0)]
