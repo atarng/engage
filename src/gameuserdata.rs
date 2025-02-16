@@ -60,6 +60,7 @@ impl GameUserData {
         let instance = Self::get_instance();
         unsafe { get_game_mode(instance, None) }
     }
+
     pub fn get_piece_bond() -> i32 {
         let instance = Self::get_instance();
         unsafe { get_piece_of_bond(instance, None) }
@@ -75,6 +76,11 @@ impl GameUserData {
     pub fn get_grow_mode() -> i32 {
         let instance = Self::get_instance();
         unsafe { getgrowmode(instance, None)}
+    }
+    pub fn set_grow_mode(value: i32) {
+        unsafe {
+            game_user_data_set_grow_mode(Self::get_instance(), value, None);
+        }
     }
 
     pub fn get_sequence() -> i32 {
@@ -130,7 +136,7 @@ impl GameUserData {
     pub fn set_field_bgm_enemy(event_name: &Il2CppString) { unsafe { game_user_data_set_field_bgm_enemy(Self::get_instance(), event_name, None); }}
     
     pub fn is_encount_map() -> bool { unsafe { is_encounter_map(Self::get_instance(), None)}}
-    pub fn is_cid_completed(cid: &Il2CppString) -> bool { unsafe{ is_completed(Self::get_instance(), cid, None) }}
+    pub fn is_cid_completed<'a>(cid: impl Into<&'a Il2CppString>) -> bool { unsafe{ is_completed(Self::get_instance(), cid.into(), None) }}
     pub fn set_chapter(chapter: &ChapterData) { unsafe { set_chapter_data(Self::get_instance(), chapter, None); }}
     pub fn is_chapter_completed(chapter: &ChapterData) -> bool { unsafe {is_completed_chapterdata(Self::get_instance(), chapter, None) }}
     pub fn is_evil_map() -> bool { unsafe { is_evil_map(Self::get_instance(), None) }}
@@ -208,3 +214,5 @@ fn game_user_data_set_field_bgm_player(this: &GameUserData, value: &Il2CppString
 
 #[unity::from_offset("App", "GameUserData", "set_FieldBGMEnemy")]
 fn game_user_data_set_field_bgm_enemy(this: &GameUserData, value: &Il2CppString, method_info: OptionalMethod);
+#[unity::from_offset("App", "GameUserData", "SetGrowMode")]
+fn game_user_data_set_grow_mode(this: &GameUserData, value: i32, method_info: OptionalMethod);

@@ -2,7 +2,7 @@
 
 use unity::prelude::*;
 
-use crate::gamedata::{unit::Unit, item::ItemData};
+use crate::{gamedata::{item::ItemData, unit::Unit}, proc::ProcInst};
 
 #[unity::from_offset("App", "ScriptSystem", "Log")]
 pub fn scriptsystem_log(args: *const u8);
@@ -26,9 +26,13 @@ impl EventScript {
     pub fn get_instance() -> &'static EventScript {
         unsafe { eventscript_getinstance(None) }
     }
-
-    pub fn get_func<'a>(&self, name: impl Into<&'a Il2CppString>) -> Option<&'static mut DynValue> {
-        unsafe { eventscript_getfunc(self, name.into(), None) }
+  
+    pub fn get_func<'a>(name: impl Into<&'a Il2CppString>) -> Option<&'static mut DynValue> {
+        unsafe { eventscript_getfunc(Self::get_instance(), name.into(), None) }
+    }
+  
+    pub fn call<'a>(name: impl Into<&'a Il2CppString>, arg: &Il2CppArray<DynValue>) {
+        unsafe { eventscript_call(Self::get_instance(), name.into(), arg, None) }
     }
 }
 
@@ -136,13 +140,25 @@ pub struct DynValue {
 }
 
 impl DynValue {
-    pub fn new_boolean(value: bool) -> &'static DynValue {
+    pub fn new_boolean(value: bool) -> &'static mut DynValue {
         unsafe { dynvalue_newboolean(value, None) }
+    }
+    pub fn new_string(value: &Il2CppString) -> &'static mut DynValue {
+        unsafe { dynvalue_new_string(value, None) }
+    }
+    pub fn new_number(value: f64) -> &'static mut DynValue {
+        unsafe { dynvalue_new_number(value, None) }
     }
 }
 
 #[skyline::from_offset(0x2e200f0)]
-fn dynvalue_newboolean(v: bool, method_info: OptionalMethod) -> &'static DynValue;
+fn dynvalue_newboolean(v: bool, method_info: OptionalMethod) -> &'static mut DynValue;
+
+#[skyline::from_offset(0x02e20010)]
+fn dynvalue_new_string(string: &Il2CppString, method_info: OptionalMethod) -> &'static mut DynValue;
+
+#[skyline::from_offset(0x02e24d10)]
+fn dynvalue_new_number(v: f64, method_info: OptionalMethod) -> &'static mut DynValue;
 
 pub trait ScriptUtils {
     fn try_get_i32(&self, index: i32) -> i32;
@@ -230,3 +246,18 @@ pub fn eventscript_registfunction(
     name: &Il2CppString,
     method_info: OptionalMethod,
 );
+
+#[unity::from_offset("App", "EventScript", "GetFunc")]
+fn eventscript_getfunc(this: &EventScript, name: &Il2CppString, method_info: OptionalMethod) -> Option<&'static mut DynValue>;
+
+#[unity::from_offset("App", "EventScript", "Call")]
+fn eventscript_call(this: &EventScript, name: &Il2CppString, args: &Il2CppArray<DynValue>, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "ScriptUtil", "GetSequence")]
+fn scriptutil_get_sequence(method_info: OptionalMethod) -> &'static ProcInst;
+
+pub struct ScriptUtil;
+
+impl ScriptUtil {
+    pub fn get_sequence() -> &'static ProcInst { unsafe { scriptutil_get_sequence(None) } }
+}

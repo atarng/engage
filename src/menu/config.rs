@@ -112,6 +112,7 @@ impl ConfigBasicMenuItem {
             .map(|method| method.method_ptr = Methods::on_deselect as _)
             .unwrap();
 
+
         item.title_text = title.into();
 
         Methods::set_command_text(item, None);

@@ -46,6 +46,8 @@ pub struct DisposData {
     pub ai_attack_value: Option<&'static Il2CppString>,
     pub ai_move_name: &'static Il2CppString,
     pub ai_move_value: Option<&'static Il2CppString>,
+    junk: [u8; 0x22],
+    pub force: i8,
 }
 #[unity::class("App", "DisposDataFlag")]
 pub struct DisposDataFlag {
@@ -88,6 +90,10 @@ pub struct ChapterData {
     pub parent: StructBaseFields, 
     pub cid: &'static Il2CppString,
     pub name: &'static Il2CppString,
+    pub alpha: f32,
+    pub mess: &'static Il2CppString,
+    pub event: &'static Il2CppString,
+    pub field: &'static Il2CppString,
     //
 }
 
@@ -109,6 +115,15 @@ impl ChapterData {
     pub fn set_next_chapter(&self, value: &str) { unsafe {chapter_set_next_chapter(self, value.into(), None); }}
     pub fn set_hold_level(&self, value: u8) { unsafe { chapter_set_hold_level(self, value, None); }}
     pub fn set_recommended_level(&self, level: u8 ) { unsafe { chapter_set_recommended_level(self, level, None );}}
+    pub fn get_next_chapter(&self) -> Option<&'static ChapterData> { unsafe { chapterdata_get_next_chapter(self, None)}}
+
+    pub fn set_player_bgm(&self, value: &Il2CppString) { unsafe {chapter_set_player_bgm(self, value,None); }}
+    pub fn set_enemy_bgm(&self, value: &Il2CppString) { unsafe {chapter_set_enemy_bgm(self, value,None); }}
+    pub fn set_ally_bgm(&self, value: &Il2CppString) { unsafe {chapter_set_ally_bgm(self, value,None); }}
+
+    pub fn get_player_bgm(&self) -> Option<&'static Il2CppString> { unsafe {chapter_get_player_bgm(self, None) }}
+    pub fn get_enemy_bgm(&self) -> Option<&'static Il2CppString> { unsafe {chapter_get_enemy_bgm(self, None) }}
+    pub fn get_ally_bgm(&self) -> Option<&'static Il2CppString> { unsafe {chapter_get_ally_bgm(self, None) }}
 }
 
 // Dispos Data
@@ -202,3 +217,25 @@ fn chapter_set_next_chapter(this: &ChapterData, value: &Il2CppString, method_inf
 
 #[unity::from_offset("App", "ChapterData", "get_Flag")]
 fn get_chapter_flag(this: &ChapterData, method_info: OptionalMethod) -> i32;
+
+#[unity::from_offset("App", "ChapterData", "GetNextChapter")]
+fn chapterdata_get_next_chapter(this: &ChapterData, method_info: OptionalMethod) -> Option<&'static ChapterData>;
+
+#[unity::from_offset("App", "ChapterData", "get_AllyPhaseBgm")]
+fn chapter_get_ally_bgm(this: &ChapterData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
+#[unity::from_offset("App", "ChapterData", "get_EnemyPhaseBgm")]
+fn chapter_get_enemy_bgm(this: &ChapterData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
+#[unity::from_offset("App", "ChapterData", "get_PlayerPhaseBgm")]
+fn chapter_get_player_bgm(this: &ChapterData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
+#[unity::from_offset("App", "ChapterData", "set_AllyPhaseBgm")]
+fn chapter_set_ally_bgm(this: &ChapterData, value: &Il2CppString, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "ChapterData", "set_EnemyPhaseBgm")]
+fn chapter_set_enemy_bgm(this: &ChapterData, value: &Il2CppString, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "ChapterData", "set_PlayerPhaseBgm")]
+fn chapter_set_player_bgm(this: &ChapterData, value: &Il2CppString, method_info: OptionalMethod);
+

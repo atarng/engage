@@ -96,7 +96,6 @@ fn proc_end(
     method_info: OptionalMethod,
 ) -> &'static mut ProcDesc;
 
-
 /// A structure representing a call to a method that returns nothing.
 #[repr(C)]
 #[unity::class("App", "ProcVoidMethod")]

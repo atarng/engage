@@ -2,7 +2,11 @@ pub use unity::prelude::*;
 use super::*;
 
 #[unity::class("App", "AnimalData")]
-pub struct AnimalData {}
+pub struct AnimalData {
+    pub parent: StructBaseFields,
+    pub annid: &'static Il2CppString,
+    pub name: &'static Il2CppString,
+}
 impl Gamedata for AnimalData {}
 
 impl AnimalData {

@@ -9,3 +9,7 @@ pub mod mapsequence;
 pub mod mapsequencetargetselect;
 pub mod skillinheritancesequence;
 pub mod titleloopsequence;
+pub mod wellsequence;
+pub mod commonrewardsequence;
+pub mod arenaordersequence;
+pub mod unitgrowsequence;

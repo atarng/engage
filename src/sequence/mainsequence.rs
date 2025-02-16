@@ -1,6 +1,6 @@
 use unity::prelude::*;
 
-use crate::proc::ProcInstFields;
+use crate::proc::{Bindable, ProcInstFields};
 
 #[repr(C)]
 #[unity::class("App", "MainSequence")]
@@ -55,7 +55,7 @@ pub enum MainSequenceLabel {
     BackToTitle = 28,
     End = 29,
 }
-
+impl Bindable for MainSequence {}
 impl AsRef<ProcInstFields> for MainSequence {
     fn as_ref(&self) -> &ProcInstFields {
         &self.proc

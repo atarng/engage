@@ -49,7 +49,7 @@ impl GameVariableManager {
 
         unsafe { entry(game_variable, key.into(), num, None) }
     }
-    pub fn make_entry_str(key: &str, value: &str) -> bool {
+    pub fn make_entry_str<'a>(key: &str, value: impl Into<&'a Il2CppString>) -> bool {
         let game_variable = GameUserData::get_variable();
 
         unsafe { entry_str(game_variable, key.into(), value.into(), None) }
@@ -69,37 +69,34 @@ impl GameVariableManager {
     }
 
     /// Set a game variable to the provided boolean value.
-    /// This will NOT create a new entry if it deosn't exist.
+    /// This will NOT create a new entry if it doesn't exist.
     pub fn set_bool<'a>(key: impl Into<&'a Il2CppString>, value: bool) {
         let game_variable = GameUserData::get_variable();
-
-        unsafe {
-            set_bool(game_variable, key.into(), value, None);
-        }
+        unsafe { set_bool(game_variable, key.into(), value, None); }
     }
     pub fn set_number<'a>(key: impl Into<&'a Il2CppString>, value: i32) {
         let game_variable = GameUserData::get_variable();
 
-        unsafe {
-            set_number(game_variable, key.into(), value, None);
-        }   
+        unsafe { set_number(game_variable, key.into(), value, None); }   
     }
     pub fn get_number<'a>(key: impl Into<&'a Il2CppString>) -> i32 {
         let game_variable = GameUserData::get_variable();
         unsafe {get_number(game_variable, key.into(), None) }
     }
 
-    pub fn set_string(key: &str, value: &str) {
+    pub fn set_string<'a>(key: impl Into<&'a Il2CppString>, value: impl Into<&'a Il2CppString>) {
         let game_variable = GameUserData::get_variable();
 
-        unsafe {
-            set_string(game_variable, key.into(), value.into(), None);
-        }   
+        unsafe { set_string(game_variable, key.into(), value.into(), None); }   
     }
     pub fn get_string<'a>(key: impl Into<&'a Il2CppString>) -> &'static Il2CppString {
         let game_variable = GameUserData::get_variable();
         unsafe {get_string(game_variable, key.into(), None) }
     }
+    pub fn try_get_string<'a>(key: impl Into<&'a Il2CppString>) -> Option<&'static Il2CppString> {
+        Some(Self::get_string(key))
+    }
+
     pub fn find_starts_with<'a>(string: impl Into<&'a Il2CppString>) -> &'static List<Il2CppString> {
         let game_variable = GameUserData::get_variable();
         unsafe { gamevariable_find_start_with(game_variable, string.into(), None)  }
@@ -108,6 +105,11 @@ impl GameVariableManager {
         let game_variable = GameUserData::get_variable();
         unsafe { gamevariable_is_exist(game_variable, string.into(), None)  }
     }
+    pub fn is_string<'a>(key: impl Into<&'a Il2CppString>) -> bool { 
+        unsafe { gamevariable_is_string(GameUserData::get_variable(), key.into(), None) } 
+    }
+
+    
 }
 
 #[unity::from_offset("App", "GameVariable", "FindStartsWith")]
@@ -115,3 +117,6 @@ pub fn gamevariable_find_start_with(this: &GameVariable, name: &Il2CppString, me
 
 #[unity::from_offset("App", "GameVariable", "IsExist")]
 pub fn gamevariable_is_exist(this: &GameVariable, key: &Il2CppString, method_info: OptionalMethod) -> bool;
+
+#[unity::from_offset("App", "GameVariable", "IsString")]
+pub fn gamevariable_is_string(this: &GameVariable, key: &Il2CppString, method_info: OptionalMethod) -> bool;

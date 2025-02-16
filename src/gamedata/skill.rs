@@ -36,8 +36,8 @@ pub struct SkillArray {
     pub timing: i32,
     pub efficacys: i32,
     pub efficacy_ignore: i32,
-    pub bad_States: i32,
-    pub bad_Ignore: i32,
+    pub bad_states: i32,
+    pub bad_ignore: i32,
 }
 impl Deref for SkillArrayFields {
     type Target = [SkillArrayEntity];
@@ -110,6 +110,7 @@ impl SkillData {
     pub fn set_inherit_cost(&self, value: u16) { unsafe { skilldata_set_inherit_cost(self, value, None); }}
     pub fn set_range_target(&self, value: i32) { unsafe {skilldata_set_range_target(self, value, None); }}
     pub fn set_range_add(&self, value: i32) { unsafe {skilldata_set_range_add(self, value, None); }}
+    pub fn get_style_skill(&mut self, style: i32) -> Option<&'static mut SkillData> { unsafe { skilldata_get_style_skill(self, style, None)}}
     pub fn get_priority(&self) -> i32 { unsafe { skilldata_priority(self, None) }}
     pub fn set_priority(&self, value: i32)  { unsafe { skilldata_set_priority(self, value, None); }}
     pub fn has_effect(&self) -> bool { unsafe { skilldata_has_effect(self, None)}}
@@ -123,6 +124,7 @@ impl SkillArrayEntity {
     pub fn get_skill(&self) -> Option<&'static SkillData> { unsafe { skill_array_entity_get_skill(self, None)}}
     pub fn get_age(&self) -> i32 { unsafe { skill_array_entity_get_age(self, None) }}
     pub fn get_category(&self) -> i32 { unsafe { skill_array_entity_get_category(self, None)}}
+    pub fn set_index(&self, value: i32) { unsafe { skill_array_entity_set_index(self, value, None); } }
 }
 // Skill Array Entity Methods ()
 #[skyline::from_offset(0x01d6e120)]
@@ -133,6 +135,8 @@ fn skill_array_entity_get_age(this: &SkillArrayEntity, method_info: OptionalMeth
 
 #[skyline::from_offset(0x01d6e100)]
 fn skill_array_entity_get_category(this: &SkillArrayEntity, method_info: OptionalMethod) -> i32;
+#[skyline::from_offset(0x01d6e0b0)]
+fn skill_array_entity_set_index(this: &SkillArrayEntity, index: i32, method_info: OptionalMethod);
 
 //Skill Array
 #[unity::from_offset("App","SkillArray", "Clear")]
@@ -191,6 +195,9 @@ fn skilldata_has_effect(this: &SkillData, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "SkillData", "get_Priority")]
 fn skilldata_priority(this: &SkillData, method_info: OptionalMethod) -> i32;
 
+#[unity::from_offset("App", "SkillData", "set_Priority")]
+fn skilldata_set_priority(this: &SkillData, value: i32, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "SkillData", "get_WeaponProhibit")]
 fn skilldata_weapon_prohibit(this: &SkillData, method_info: OptionalMethod) -> &'static mut WeaponMask;
 
@@ -233,5 +240,5 @@ fn skilldata_oncomplete(this: &SkillData,method_info: OptionalMethod);
 #[unity::from_offset("App", "SkillData", "set_EfficacyValue")]
 fn skilldata_set_efficacy_value(this: &SkillData, value: i32, method_info: OptionalMethod);
 
-#[unity::from_offset("App", "SkillData", "set_Priority")]
-fn skilldata_set_priority(this: &SkillData, value: i32, method_info: OptionalMethod);
+#[unity::from_offset("App", "SkillData", "GetStyleSkill")]
+fn skilldata_get_style_skill(this: &SkillData, ty: i32, method_info: OptionalMethod) -> Option<&'static mut SkillData>;

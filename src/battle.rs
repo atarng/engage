@@ -1,5 +1,5 @@
 use unity::il2cpp::object::Array;
-
+use unity::prelude::*;
 use crate::gamedata::{item::UnitItem, terrain::TerrainData, unit::Unit, WeaponMask};
 
 #[unity::class("App", "CapabilityInt")]
@@ -32,3 +32,22 @@ pub struct BattleInfoSide {
     pub parent: &'static BattleInfoSide,
     pub reverse: &'static BattleInfoSide,
 }
+
+#[unity::class("App", "BattleInfo")]
+pub struct BattleInfo {}
+
+#[unity::class("App", "BattleCalculator")]
+pub struct BattleCalculator {
+    pub mode: i32,
+    pub info: &'static BattleInfo,
+}
+impl BattleCalculator {
+    pub fn get_dead_side(&self) -> i32 { unsafe { battlecalcultor_get_deadside(self, None) }}
+}
+
+#[unity::from_offset("App", "BattleCalculator", "GetDeadSide")]
+fn battlecalcultor_get_deadside(this: &BattleCalculator,method_info: OptionalMethod) -> i32;
+
+
+#[skyline::from_offset(0x01e7f750)]
+pub fn battle_info_get_unit(this: &BattleInfo, index: i32,  method_info: OptionalMethod) -> &Unit; 

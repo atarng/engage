@@ -5,18 +5,33 @@ use crate::gamedata::{
     animal::AnimalData,
     *,
 };
+#[unity::class("App", "HubAccess")]
+pub struct HubAccess {
+    junk: [u8; 0x50],
+    pub access_data: Option<&'static mut HubAccessData>,
+    pub item_effect: u64,
+}
 
 #[unity::class("App", "HubAccessData")]
 pub struct HubAccessData {
     pub aid: Option<&'static Il2CppString>,
     pub dispos_data: &'static HubDisposData,
+
     //
 }
 
 #[unity::class("App", "HubDisposData")]
 pub struct HubDisposData {
     pub parent: StructDataArrayFields,
+    pub locator: &'static Il2CppString,
+    pub parent_locator: Option<&'static Il2CppString>,
+    pub is_must_child: bool,
+    pub fade_distance: f32,
+    pub priority: i32,
+    pub chapter: Option<&'static Il2CppString>,
+    pub phase: i32,
 }
+impl GamedataArray for HubDisposData {}
 
 #[unity::class("App", "HubRandomSet")]
 pub struct HubRandomSet {
@@ -35,6 +50,12 @@ pub struct HubAccessManager {
     pub dispos_item_list: &'static List<HubDisposData>,
     talk_limit: * const u8,
     pub animal_list: &'static List<AnimalData>, 
+}
+
+impl HubAccess {
+    pub fn locate(&self, locator: &Il2CppString) { unsafe { access_locate(self, locator, None); } }
+    pub fn done(&self) { unsafe { access_done(self, None); }}
+    pub fn clear(&self) { unsafe { access_clear(self, None); } }
 }
 
 impl HubDisposData {
@@ -127,3 +148,11 @@ pub fn access_load(method_info: OptionalMethod);
 #[unity::from_offset("App", "HubAccessData", "TryGetPID")]
 pub fn access_data_try_get_pid(this: &HubAccessData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
+#[unity::from_offset("App", "HubAccess", "Locate")]
+fn access_locate(this: &HubAccess, locator: &Il2CppString, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "HubAccess", "DoneAccess")]
+fn access_done(this: &HubAccess, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "HubAccess", "Clear")]
+fn access_clear(this: &HubAccess, method_info: OptionalMethod);

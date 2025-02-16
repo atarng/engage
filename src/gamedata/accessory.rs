@@ -1,6 +1,6 @@
 use unity::prelude::*;
 
-use super::{Gamedata, StructBaseFields, unit::Unit};
+use super::{Gamedata, StructBaseFields, unit::Unit, GodData};
 
 #[unity::class("App", "AccessoryData")]
 pub struct AccessoryData {
@@ -25,7 +25,7 @@ pub struct AccessoryData {
     pub silver: i32,
     pub mask: i32,
     pub kind: i32,
-    pub god_data: u64,
+    pub god_data: Option<&'static GodData>,
     pub flag_name: &'static Il2CppString,
     // ...
 }

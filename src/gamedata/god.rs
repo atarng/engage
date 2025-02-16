@@ -163,7 +163,6 @@ fn god_data_get_ascii(this: &GodData, method_info: OptionalMethod) -> Option<&'s
 
 #[unity::from_offset("App", "GodData", "set_AsciiName")]
 fn god_data_set_ascii(this: &GodData, value: &Il2CppString, method_info: OptionalMethod);
-
 #[unity::from_offset("App", "GodData", "get_Flag")]
 fn god_data_get_flag(this: &GodData, method_info: OptionalMethod) -> &'static mut WeaponMask;
 
@@ -229,7 +228,6 @@ fn goddata_set_engrave_secure(this: &GodData, value: i8, method_info: OptionalMe
 
 #[unity::from_offset("App","GodData","set_EngraveWeight")]
 fn goddata_set_engrave_weight(this: &GodData, value: i8, method_info: OptionalMethod);
-
 
 #[unity::from_offset("App","GodData","Load")]
 fn goddata_load(method_info: OptionalMethod);

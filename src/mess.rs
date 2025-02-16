@@ -19,8 +19,15 @@ impl Mess {
     pub fn get_language_directory_name() -> &'static Il2CppString {
         unsafe { mess_get_language_directory_name(None) }
     }
+    /// For PersonData, JobData, and ItemData using PID / JID / IID
     pub fn get_name<'a>(value: impl Into<&'a Il2CppString>) -> &'static Il2CppString {
         unsafe { mess_get_name_data_name(value.into(), None) }
+    }
+    pub fn set_argument<'a>(index: i32, value: impl Into<&'a Il2CppString>) {
+        unsafe { mess_set_argument(index, value.into(), None);}
+    }
+    pub fn create_sprite_tag(category: i32, kind_name: &Il2CppString) -> &'static Il2CppString {
+        unsafe { mess_create_sprite_tag(category, kind_name, None)}
     }
 }
 
@@ -79,3 +86,9 @@ pub fn msbt_get_text(this: &MsgFile, index: usize, method_info: OptionalMethod) 
 
 #[skyline::from_offset(0x025daae0)]
 fn mess_get_name_data_name(value: &Il2CppString, method_info: OptionalMethod) -> &'static Il2CppString;
+
+#[skyline::from_offset(0x025d77c0)]
+fn mess_set_argument(index: i32, value: &Il2CppString, method_info: OptionalMethod);
+
+#[skyline::from_offset(0x025d94d0)]
+fn mess_create_sprite_tag(category: i32, kind_name: &Il2CppString, method_info: OptionalMethod) -> &'static Il2CppString;

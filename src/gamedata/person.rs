@@ -1,6 +1,6 @@
 pub use unity::prelude::*;
 use unity::il2cpp::object::Array;
-use super::{JobData, PersonData, skill::*, WeaponMask};
+use super::{JobData, GodData, PersonData, skill::*, WeaponMask};
 use std::ops::Deref;
 use std::ops::DerefMut;
 // Structs, methods required for PersonData, JobData, SkillArray
@@ -60,7 +60,6 @@ impl PersonData {
     pub fn get_ascii_name(&self) -> Option<&Il2CppString> { unsafe {person_get_ascii_name(self, None) } }
     pub fn get_asset_force(&self) -> i32 { unsafe { person_get_asset_force(self, None) }  }
     pub fn get_attrs(&self) -> i32 { unsafe { person_get_attrs(self, None)} }
-    pub fn get_bmap_size(&self) -> u8 { unsafe { get_bmap_size(self, None)}}
     pub fn get_combat_bgm(&self) -> Option<&Il2CppString> { unsafe { person_get_combat_bgm(self, None)}}
     pub fn get_common_skills(&self) -> &mut SkillArray { unsafe { person_get_commonskill(self, None) }  }
 
@@ -81,13 +80,16 @@ impl PersonData {
     pub fn get_sp(&self) -> i32 { unsafe { person_get_sp(self, None)}}
     pub fn get_summon_color(&self) -> i32 { unsafe { person_get_summoncolor(self, None)}}
     pub fn get_summon_rank(&self) -> i32 { unsafe { person_get_summon_rank(self, None)}}
-    pub fn get_unit_icon_id(&self) -> &'static Il2CppString { unsafe { get_uniticonid(self, None )}}
+    pub fn get_unit_icon_id(&self) -> Option<&'static Il2CppString> { unsafe { get_uniticonid(self, None )}}
     pub fn get_offset_n(&self) -> &'static CapabilitySbyte { unsafe { person_get_offset_n(self, None) }}
     pub fn get_offset_h(&self) -> &'static CapabilitySbyte { unsafe { person_get_offset_h(self, None) }}
     pub fn get_offset_l(&self) -> &'static CapabilitySbyte { unsafe { person_get_offset_l(self, None) }}
     pub fn get_engage_sid(&self ) -> Option<&'static Il2CppString> { unsafe { person_get_engage_sid(self, None)} }
     pub fn get_items(&self) -> Option<&'static mut Array<&'static Il2CppString>> { unsafe { person_get_items(self, None)}}
     pub fn get_aid(&self) -> Option<&'static Il2CppString> { unsafe { person_get_aid(self, None)}}
+    pub fn get_bmap_size(&self) -> u8 { unsafe { person_get_bmapsize(self, None)}}
+    pub fn get_exist_die_cid(&self) -> Option<&'static Il2CppString> { unsafe { person_cid_exist(self, None) }}
+    pub fn get_exist_timing(&self) -> i32 { unsafe { person_cid_timing(self, None)}}
     pub fn load() { unsafe { persondata_load(None); }}
     pub fn on_complete(&self) { unsafe { person_on_release(self, None); }}
 
@@ -120,6 +122,7 @@ impl PersonData {
     pub fn set_name(&self, name: &Il2CppString) { unsafe { person_set_name(self, name, None); }}
     pub fn set_unit_icon_id(&self, icon_id: &Il2CppString) { unsafe { person_set_uniticonid(self, icon_id, None ); }}
     pub fn set_sp(&self, value: i32) { unsafe { person_set_sp(self, value, None)}; }
+    pub fn set_link_god(&self, god: Option<&GodData>) { unsafe { person_set_link_god(self, god, None); }}
 }
 
 
@@ -134,7 +137,7 @@ fn person_set_fid(this: &PersonData, fid: &Il2CppString, method_info: OptionalMe
 fn person_get_name(this: &PersonData, method_info: OptionalMethod) -> Option<&Il2CppString>;
 
 #[unity::from_offset("App", "PersonData", "get_UnitIconID")] //#[skyline::from_offset(0x1f25d20)]
-fn get_uniticonid(this: &PersonData, method_info: OptionalMethod) -> &'static Il2CppString;
+fn get_uniticonid(this: &PersonData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
 #[unity::from_offset("App", "PersonData", "get_Gender")] //#[skyline::from_offset(0x1f25da0)]
 fn person_get_gender(this: &PersonData, method_info: OptionalMethod) -> i32;
@@ -282,8 +285,11 @@ fn person_get_offset_l(this: &PersonData, method_info: OptionalMethod) -> &'stat
 
 #[unity::from_offset("App", "PersonData", "set_CommonSids")]
 fn person_set_common_sids(this: &PersonData, sids: &Array<&Il2CppString>, method_info: OptionalMethod);
-//Capability
 
+#[unity::from_offset("App", "PersonData", "get_BmapSize")]
+fn person_get_bmapsize(this: &PersonData, method_info: OptionalMethod) -> u8;
+
+//Capability
 #[skyline::from_offset(0x25bcda0)]
 fn capability_is_zero(this: &Capability, method_info: OptionalMethod) -> bool;
 
@@ -299,6 +305,9 @@ fn capabilitysbyte_add(this: &CapabilitySbyte, i: i32, v: i8,  method_info: Opti
 #[unity::from_offset("App", "PersonData", "set_EngageSid")]
 fn person_set_engage_sid(this: &PersonData, value: Option<&Il2CppString>, method_info: OptionalMethod);
 
+#[unity::from_offset("App", "PersonData", "set_LinkGod")]
+fn person_set_link_god(this: &PersonData, value: Option<&GodData>, method_info: OptionalMethod);
+
 #[unity::from_offset("App", "PersonData", "get_EngageSid")]
 fn person_get_engage_sid(this: &PersonData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
@@ -308,5 +317,8 @@ fn person_set_sp(this: &PersonData, value: i32, method_info: OptionalMethod);
 #[unity::from_offset("App", "PersonData", "get_Aid")]
 fn person_get_aid(this: &PersonData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
 
-#[skyline::from_offset(0x01f25ec0)]
-pub fn get_bmap_size(this: &PersonData, method_info: OptionalMethod) -> u8;
+#[unity::from_offset("App", "PersonData", "get_ExistDieCid")]
+fn person_cid_exist(this: &PersonData, method_info: OptionalMethod) -> Option<&'static Il2CppString>;
+
+#[unity::from_offset("App", "PersonData", "get_ExistDieTiming")]
+fn person_cid_timing(this: &PersonData, method_info: OptionalMethod) -> i32;

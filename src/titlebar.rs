@@ -26,6 +26,14 @@ impl TitleBar {
     pub fn close_header() -> bool {
         unsafe { titlebar_close_header(Self::get_instance(), None) }
     }
+
+    pub fn hide_footer() {
+        unsafe { titlebar_hide_footer(Self::get_instance(), None); }
+    }
+
+    pub fn show_footer() {
+        unsafe { titlebar_show_footer(Self::get_instance(), None); }
+    }
 }
 
 #[unity::from_offset("App", "TitleBar", "OpenHeader")]
@@ -39,3 +47,9 @@ fn titlebar_open_header(
 
 #[unity::from_offset("App", "TitleBar", "CloseHeader")]
 fn titlebar_close_header(this: &'static TitleBar, method_info: OptionalMethod) -> bool;
+
+#[unity::from_offset("App", "TitleBar", "HideFooter")]
+fn titlebar_hide_footer(this: &'static TitleBar, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "TitleBar", "ShowFooter")]
+fn titlebar_show_footer(this: &'static TitleBar, method_info: OptionalMethod);

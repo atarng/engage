@@ -92,6 +92,7 @@ impl GamedataArray for ItemEvolveData  {}
 impl RewardData {
 	pub fn ctor(&self) { unsafe { rewarddata_ctor(self, None); }}
 	pub fn set_iid(&self, iid: &Il2CppString) { unsafe { rewarddata_set_iid(self, iid, None); }}
+	pub fn calc_rewards(name: &Il2CppString) -> Option<&'static mut List<ItemData>> { unsafe { rewarddata_calc_reward(name, None)}}
 }
 
 impl ItemData {
@@ -103,11 +104,12 @@ impl ItemData {
 	pub fn set_cannon_effect(&self, value: &Il2CppString) { unsafe { item_set_cannon_effect(self, value, None); }}
 	pub fn set_hit_effect(&self, value: &Il2CppString) { unsafe { item_set_hit_effect(self, value, None); }}
 	pub fn get_flag(&self) -> &'static ItemDataFlag { unsafe { item_data_flag(self, None)}}
-
+	pub fn add_inventory(&self, count: i32) { unsafe { item_data_add_inventory(self, count, None);}}
 	pub fn is_inventory(&self) -> bool  {unsafe { item_data_is_inventory(self, None) } }
 	pub fn is_material(&self) -> bool { unsafe { item_data_is_material(self, None)}}
 	pub fn is_unknown(&self) -> bool { unsafe { item_data_is_unknown(self, None)}}	
 	pub fn is_weapon(&self) -> bool { unsafe { item_data_is_weapon(self, None)}}
+	pub fn get_inventory(&self) -> i32 { unsafe { item_data_get_inventory(self, None)}}
 }
 impl UnitItem {
 	pub fn ctor(&self, item: &ItemData) { unsafe { unititem_ctor(self, item, None); }}
@@ -202,6 +204,13 @@ fn item_data_is_material(this: &ItemData, method_info: OptionalMethod) -> bool;
 #[unity::from_offset("App", "ItemData", "IsUnknown")]
 fn item_data_is_unknown(this: &ItemData, method_info: OptionalMethod) -> bool;
 
+#[skyline::from_offset(0x027b1920)]
+fn item_data_get_inventory(this: &ItemData, method_info: OptionalMethod) -> i32;
+
+
+#[skyline::from_offset(0x027b1c30)]
+fn item_data_add_inventory(this: &ItemData, count: i32, method_info: OptionalMethod);
+
 //UnitItemList
 #[unity::from_offset("App", "UnitItemList", "get_Count")]
 pub fn unititemlist_get_count(this: &UnitItemList, method_info: OptionalMethod) -> i32;
@@ -265,3 +274,6 @@ fn rewarddata_set_iid(this: &RewardData, value: &Il2CppString, method_info: Opti
 
 #[skyline::from_offset(0x02019720)]
 fn rewarddata_ctor(this: &RewardData, method_info: OptionalMethod); 
+
+#[skyline::from_offset(0x020193e0)]
+fn rewarddata_calc_reward(name: &Il2CppString, method_info: OptionalMethod) -> Option<&'static mut List<ItemData>>;

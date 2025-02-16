@@ -15,6 +15,8 @@ pub mod savedata;
 /// A Menu is a [ProcInst](crate::proc::ProcInst) with fields to keep every element together
 ///
 /// You can usually use this instead of a class inheriting from it at the risk of missing fields and methods.
+/// 
+/// 
 #[unity::class("App", "BasicMenu")]
 pub struct BasicMenu<T: 'static> {
     pub proc: ProcInstFields,
@@ -46,6 +48,9 @@ impl<T> BasicMenu<T> {
                 unsafe { std::mem::transmute::<_, extern "C" fn(&BasicMenu<T>, &MethodInfo)>(method.method_info.method_ptr) };
             close_anime_all(&self, method.method_info);
         });
+    }
+    pub fn save_select(&self, sel: &BasicMenuSelect) {
+        unsafe { basicmenu_save_select(self, sel, None) }
     }
 }
 
@@ -147,7 +152,7 @@ pub struct BasicMenuItem {
     name: &'static Il2CppString,
     pub index: i32,
     full_index: i32,
-    attribute: i32,
+    pub attribute: i32,
     cursor_color: unity::engine::Color,
     active_text_color: unity::engine::Color,
     inactive_text_color: unity::engine::Color,
@@ -198,9 +203,11 @@ impl BasicMenuItem {
             basicmenuitem_is_attribute_disable(self, None)
         }
     }
-    pub fn rebuild_text(&self) {    // Updates the text in BasicMenuItemContent
+    /// Updates the text in BasicMenuItemContent
+    pub fn rebuild_text(&self) { 
         unsafe { build_content_text(self.menu_item_content, None); }
     }
+    pub fn force_rebuild(&self) { unsafe { basicmenuitem_force_rebuild(self, None); }  }
 }
 
 pub trait BasicMenuItemMethods {
@@ -226,6 +233,9 @@ fn basicmenuitem_is_attribute_disable(this: &BasicMenuItem, method_info: Optiona
 
 #[skyline::from_offset(0x02467490)]
 fn build_content_text(this: *const u8, method_info: OptionalMethod);
+
+#[unity::from_offset("App", "BasicMenuItem", "ForceRebuildLayout")]
+fn basicmenuitem_force_rebuild(this: &BasicMenuItem, method_info: OptionalMethod);
 
 #[unity::class("App", "BasicMenuContent")]
 pub struct BasicMenuContent {
@@ -293,6 +303,9 @@ impl BasicMenuResult {
     pub fn delete_decide() -> Self {
         Self::new().with_delete_this(true).with_se_decide(true)
     }
+    pub fn close_cancel() -> Self {
+        Self::new().with_se_cancel(true).with_close_this(true)
+    }
 }
 
 #[repr(C)]
@@ -351,3 +364,12 @@ impl<T> AsMut<ProcInstFields> for ConfigMenu<T> {
 
 #[unity::from_offset("", "ConfigMenu", "CreateBind")]
 fn configmenu_createbind<T: Bindable + ?Sized>(parent: &T, method_info: OptionalMethod); // Apparently returns a GameObject?
+
+#[unity::class("App", "BasicMenuSelect")]
+pub struct BasicMenuSelect {
+    pub index: i32,
+    pub scroll: i32,
+}
+
+#[unity::from_offset("App", "BasicMenu", "SaveSelect")]
+fn basicmenu_save_select<P: BasicMenuMethods + ?Sized>(this: &P, sel: &BasicMenuSelect, method_info: OptionalMethod);
