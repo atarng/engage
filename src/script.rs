@@ -26,6 +26,10 @@ impl EventScript {
     pub fn get_instance() -> &'static EventScript {
         unsafe { eventscript_getinstance(None) }
     }
+
+    pub fn get_func<'a>(&self, name: impl Into<&'a Il2CppString>) -> Option<&'static mut DynValue> {
+        unsafe { eventscript_getfunc(self, name.into(), None) }
+    }
 }
 
 pub trait EventScriptCommand {
@@ -192,6 +196,9 @@ fn scriptutil_trygetitem(
 
 #[skyline::from_offset(0x21994e0)]
 pub fn scriptutil_yield(method_info: OptionalMethod);
+
+#[unity::from_offset("App", "EventScript", "GetFunc")]
+fn eventscript_getfunc(this: &EventScript, name: &Il2CppString, method_info: OptionalMethod) -> Option<&'static mut DynValue>;
 
 #[unity::from_offset("App", "EventScript", "get_Instance")]
 fn eventscript_getinstance(method_info: OptionalMethod) -> &'static EventScript;
