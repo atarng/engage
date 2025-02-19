@@ -247,9 +247,6 @@ pub fn eventscript_registfunction(
     method_info: OptionalMethod,
 );
 
-#[unity::from_offset("App", "EventScript", "GetFunc")]
-fn eventscript_getfunc(this: &EventScript, name: &Il2CppString, method_info: OptionalMethod) -> Option<&'static mut DynValue>;
-
 #[unity::from_offset("App", "EventScript", "Call")]
 fn eventscript_call(this: &EventScript, name: &Il2CppString, args: &Il2CppArray<DynValue>, method_info: OptionalMethod);
 
