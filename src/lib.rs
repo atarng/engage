@@ -1,5 +1,8 @@
 #![feature(ptr_sub_ptr)]
 
+#[macro_use]
+extern crate enum_display_derive;
+
 pub mod battle;
 pub mod bundle;
 pub mod calculator;
