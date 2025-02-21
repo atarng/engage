@@ -36,7 +36,7 @@ impl AchieveData {
 
     pub fn add_count_reliance_a() { unsafe { add_a_reliance_count(None) }}
     pub fn add_count_reliance_b() { unsafe { add_b_reliance_count(None) }}
-    pub fn add_count_reliance_s() { { unsafe { add_s_reliance_count(None) }}}
+    pub fn add_count_reliance_s() { unsafe { add_s_reliance_count(None) }}
 
     pub fn set_status(&self, status: AchieveDataStatus) {
         unsafe { achieve_set_status(self, status, None) }

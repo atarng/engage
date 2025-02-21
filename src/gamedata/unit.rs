@@ -13,7 +13,7 @@ use super::{JobData, WeaponMask, PersonData,
 };
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Gender
 {
 	None = 0,
