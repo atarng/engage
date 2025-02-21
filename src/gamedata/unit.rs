@@ -11,10 +11,9 @@ use super::{JobData, WeaponMask, PersonData,
     ring::RingData,
     ai::UnitAI,
 };
-use std::fmt::Display;
 
 #[repr(C)]
-#[derive(Debug, Display, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Gender
 {
 	None = 0,
