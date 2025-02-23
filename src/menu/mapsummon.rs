@@ -7,5 +7,5 @@ pub struct MapSummonMenu { }
 // Not sure why these don't need to use App namespace?
 #[unity::class("", "MapSummonMenu.SummonColorMenuItem")]
 pub struct SummonColorMenuItem {
-    base: BasicMenuItemFields
+    base: BasicMenuItemFields // MapBasicMenuItemFields...?
 }

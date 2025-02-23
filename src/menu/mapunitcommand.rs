@@ -29,6 +29,14 @@ pub struct EngageAttackMenuItem {
     base: BasicMenuItemFields
 }
 
+// JumpToMenuItem
+#[unity::class("", "MapUnitCommandMenu.EngageCommandMenuItem")]
+pub struct EngageCommandMenuItem
+{
+    base: BasicMenuItemFields
+}
+
+// EngageCommandMenuItem
 #[unity::class("", "MapUnitCommandMenu.EngageStartMenuItem")]
 pub struct EngageStartMenuItem {
     base: BasicMenuItemFields
