@@ -47,3 +47,8 @@ pub struct EngageStartMenuItem {
 pub struct EngageSummonMenuItem {
     base: BasicMenuItemFields
 }
+
+#[unity::class("", "MapUnitCommandMenu.EngageLinkMenuItem")]
+pub struct EngageLinkMenuItem {
+    base: BasicMenuItemFields
+}
