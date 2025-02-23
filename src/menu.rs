@@ -7,6 +7,7 @@ use crate::proc::{desc::ProcDesc, Bindable, ProcInst, ProcInstFields};
 
 pub mod content;
 pub mod config;
+pub mod mapsummon;
 pub mod mapunitcommand;
 pub mod savedata;
 

@@ -8,14 +8,34 @@ pub struct TradeMenuItem {
     base: BasicMenuItemFields
 }
 
-// Not sure why these don't need to use App namespace?
-#[unity::class("", "MapUnitCommandMenu.EngageSummonMenuItem")]
-pub struct EngageSummonMenuItem {
+#[unity::class("", "MapUnitCommandMenu.SkillAttackMenuItem")]
+pub struct SkillAttackMenuItem {
     base: BasicMenuItemFields
 }
 
-// Not sure why these don't need to use App namespace?
+#[unity::class("", "MapUnitCommandMenu.EngageActionBaseMenuItem")]
+pub struct EngageActionBaseMenuItem {
+    base: BasicMenuItemFields
+}
+
+// EngageActionBaseMenuItem
+#[unity::class("", "MapUnitCommandMenu.AttackMenuItem")]
+pub struct AttackMenuItem {
+    base: BasicMenuItemFields
+}
+
+#[unity::class("", "MapUnitCommandMenu.EngageAttackMenuItem")]
+pub struct EngageAttackMenuItem {
+    base: BasicMenuItemFields
+}
+
 #[unity::class("", "MapUnitCommandMenu.EngageStartMenuItem")]
 pub struct EngageStartMenuItem {
+    base: BasicMenuItemFields
+}
+
+// EngageActionBaseMenuItem
+#[unity::class("", "MapUnitCommandMenu.EngageSummonMenuItem")]
+pub struct EngageSummonMenuItem {
     base: BasicMenuItemFields
 }
