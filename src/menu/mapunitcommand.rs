@@ -13,3 +13,9 @@ pub struct TradeMenuItem {
 pub struct EngageSummonMenuItem {
     base: BasicMenuItemFields
 }
+
+// Not sure why these don't need to use App namespace?
+#[unity::class("", "MapUnitCommandMenu.EngageStartMenuItem")]
+pub struct EngageStartMenuItem {
+    base: BasicMenuItemFields
+}
