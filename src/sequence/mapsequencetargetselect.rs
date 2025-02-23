@@ -42,6 +42,17 @@ pub struct MapTarget {
   pub m_enumerate_rod_specified_item: &'static(),
 }
 
+impl MapTarget {
+  pub fn enumerate_self_only(&self, item_mask: i32) {
+    unsafe { maptarget_enumerateselfonly(self, item_mask, None) }
+  }
+}
+
+// 0x7101f58de0
+// void App.MapTarget$$EnumerateSelfOnly(App_MapTarget_o *__this,uint32_t itemMask,MethodInfo *method)
+#[skyline::from_offset(0x01f58de0)]
+extern "C" fn maptarget_enumerateselfonly(this: &MapTarget, item_mask: i32, method_info: OptionalMethod);
+
 #[unity::class("", "MapTarget.Data")]
 pub struct MapTargetData {
   pub m_index: i8,
