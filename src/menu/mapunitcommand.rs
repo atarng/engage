@@ -3,8 +3,18 @@ use super::BasicMenuItemFields;
 #[unity::class("App", "MapUnitCommandMenu")]
 pub struct MapUnitCommandMenu { }
 
+#[unity::class("App", "MapUnitCommandMenuContent")]
+pub struct MapUnitCommandMenuContent {
+}
+
 #[unity::class("", "MapUnitCommandMenu.TradeMenuItem")]
 pub struct TradeMenuItem {
+    base: BasicMenuItemFields
+}
+
+// void App.MapUnitCommandMenu.ItemMenuItem$$.ctor(App_MapUnitCommandMenu_ItemMenuItem_o *__this,MethodInfo *method)
+#[unity::class("", "MapUnitCommandMenu.ItemMenuItem")]
+pub struct ItemMenuItem {
     base: BasicMenuItemFields
 }
 
@@ -52,3 +62,4 @@ pub struct EngageSummonMenuItem {
 pub struct EngageLinkMenuItem {
     base: BasicMenuItemFields
 }
+
