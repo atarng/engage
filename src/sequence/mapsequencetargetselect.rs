@@ -17,6 +17,9 @@ impl MapSequenceTargetSelect {
     pub fn can_select_target(&self) -> bool {
         unsafe { mapsequencetargetselect_canselecttarget(self, None) }
     }
+    pub fn set_mapmind(&self) -> bool {
+        unsafe { mapsequencetargetselect_setmapmind(self, None) }
+    }
 }
 
 #[unity::class("App", "MapTarget")]
@@ -83,3 +86,6 @@ extern "C" fn maptargetdata_set(this: &MapTargetData, unit: &Unit, x: i32, z: i3
 
 #[skyline::from_offset(0x1e42a60)]
 extern "C" fn maptargetdataset_clear(this: &MapTargetDataSet, _method_info: OptionalMethod);
+
+#[skyline::from_offset(0x1f3ba70)]
+extern "C" fn mapsequencetargetselect_setmapmind(this: &MapSequenceTargetSelect, method_info: OptionalMethod);
