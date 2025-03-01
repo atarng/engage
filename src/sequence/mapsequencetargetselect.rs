@@ -17,7 +17,7 @@ impl MapSequenceTargetSelect {
     pub fn can_select_target(&self) -> bool {
         unsafe { mapsequencetargetselect_canselecttarget(self, None) }
     }
-    pub fn set_mapmind(&self) -> bool {
+    pub fn set_mapmind(&self) {
         unsafe { mapsequencetargetselect_setmapmind(self, None) }
     }
 }
