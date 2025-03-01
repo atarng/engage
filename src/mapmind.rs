@@ -6,7 +6,7 @@ use crate::{gamedata::unit::Unit, util::get_instance};
 #[repr(C)]
 #[unity::class("App", "MapMind")]
 pub struct MapMind {
-    pub sup: [u8;0x10],
+    pub sup: [u8;0x9],
     pub unit_index: u8,
     pub first_unit_index: u8,
     pub first_x: i8,
