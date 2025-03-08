@@ -48,6 +48,10 @@ impl ProcDesc {
         unsafe { proc_wait_while_true(method, None) }
     }
 
+    pub fn wait_while_false<T>(method: &'static mut ProcBoolMethod<T>) -> &'static mut ProcDesc {
+        unsafe { proc_wait_while_false(method, None) }
+    }
+
     // pub fn function_call<T>(function: &'static mut ProcVoidFunction<T>) -> Il2CppResult<&'static mut ProcDescCall<T>> {
     //     ProcDescCall::<T>::instantiate().map(|desc| {
     //         desc.desc.ty = ProcDescType::Call;
