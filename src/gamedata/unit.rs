@@ -506,10 +506,10 @@ pub fn unit_update_auto_equip(this: &Unit, method_info: OptionalMethod);
 fn unit_can_equip_item(unit: &Unit, index: i32, rod: bool, exp: bool, method_info: OptionalMethod) -> bool;
 
 #[unity::from_offset("App", "Unit", "get_X")]
-fn unit_get_x(unit: &Unit, method_info: OptionalMethod) -> i32;
+fn unit_get_x(this: &Unit, method_info: OptionalMethod) -> i32;
 
 #[unity::from_offset("App", "Unit", "get_Z")]
-fn unit_get_z(unit: &Unit, method_info: OptionalMethod) -> i32;
+fn unit_get_z(this: &Unit, method_info: OptionalMethod) -> i32;
 
 #[skyline::from_offset(0x01a3dd90)]
 fn inherit_apt_from_god(this: &Unit, god: &GodUnit, method_info: OptionalMethod);
