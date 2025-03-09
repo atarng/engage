@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use unity::prelude::*;
 
-use super::{proc_call, proc_end, proc_label, proc_wait_time, proc_wait_while_true, Bindable, Delegate, ProcBoolMethod, ProcVoidFunction, ProcVoidMethod};
+use super::{proc_call, proc_end, proc_label, proc_wait_time, proc_wait_while_true, proc_wait_while_false, Bindable, Delegate, ProcBoolMethod, ProcVoidFunction, ProcVoidMethod};
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq)]
