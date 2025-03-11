@@ -149,7 +149,17 @@ impl DynValue {
     pub fn new_number(value: f64) -> &'static mut DynValue {
         unsafe { dynvalue_new_number(value, None) }
     }
+
+    pub fn get_boolean(&self) -> bool {
+        unsafe { dynvalue_getboolean(self, None) }
+    }
 }
+
+// 7102e3cd80
+// bool MoonSharp.Interpreter.DynValue$$get_Boolean(MoonSharp_Interpreter_DynValue_o *__this,MethodInfo *method)
+#[skyline::from_offset(0x02e3cd80)]
+fn dynvalue_getboolean(this: &DynValue, method_info: OptionalMethod) -> bool;
+
 
 #[skyline::from_offset(0x2e200f0)]
 fn dynvalue_newboolean(v: bool, method_info: OptionalMethod) -> &'static mut DynValue;
@@ -161,6 +171,7 @@ fn dynvalue_new_string(string: &Il2CppString, method_info: OptionalMethod) -> &'
 fn dynvalue_new_number(v: f64, method_info: OptionalMethod) -> &'static mut DynValue;
 
 pub trait ScriptUtils {
+    fn try_get_bool(&self, index: i32) -> bool;
     fn try_get_i32(&self, index: i32) -> i32;
     fn try_get_string(&self, index: i32) -> Option<&'static Il2CppString>;
     fn try_get_unit(&self, index: i32) -> Option<&'static Unit>;
@@ -168,6 +179,10 @@ pub trait ScriptUtils {
 }
 
 impl ScriptUtils for Il2CppArray<DynValue> {
+    fn try_get_bool(&self, arg_index: i32) -> bool {
+        unsafe { scriptutil_trygetbool(self, arg_index, false, None) }
+    }
+
     fn try_get_i32(&self, arg_index: i32) -> i32 {
         unsafe { scriptutil_trygetint(self, arg_index, i32::MAX, None) }
     }
@@ -195,6 +210,9 @@ fn scriptutil_trygetstring(
     nothing: &Il2CppString,
     method_info: OptionalMethod,
 ) -> Option<&'static Il2CppString>;
+
+#[skyline::from_offset(0x021977b0)]
+fn scriptutil_trygetbool(args: &Il2CppArray<DynValue>, index: i32, nothing: bool, method_info: OptionalMethod) -> bool;
 
 #[skyline::from_offset(0x2196cd0)]
 fn scriptutil_trygetint(args: &Il2CppArray<DynValue>, index: i32, nothing: i32, method_info: OptionalMethod) -> i32;
